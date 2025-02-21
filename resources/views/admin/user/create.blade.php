@@ -1,62 +1,63 @@
-@extends('layouts.admin.dashboard')
+@extends('dashboards.admin')
 @section('content')
-    <div>
-        <main class="py-16">
-            <div class="container mx-auto px-6">
-                @if (Session::has('success'))
-                    <div class="alert alert-success">
-                        {{ Session::get('success') }}
-                    </div>
-                @endif
-                <h2 class="text-3xl font-bold text-center mb-8">Add User</h2>
-                <form action="{{ route('admin.storeuser') }}" method="POST" class="bg-white p-8 rounded-lg shadow-md space-y-6">
-                    @csrf
-
-                    <!-- Personal Information Section -->
-                    <div class="border border-gray-400 p-3 rounded">
-                        <h3 class="text-xl font-semibold mb-4">Add User</h3>
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                            <div>
-                                <label for="name" class="block text-sm font-medium text-gray-700">Name</label>
-                                <input type="text" id="name" name="name"
-                                    class="mt-1 p-2 block w-full border border-gray-300 rounded-md" required>
+    <div class="col-md-8 pt-5">
+        <div class="py-12">
+            <div class="container mx-auto">
+                <div class="card shadow-sm">
+                    <div class="card-body col-mb-4">
+                        @if ($errors->any())
+                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                <ul class="list-group
+                            ">
+                                    @foreach ($errors->all() as $error)
+                                        <li class="list-group
+                                -item">{{ $error }}</li>
+                                    @endforeach
+                                </ul>
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                             </div>
-                            <div>
-                                <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
-                                <input type="text" name="email" id="email"
-                                    class="mt-1 p-2 block w-full border border-gray-300 rounded-md" required>
+                        @endif
+                        @if (session()->has('success'))
+                            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                {{ session('success') }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                    aria-label="Close"></button>
                             </div>
-                            <div>
-                                <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
-                                <input type="password" name="password" id="password"
-                                    class="mt-1 p-2 block w-full border border-gray-300 rounded-md" required>
+                        @endif
+                        <h2 class="text-lg font-bold mb-4">Add User</h2>
+                        <form action="{{ route('users.store') }}" method="POST" class="max-w-md mx-auto">
+                            @csrf
+                            <div class="mb-3">
+                                <label for="name" class="form-label">Name</label>
+                                <input type="text" id="name" name="name" class="form-control" required>
                             </div>
-                            <div>
-                                <label for="password_confirmation" class="block text-sm font-medium text-gray-700">Confirm
-                                    Password</label>
-                                <input type="password" name="password_confirmation" id="password"
-                                    class="mt-1 p-2 block w-full border border-gray-300 rounded-md" required>
+                            <div class="mb-3">
+                                <label for="email" class="form-label">Email</label>
+                                <input type="email" id="email" name="email" class="form-control" required>
                             </div>
-                            <div>
-                                <label for="role" class="block text-sm font-medium text-gray-700">Role</label>
-                                <select name="role_id" id="role"
-                                    class="mt-1 p-2 block w-full border border-gray-300 rounded-md">
+                            <div class="mb-3">
+                                <label for="password" class="form-label">Password</label>
+                                <input type="password" id="password" name="password" class="form-control" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="password_confirmation" class="form-label">Confirm Password</label>
+                                <input type="password" id="password_confirmation" name="password_confirmation"
+                                    class="form-control" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="role" class="form-label">Role</label>
+                                <select name="role_id" id="role" class="form-select">
                                     @foreach ($roles as $role)
-                                    <option value="{{$role->id}}">{{Str::ucfirst($role->name)}}</option>
+                                        <option value="{{ $role->id }}">{{ Str::ucfirst($role->name) }}</option>
                                     @endforeach
                                 </select>
                             </div>
-                        </div>
+                            <button type="submit" class="btn btn-primary">Add User</button>
+                        </form>
                     </div>
-
-                        <div class="text-center pt-3">
-                            <button type="submit"
-                                class="bg-blue-800 text-white py-2 px-6 rounded-full text-lg font-semibold hover:bg-blue-700 transition duration-300">Add
-                                User</button>
-                        </div>
-                    </div>
-                </form>
+                </div>
             </div>
-        </main>
+        </div>
     </div>
+
 @endsection

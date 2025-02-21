@@ -11,7 +11,7 @@
                         </a>
                     </button>
                     <button type="button" class="btn btn-primary m-2">
-                        <a href="{{ route('category.create') }}" style="color: #fff;">
+                        <a href="{{ route('users.create') }}" style="color: #fff;">
                             <i class="fa fa-plus me-2"></i>Add
                         </a>
                     </button>
@@ -43,20 +43,20 @@
                                     <td>{{ $user->name }}</td>
                                     <td>{{ $user->role->name }}</td>
                                     <td>
-                                        {{-- <div class="nav-item dropdown">
+                                        <div class="nav-item dropdown">
                                             <a href="#" class="nav-link dropdown-toggle"
                                                 data-bs-toggle="dropdown">Update</a>
                                             <div class="dropdown-menu">
-                                                <a href="{{ route('category.edit', $classCategory) }}"
+                                                <a href="{{ route('users.edit', $user) }}"
                                                     class="dropdown-item">Edit</a>
-                                                    <form action="{{ route('category.delete', $classCategory) }}" method="POST">
+                                                    <form action="{{ route('users.delete', $user) }}" method="POST">
                                                         @csrf
                                                         @method('DELETE')
                                                         <button type="submit" class="dropdown-item">Delete</button>
                                                     </form>
                                                 
                                             </div>
-                                        </div> --}}
+                                        </div>
                                     </td>
                                 </tr>
                             @empty

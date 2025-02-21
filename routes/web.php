@@ -41,6 +41,12 @@ Route::prefix('admin')->middleware(['auth', 'role:Admin'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'admin'])->name('admin.dashboard');
     Route::get('/dashboard/roles', [AdminActions::class, 'viewRoles'])->name('role.index');
     Route::get('/dashboard/users', [AdminActions::class, 'viewUsers'])->name('users.index');
+    Route::get('/dashboard/users/create', [AdminActions::class, 'createUser'])->name('users.create');
+    Route::post('/dashboard/users/create', [AdminActions::class, 'storeUser'])->name('users.store');
+    Route::get('/dashboard/users/{user}/edit', [AdminActions::class, 'editUser'])->name('users.edit');
+    Route::put('/dashboard/users/{user}/update', [AdminActions::class, 'updateUser'])->name('users.update');
+    Route::delete('/dashboard/users/{user}/delete', [AdminActions::class, 'deleteUser'])->name('users.delete');
+    
     Route::get('/dashboard/categories', [AdminActions::class, 'classCategoryIndex'])->name('category.index');
     Route::get('/dashboard/categories/create', [AdminActions::class, 'createclassCategory'])->name('category.create');
     Route::post('/dashboard/categories/create', [AdminActions::class, 'storeCategory'])->name('category.store');

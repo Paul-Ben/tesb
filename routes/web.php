@@ -66,6 +66,10 @@ Route::prefix('admin')->middleware(['auth', 'role:Admin'])->group(function () {
     Route::get('/dashboard/students/create', [AdminActions::class, 'createStudent'])->name('student.create');
     Route::post('/dashboard/students/create', [AdminActions::class, 'storeStudent'])->name('student.store');
     Route::get('/dashboard/students/{student}/edit', [AdminActions::class, 'editStudent'])->name('student.edit');
+    Route::put('/dashboard/students/{student}/update', [AdminActions::class, 'updateStudent'])->name('student.update');
+    Route::delete('/dashboard/students/{student}/delete', [AdminActions::class, 'deleteStudent'])->name('student.delete');
+    Route::get('/dashboard/students/{student}/show', [AdminActions::class, 'showStudent'])->name('student.show');
+    Route::get('/dashboard/class_students/{classroom}', [AdminActions::class, 'viewClassstudents'])->name('class.students');
 
 });
 

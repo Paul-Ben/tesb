@@ -14,4 +14,9 @@ class Student extends Model
     {
         return $this->belongsTo(Classroom::class, 'class_id');
     }
+
+    public function schoolSession()
+    {
+        return $this->belongsTo(SchoolSession::class);
+    }
 }

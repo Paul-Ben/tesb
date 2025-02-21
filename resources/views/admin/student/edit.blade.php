@@ -6,7 +6,7 @@
             <div class="bg-light rounded h-100 p-4">
                 <div class="m-n2 d-flex justify-content-end ">
                     <button type="button" class="btn btn-primary m-2">
-                        <a href="{{ route('admin.dashboard') }}" style="color: #fff;">
+                        <a href="{{ url()->previous() }}" style="color: #fff;">
                             <i class="fa fa-arrow-left me-2"></i>Go Back
                         </a>
                     </button>
@@ -28,8 +28,9 @@
             <div class="col-lg-12 mx-auto">
                 <div class="bg-light rounded h-100 p-4">
                     <h4>Edit Student</h4>
-                    <form action="{{ route('student.store') }}" method="POST" enctype="multipart/form-data">
+                    <form action="{{ route('student.update', $student) }}" method="POST" enctype="multipart/form-data">
                         @csrf
+                        @method('PUT')
                         <div class="row">
                             <!-- Left Column -->
                             <div class="col-md-6">
@@ -78,36 +79,36 @@
                                 
                                 <div class="form-group">
                                     <label for="std_number">Student Number</label>
-                                    <input type="text" name="std_number" id="std_number" class="form-control" required>
+                                    <input type="text" name="std_number" value="{{$student->std_number}}" id="std_number" class="form-control" required>
                                 </div>
                                 <div class="form-group">
                                     <label for="stateoforigin">State of Origin</label>
-                                    <input type="text" name="stateoforigin" id="stateoforigin" class="form-control">
+                                    <input type="text" name="stateoforigin" value="{{$student->stateoforigin}}" id="stateoforigin" class="form-control">
                                 </div>
                                 <div class="form-group">
                                     <label for="date_of_birth">Date of Birth</label>
-                                    <input type="date" name="date_of_birth" id="date_of_birth" class="form-control"
+                                    <input type="date" name="date_of_birth" value="{{$student->date_of_birth}}" id="date_of_birth" class="form-control"
                                         required>
                                 </div>
                                
                                 <div class="form-group">
                                     <label for="bgroup">Blood Group</label>
-                                    <input type="text" name="bgroup" id="bgroup" class="form-control" required>
+                                    <input type="text" name="bgroup" value="{{$student->bgroup}}" id="bgroup" class="form-control" required>
                                 </div>
                                 
                                 <div class="form-group">
                                     <label for="guardian_phone">Guardian Phone</label>
-                                    <input type="text" name="guardian_phone" id="guardian_phone"
+                                    <input type="text" name="guardian_phone" value="{{$student->guardian_phone}}" id="guardian_phone"
                                         class="form-control">
                                 </div>
                                 <div class="form-group">
                                     <label for="guardian_email">Guardian Email</label>
-                                    <input type="email" name="guardian_email" id="guardian_email"
+                                    <input type="email" name="guardian_email" value="{{$student->guardian_email}}" id="guardian_email"
                                         class="form-control">
                                 </div>
                                 <div class="form-group">
                                     <label for="address">Address</label>
-                                    <input type="text" name="address" id="address" class="form-control">
+                                    <input type="text" name="address" value="{{$student->address}}" id="address" class="form-control">
                                 </div>
                             </div>
                         </div>
@@ -118,6 +119,7 @@
                                 <div class="form-group">
                                     <label for="class_id">Class</label>
                                     <select name="class_id" id="class_id" class="form-control" required>
+                                        <option value="{{$student->class_id}}">{{$student->classroom->name}}</option>
                                         @foreach ($classrooms as $classroom)
                                             <option value="{{ $classroom->id }}">{{ $classroom->name }}</option>
                                         @endforeach
@@ -128,6 +130,7 @@
                                 <div class="form-group">
                                     <label for="current_session">Current Session</label>
                                     <select name="current_session" id="current_session" class="form-control" required>
+                                        <option value="{{$student->current_session}}">{{$currentSession->sessionName}}</option>
                                         @foreach ($schoolSessions as $session)
                                             <option value="{{ $session->id }}">{{ $session->sessionName }}</option>
                                         @endforeach

@@ -202,6 +202,11 @@ class AdminActions extends Controller
         return view('admin.student.index', compact('students'));
     }
 
+    public function showStudent(Student $student)
+    {
+        return view('admin.student.show', compact('student'));
+    }
+
     public function createStudent()
     {
         $classrooms = Classroom::all();
@@ -263,6 +268,70 @@ class AdminActions extends Controller
     {
         $classrooms = Classroom::all();
         $schoolSessions = SchoolSession::all();
-        return view('admin.student.edit', compact('student', 'classrooms', 'schoolSessions'));
+        $currentSession = SchoolSession::find($student->current_session);
+
+        return view('admin.student.edit', compact('student', 'classrooms', 'currentSession', 'schoolSessions'));
+    }
+
+    public function updateStudent(Request $request, Student $student)
+    {
+        $request->validate([
+            'first_name' => 'required',
+            'last_name' => 'required',
+            'std_number' => 'required|unique:students,std_number,' . $student->id,
+            'email' => 'required|email|unique:students,email,' . $student->id,
+            'date_of_birth' => 'required|date',
+            'nationality' => 'required',
+            'genotype' => 'required',
+            'bgroup' => 'required',
+            'class_id' => 'required|exists:classrooms,id',
+            'current_session' => 'required|exists:school_sessions,id',
+            'image' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
+        ]);
+
+        if ($student->image && file_exists(public_path('images/' . $student->image))) {
+            unlink(public_path('images/' . $student->image));
+        }
+
+        $filename = null;
+        if ($request->hasFile('image')) {
+            $filePath = $request->file('image');
+            $filename = time() . '_' . $filePath->getClientOriginalName();
+            $image = $filePath->move(public_path('images/'), $filename);
+            $file = $request->merge(['file_path' => $filename]);
+        }
+        $student->update([
+            'first_name' => $request->first_name,
+            'middle_name' => $request->middle_name,
+            'last_name' => $request->last_name,
+            'std_number' => $request->std_number,
+            'email' => $request->email,
+            'date_of_birth' => $request->date_of_birth,
+            'nationality' => $request->nationality,
+            'stateoforigin' => $request->stateoforigin,
+            'lga' => $request->lga,
+            'genotype' => $request->genotype,
+            'bgroup' => $request->bgroup,
+            'guardian_name' => $request->guardian_name,
+            'guardian_phone' => $request->guardian_phone,
+            'guardian_email' => $request->guardian_email,
+            'address' => $request->address,
+            'class_id' => $request->class_id,
+            'current_session' => $request->current_session,
+            'image' => $filename ?? $student->image, // Save the image path in the database
+        ]);
+        return redirect()->route('student.index')->with('success', 'Student updated successfully.');
+    }
+
+    public function deleteStudent(Student $student)
+    {
+        $student->delete();
+        return redirect()->route('student.index')->with('success', 'Student deleted successfully.');
+    }
+
+    public function viewClassstudents(Classroom $classroom)
+    {
+        $students = Student::where('class_id', $classroom->id)->get();
+        return view('admin.classroom.students', compact('students', 'classroom'));
     }
 }

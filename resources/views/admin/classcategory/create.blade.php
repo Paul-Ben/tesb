@@ -6,7 +6,7 @@
             <div class="bg-light rounded h-100 p-4">
                 <div class="m-n2">
                     <button type="button" class="btn btn-primary m-2">
-                        <a href="class_category.html" style="color: #fff;">
+                        <a href="{{url()->previous()}}" style="color: #fff;">
                             <i class="fa fa-arrow-left me-2"></i>Go Back
                         </a>
                     </button>

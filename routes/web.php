@@ -3,6 +3,7 @@
 use App\Http\Controllers\AdminActions;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\FrontendController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -16,16 +17,21 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
-Route::get('/about-us', function () {
-    return view('about-us');
-})->name('about-us');
+// Route::get('/', function () {
+//     return view('welcome');
+// });
+// Route::get('/about-us', function () {
+//     return view('about-us');
+// })->name('about-us');
 
 // Route::get('/dashboard', function () {
 //     return view('dashboard');
 // })->middleware(['auth', 'verified'])->name('dashboard');
+
+// Frontend routes
+Route::get('/', [FrontendController::class, 'index'])->name('home');
+Route::get('/about-us', [FrontendController::class, 'about'])->name('about');
+Route::get('/contact-us', [FrontendController::class, 'contact'])->name('contact');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

@@ -20,16 +20,19 @@ class DashboardController extends Controller
 
     public function superAdmin()
     {
-        return view('dashboards.superadmin');
+        $authUser = Auth::user();
+        return view('dashboards.superadmin', compact('authUser'));
     }
 
     public function admin()
     {
-        return view('admin.index');
+        $authUser = Auth::user();
+        return view('dashboards.admin' , compact('authUser'));
     }
 
     public function user()
     {
-        return view('users.index');
+        $authUser = Auth::user();
+        return view('dashboards.user', compact('authUser'));
     }
 }

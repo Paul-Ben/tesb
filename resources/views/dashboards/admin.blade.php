@@ -54,8 +54,8 @@
                         <div class="bg-success rounded-circle border-2 border-white position-absolute end-0 bottom-0 p-1"></div>
                     </div>
                     <div class="ms-3">
-                        <h6 class="mb-0">{{Auth::user()->name}}</h6>
-                        <span>{{Auth::user()->role->name}}</span>
+                        <h6 class="mb-0">{{$authUser->name}}</h6>
+                        <span>{{$authUser->role->name}}</span>
                     </div>
                 </div>
                 <div class="navbar-nav w-100">
@@ -190,7 +190,54 @@
                 </div>
             </nav>
             <!-- Navbar End -->
-
+            @if (Route::is('admin.dashboard'))
+                 <div>
+                <!-- Sale & Revenue Start -->
+                <div class="container-fluid pt-4 px-4">
+                    <div class="row g-4">
+                        <div class="col-sm-6 col-xl-3">
+                            <div class="bg-light rounded d-flex align-items-center justify-content-between p-4">
+                                <i class="fa fa-chart-line fa-3x text-primary"></i>
+                                <div class="ms-3">
+                                    <p class="mb-2">Today Sale</p>
+                                    <h6 class="mb-0">$1234</h6>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-xl-3">
+                            <div class="bg-light rounded d-flex align-items-center justify-content-between p-4">
+                                <i class="fa fa-chart-bar fa-3x text-primary"></i>
+                                <div class="ms-3">
+                                    <p class="mb-2">Total Sale</p>
+                                    <h6 class="mb-0">$1234</h6>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-xl-3">
+                            <div class="bg-light rounded d-flex align-items-center justify-content-between p-4">
+                                <i class="fa fa-chart-area fa-3x text-primary"></i>
+                                <div class="ms-3">
+                                    <p class="mb-2">Today Revenue</p>
+                                    <h6 class="mb-0">$1234</h6>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-xl-3">
+                            <div class="bg-light rounded d-flex align-items-center justify-content-between p-4">
+                                <i class="fa fa-chart-pie fa-3x text-primary"></i>
+                                <div class="ms-3">
+                                    <p class="mb-2">Total Revenue</p>
+                                    <h6 class="mb-0">$1234</h6>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Sale & Revenue End -->
+            </div>
+                
+            @endif
+           
             <div>
               @yield('content')
             </div>

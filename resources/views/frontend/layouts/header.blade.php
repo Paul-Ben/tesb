@@ -17,7 +17,7 @@
                             </ul>
                             <div class="top_bar_login ml-auto">
                                 <ul>
-                                    <li><a href="#">Register</a></li>
+                                    <li><a href="{{route('register')}}">Register</a></li>
                                     <li><a href="{{ route('login') }}">Login</a></li>
                                 </ul>
                             </div>

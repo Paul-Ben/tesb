@@ -9,6 +9,7 @@ use App\Models\SchoolSession;
 use App\Models\Student;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 
 class AdminActions extends Controller
@@ -30,21 +31,23 @@ class AdminActions extends Controller
 
     public function viewRoles()
     {
+        $authUser = Auth::user();
         $roles = Role::all();
-        return view('admin.role', compact('roles'));
+        return view('admin.role', compact('roles', 'authUser'));
     }
 
     public function viewUsers()
     {
-        // $users = User::all();
+        $authUser = Auth::user();
         $users = User::whereNotIn('role_id', [3, 2])->get();
-        return view('admin.user.index', compact('users'));
+        return view('admin.user.index', compact('users', 'authUser'));
     }
 
     public function createUser()
     {
+        $authUser = Auth::user();
         $roles = Role::all();
-        return view('admin.user.create', compact('roles'));
+        return view('admin.user.create', compact('roles', 'authUser'));
     }
 
     public function storeUser(Request $request)
@@ -63,8 +66,9 @@ class AdminActions extends Controller
 
     public function editUser(User $user)
     {
+        $authUser = Auth::user();
         $roles = Role::all();
-        return view('admin.user.edit', compact('user', 'roles'));
+        return view('admin.user.edit', compact('user', 'roles', 'authUser'));
     }
 
     public function updateUser(Request $request, User $user)
@@ -92,13 +96,15 @@ class AdminActions extends Controller
 
     public function classCategoryIndex()
     {
+        $authUser = Auth::user();
         $classCategories = ClassCategory::all();
-        return view('admin.classcategory.index', compact('classCategories'));
+        return view('admin.classcategory.index', compact('classCategories', 'authUser'));
     }
 
     public function createclassCategory()
     {
-        return view('admin.classcategory.create');
+        $authUser = Auth::user();
+        return view('admin.classcategory.create', compact('authUser'));
     }
 
     public function storeCategory(Request $request)
@@ -114,8 +120,8 @@ class AdminActions extends Controller
 
     public function editclassCategory(Request $request, ClassCategory $classCategory)
     {
-
-        return view('admin.classcategory.edit', compact('classCategory'));
+        $authUser = Auth::user();
+        return view('admin.classcategory.edit', compact('classCategory', 'authUser'));
     }
 
     public function updateclassCategory(Request $request, ClassCategory $classCategory)
@@ -138,15 +144,16 @@ class AdminActions extends Controller
 
     public function classroomIndex()
     {
+        $authUser = Auth::user();
         $classrooms = Classroom::with('classCategory')->get();
-
-        return view('admin.classroom.index', compact('classrooms'));
+        return view('admin.classroom.index', compact('classrooms', 'authUser'));
     }
 
     public function createClassroom()
     {
+        $authUser = Auth::user();
         $classCategories = ClassCategory::all();
-        return view('admin.classroom.create', compact('classCategories'));
+        return view('admin.classroom.create', compact('classCategories', 'authUser'));
     }
 
     public function storeClassroom(Request $request)
@@ -163,9 +170,10 @@ class AdminActions extends Controller
 
     public function editClassroom(Classroom $classroom)
     {
+        $authUser = Auth::user();
         $category = ClassCategory::find($classroom->category_id);
         $classCategories = ClassCategory::all();
-        return view('admin.classroom.edit', compact('classroom', 'classCategories', 'category'));
+        return view('admin.classroom.edit', compact('classroom', 'classCategories', 'category', 'authUser'));
     }
 
     public function updateClassroom(Request $request, Classroom $classroom)
@@ -191,13 +199,15 @@ class AdminActions extends Controller
     /**Session operations */
     public function schoolSessionIndex()
     {
+        $authUser = Auth::user();
         $schoolsessions = SchoolSession::all();
-        return view('admin.sessions.index', compact('schoolsessions'));
+        return view('admin.sessions.index', compact('schoolsessions', 'authUser'));
     }
 
     public function createschoolSession()
     {
-        return view('admin.sessions.create');
+        $authUser = Auth::user();
+        return view('admin.sessions.create', compact('authUser'));
     }
 
     public function storeschoolSession(Request $request)
@@ -220,7 +230,8 @@ class AdminActions extends Controller
 
     public function editschoolSession(SchoolSession $schoolsession)
     {
-        return view('admin.sessions.edit', compact('schoolsession'));
+        $authUser = Auth::user();
+        return view('admin.sessions.edit', compact('schoolsession', 'authUser'));
     }
     public function updateschoolSession(Request $request, SchoolSession $schoolsession)
     {
@@ -248,20 +259,23 @@ class AdminActions extends Controller
 
     public function studentIndex()
     {
+        $authUser = Auth::user();
         $students = Student::all();
-        return view('admin.student.index', compact('students'));
+        return view('admin.student.index', compact('students', 'authUser'));
     }
 
     public function showStudent(Student $student)
     {
-        return view('admin.student.show', compact('student'));
+        $authUser = Auth::user();
+        return view('admin.student.show', compact('student', 'authUser'));
     }
 
     public function createStudent()
     {
+        $authUser = Auth::user();
         $classrooms = Classroom::all();
         $schoolSessions = SchoolSession::all();
-        return view('admin.student.create', compact('classrooms', 'schoolSessions'));
+        return view('admin.student.create', compact('classrooms', 'schoolSessions', 'authUser'));
     }
 
     public function storeStudent(Request $request)
@@ -316,11 +330,12 @@ class AdminActions extends Controller
 
     public function editStudent(Student $student)
     {
+        $authUser = Auth::user();
         $classrooms = Classroom::all();
         $schoolSessions = SchoolSession::all();
         $currentSession = SchoolSession::find($student->current_session);
 
-        return view('admin.student.edit', compact('student', 'classrooms', 'currentSession', 'schoolSessions'));
+        return view('admin.student.edit', compact('student', 'classrooms', 'currentSession', 'schoolSessions', 'authUser'));
     }
 
     public function updateStudent(Request $request, Student $student)
@@ -384,7 +399,8 @@ class AdminActions extends Controller
 
     public function viewClassstudents(Classroom $classroom)
     {
+        $authUser = Auth::user();
         $students = Student::where('class_id', $classroom->id)->get();
-        return view('admin.classroom.students', compact('students', 'classroom'));
+        return view('admin.classroom.students', compact('students', 'classroom', 'authUser'));
     }
 }

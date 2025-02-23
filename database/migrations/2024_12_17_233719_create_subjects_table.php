@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('code');
-            $table->foreignId('class_id')->constrained('classrooms')->onDelete('cascade');
+            $table->foreignId('classCategory_id')->constrained('class_categories')->onDelete('cascade');
             $table->timestamps();
         });
     }

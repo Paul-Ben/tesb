@@ -1,4 +1,4 @@
-@extends('dashboards.admin')
+@extends('dashboards.user')
 @section('content')
     <!-- Button Start -->
     <div class="container-fluid pt-4 px-4">
@@ -13,7 +13,7 @@
                     <button type="button" class="btn btn-primary m-2">
                         <a href="{{ route('student.create') }}" style="color: #fff;">
                             <i class="fa fa-plus
-                            me-2"></i>Add
+                        me-2"></i>Add
                         </a>
                     </button>
                 </div>
@@ -28,7 +28,7 @@
             <div class="col-lg-12 mx-auto">
                 <div class="bg-light rounded h-100 p-4">
                     <h4>Create New Student</h4>
-                    <form action="{{ route('student.store') }}" method="POST" enctype="multipart/form-data">
+                    <form action="#" method="POST" enctype="multipart/form-data">
                         @csrf
                         <div class="row">
                             <!-- Left Column -->
@@ -47,21 +47,21 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="lga">LGA</label>
-                                    <select name="lga" id="lga" class="form-control">
-                                        <option value="" selected>Select LGA</option>
-                                    </select>
+                                    <input type="text" name="lga" id="lga" class="form-control">
                                 </div>
                                 <div class="form-group">
                                     <label for="genotype">Genotype</label>
-                                    <select name="genotype" id="genotype" class="form-control">
-                                        <option value="" selected>Select Genotype</option>
-                                        <option value="AA">AA</option>
-                                        <option value="AS">AS</option>
-                                        <option value="SS">SS</option>
-                                        <option value="SC">SC</option>
-                                        <option value="AC">AC</option>
-                                    </select>
+                                    <input type="text" name="genotype" id="genotype" class="form-control" required>
                                 </div>
+                                <div class="form-group">
+                                    <label for="guardian_name">Guardian Name</label>
+                                    <input type="text" name="guardian_name" id="guardian_name" class="form-control">
+                                </div>
+                                <div class="form-group">
+                                    <label for="email">Email</label>
+                                    <input type="email" name="email" id="email" class="form-control" required>
+                                </div>
+
                                 <div class="form-group">
                                     <label for="image">Image</label>
                                     <input type="file" name="image" id="image" class="form-control">
@@ -79,14 +79,11 @@
 
                                 <div class="form-group">
                                     <label for="std_number">Student Number</label>
-                                    <input type="text" value="{{'TesB'. '/'. substr(rand(1,1000000).microtime(true), 0,6)}}" name="std_number" id="std_number" class="form-control" required>
+                                    <input type="text" name="std_number" id="std_number" class="form-control" required>
                                 </div>
                                 <div class="form-group">
                                     <label for="stateoforigin">State of Origin</label>
-                                    <select name="stateoforigin" id="state" class="form-control"
-                                        onchange="selectLGA(this)">
-                                        <option value="" selected="selected">Select State</option>
-                                    </select>
+                                    <input type="text" name="stateoforigin" id="stateoforigin" class="form-control">
                                 </div>
                                 <div class="form-group">
                                     <label for="date_of_birth">Date of Birth</label>
@@ -96,26 +93,22 @@
 
                                 <div class="form-group">
                                     <label for="bgroup">Blood Group</label>
-                                    <select name="bgroup" id="bgroup" class="form-control">
-                                        <option value="" selected>Select Blood Group</option>
-                                        <option value="A+">A+</option>
-                                        <option value="A-">A-</option>
-                                        <option value="B+">B+</option>
-                                        <option value="B-">B-</option>
-                                        <option value="AB+">AB+</option>
-                                        <option value="AB-">AB-</option>
-                                        <option value="O+">O+</option>
-                                        <option value="O-">O-</option>
-                                        </select>
+                                    <input type="text" name="bgroup" id="bgroup" class="form-control" required>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="guardian_phone">Guardian Phone</label>
+                                    <input type="text" name="guardian_phone" id="guardian_phone"
+                                        class="form-control">
                                 </div>
                                 <div class="form-group">
-                                    <label for="address">Paarent/Guardian</label>
-                                    <select name="guardian_id" id="guardian_id" class="form-control" required>
-                                        <option value="" selected>Select Guardian</option>
-                                        @foreach ($guardians as $guardian)
-                                            <option value="{{ $guardian->id }}">{{ $guardian->guardian_name }}</option>
-                                        @endforeach
-                                    </select>
+                                    <label for="guardian_email">Guardian Email</label>
+                                    <input type="email" name="guardian_email" id="guardian_email"
+                                        class="form-control">
+                                </div>
+                                <div class="form-group">
+                                    <label for="address">Address</label>
+                                    <input type="text" name="address" id="address" class="form-control">
                                 </div>
                             </div>
                         </div>
@@ -151,40 +144,4 @@
             </div>
         </div>
     </div>
-    <!-- Form End -->
-    <script>
-        //Fetch all States
-        fetch('https://nga-states-lga.onrender.com/fetch')
-            .then((res) => res.json())
-            .then((data) => {
-                var x = document.getElementById("state");
-                for (let index = 0; index < Object.keys(data).length; index++) {
-                    var option = document.createElement("option");
-                    option.text = data[index];
-                    option.value = data[index];
-                    x.add(option);
-                }
-            });
-        //Fetch Local Goverments based on selected state
-        function selectLGA(target) {
-            var state = target.value;
-            fetch('https://nga-states-lga.onrender.com/?state=' + state)
-                .then((res) => res.json())
-                .then((data) => {
-                    var x = document.getElementById("lga");
-
-                    var select = document.getElementById("lga");
-                    var length = select.options.length;
-                    for (i = length - 1; i >= 0; i--) {
-                        select.options[i] = null;
-                    }
-                    for (let index = 0; index < Object.keys(data).length; index++) {
-                        var option = document.createElement("option");
-                        option.text = data[index];
-                        option.value = data[index];
-                        x.add(option);
-                    }
-                });
-        }
-    </script>
 @endsection

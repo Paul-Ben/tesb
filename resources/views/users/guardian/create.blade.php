@@ -1,4 +1,4 @@
-@extends('dashboards.admin')
+@extends('dashboards.user')
 @section('content')
     <!-- Button Start -->
     <div class="container-fluid pt-4 px-4">
@@ -13,11 +13,26 @@
                     <button type="button" class="btn btn-primary m-2">
                         <a href="{{ route('student.create') }}" style="color: #fff;">
                             <i class="fa fa-plus
-                            me-2"></i>Add
+                        me-2"></i>Add
                         </a>
                     </button>
                 </div>
-                <h3>{{ $errors }}</h3>
+                <!-- Error Message -->
+                @if($errors->any())
+                    <div class="alert alert-danger">
+                        <ul>
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
+                <!-- Success Message -->
+                @if(session('success'))
+                    <div class="alert alert-success">
+                        {{ session('success') }}
+                    </div>
+                @endif
             </div>
         </div>
     </div>
@@ -28,18 +43,14 @@
             <div class="col-lg-12 mx-auto">
                 <div class="bg-light rounded h-100 p-4">
                     <h4>Create New Student</h4>
-                    <form action="{{ route('student.store') }}" method="POST" enctype="multipart/form-data">
+                    <form action="{{route('guardian.store')}}" method="POST" enctype="multipart/form-data">
                         @csrf
                         <div class="row">
                             <!-- Left Column -->
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="first_name">First Name</label>
-                                    <input type="text" name="first_name" id="first_name" class="form-control" required>
-                                </div>
-                                <div class="form-group">
-                                    <label for="middle_name">Middle Name</label>
-                                    <input type="text" name="middle_name" id="middle_name" class="form-control">
+                                    <label for="first_name">Full Name</label>
+                                    <input type="text" name="guardian_name" id="first_name" class="form-control" value="{{$authUser->name}}" required>
                                 </div>
                                 <div class="form-group">
                                     <label for="nationality">Nationality</label>
@@ -47,19 +58,8 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="lga">LGA</label>
-                                    <select name="lga" id="lga" class="form-control">
+                                    <select name="lga" id="lga"  class="form-control">
                                         <option value="" selected>Select LGA</option>
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label for="genotype">Genotype</label>
-                                    <select name="genotype" id="genotype" class="form-control">
-                                        <option value="" selected>Select Genotype</option>
-                                        <option value="AA">AA</option>
-                                        <option value="AS">AS</option>
-                                        <option value="SS">SS</option>
-                                        <option value="SC">SC</option>
-                                        <option value="AC">AC</option>
                                     </select>
                                 </div>
                                 <div class="form-group">
@@ -73,56 +73,31 @@
                             <!-- Right Column -->
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="last_name">Last Name</label>
-                                    <input type="text" name="last_name" id="last_name" class="form-control" required>
-                                </div>
-
-                                <div class="form-group">
-                                    <label for="std_number">Student Number</label>
-                                    <input type="text" value="{{'TesB'. '/'. substr(rand(1,1000000).microtime(true), 0,6)}}" name="std_number" id="std_number" class="form-control" required>
+                                    <label for="email">Email</label>
+                                    <input type="email" name="guardian_email" value="{{$authUser->email}}" id="email" class="form-control" required>
                                 </div>
                                 <div class="form-group">
                                     <label for="stateoforigin">State of Origin</label>
-                                    <select name="stateoforigin" id="state" class="form-control"
-                                        onchange="selectLGA(this)">
+                                    <select name="stateoforigin" id="state" class="form-control" onchange="selectLGA(this)">
                                         <option value="" selected="selected">Select State</option>
                                     </select>
+                                    
                                 </div>
                                 <div class="form-group">
-                                    <label for="date_of_birth">Date of Birth</label>
-                                    <input type="date" name="date_of_birth" id="date_of_birth" class="form-control"
-                                        required>
-                                </div>
-
-                                <div class="form-group">
-                                    <label for="bgroup">Blood Group</label>
-                                    <select name="bgroup" id="bgroup" class="form-control">
-                                        <option value="" selected>Select Blood Group</option>
-                                        <option value="A+">A+</option>
-                                        <option value="A-">A-</option>
-                                        <option value="B+">B+</option>
-                                        <option value="B-">B-</option>
-                                        <option value="AB+">AB+</option>
-                                        <option value="AB-">AB-</option>
-                                        <option value="O+">O+</option>
-                                        <option value="O-">O-</option>
-                                        </select>
+                                    <label for="guardian_phone">Phone Number</label>
+                                    <input type="text" name="guardian_phone" id="guardian_phone"
+                                        class="form-control">
                                 </div>
                                 <div class="form-group">
-                                    <label for="address">Paarent/Guardian</label>
-                                    <select name="guardian_id" id="guardian_id" class="form-control" required>
-                                        <option value="" selected>Select Guardian</option>
-                                        @foreach ($guardians as $guardian)
-                                            <option value="{{ $guardian->id }}">{{ $guardian->guardian_name }}</option>
-                                        @endforeach
-                                    </select>
+                                    <label for="address">Address</label>
+                                    <input type="text" name="address" id="address" class="form-control">
                                 </div>
                             </div>
                         </div>
 
                         <!-- Full-Width Fields -->
                         <div class="row">
-                            <div class="col-md-6">
+                            {{-- <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="class_id">Class</label>
                                     <select name="class_id" id="class_id" class="form-control" required>
@@ -131,8 +106,8 @@
                                         @endforeach
                                     </select>
                                 </div>
-                            </div>
-                            <div class="col-md-6">
+                            </div> --}}
+                            {{-- <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="current_session">Current Session</label>
                                     <select name="current_session" id="current_session" class="form-control" required>
@@ -141,7 +116,7 @@
                                         @endforeach
                                     </select>
                                 </div>
-                            </div>
+                            </div> --}}
 
                         </div>
                         <div class="mt-3"><button type="submit" class="btn btn-primary">Submit</button></div>
@@ -151,7 +126,6 @@
             </div>
         </div>
     </div>
-    <!-- Form End -->
     <script>
         //Fetch all States
         fetch('https://nga-states-lga.onrender.com/fetch')

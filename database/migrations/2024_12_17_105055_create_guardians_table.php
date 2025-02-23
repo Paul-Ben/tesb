@@ -9,7 +9,7 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up(): void
+   public function up(): void
     {
         Schema::create('guardians', function (Blueprint $table) {
             $table->id();
@@ -19,11 +19,12 @@ return new class extends Migration
             $table->string('guardian_email');
             $table->string('address')->nullable();
             $table->string('nationality');
+            $table->string('image');
             $table->string('stateoforigin')->nullable();
             $table->string('lga')->nullable();
             $table->timestamps();
         });
-    }
+    } 
 
     /**
      * Reverse the migrations.

@@ -56,11 +56,11 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="guardian_name">Guardian Name</label>
-                                    <input type="text" name="guardian_name" value="{{$student->guardian_name}}" id="guardian_name" class="form-control">
+                                    <input type="text" name="guardian_name" value="{{$studentguardian->guardian_name}}" id="guardian_name" class="form-control" disabled>
                                 </div>
                                 <div class="form-group">
                                     <label for="email">Email</label>
-                                    <input type="email" name="email" value="{{$student->guardian_email}}" id="email" class="form-control" required>
+                                    <input type="email" name="email" value="{{$studentguardian->guardian_email}}" id="email" class="form-control" disabled>
                                 </div>
                                
                                 <div class="form-group">
@@ -98,17 +98,17 @@
                                 
                                 <div class="form-group">
                                     <label for="guardian_phone">Guardian Phone</label>
-                                    <input type="text" name="guardian_phone" value="{{$student->guardian_phone}}" id="guardian_phone"
-                                        class="form-control">
+                                    <input type="text" name="guardian_phone" value="{{$studentguardian->guardian_phone }}" id="guardian_phone"
+                                        class="form-control" disabled>
                                 </div>
                                 <div class="form-group">
                                     <label for="guardian_email">Guardian Email</label>
-                                    <input type="email" name="guardian_email" value="{{$student->guardian_email}}" id="guardian_email"
-                                        class="form-control">
+                                    <input type="email" name="guardian_email" value="{{$studentguardian->guardian_email}}" id="guardian_email"
+                                        class="form-control" disabled>
                                 </div>
                                 <div class="form-group">
                                     <label for="address">Address</label>
-                                    <input type="text" name="address" value="{{$student->address}}" id="address" class="form-control">
+                                    <input type="text" name="address" value="{{$studentguardian->address}}" id="address" class="form-control" disabled>
                                 </div>
                             </div>
                         </div>

@@ -19,4 +19,9 @@ class Student extends Model
     {
         return $this->belongsTo(SchoolSession::class);
     }
+
+    public function guardian()
+    {
+        return $this->belongsTo(Guardian::class);
+    }
 }

@@ -4,6 +4,7 @@ use App\Http\Controllers\AdminActions;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\FrontendController;
+use App\Http\Controllers\UserActions;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -87,6 +88,10 @@ Route::prefix('admin')->middleware(['auth', 'role:Admin'])->group(function () {
 
 Route::prefix('user')->middleware(['auth', 'role:User'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'user'])->name('user.dashboard');
+    Route::get('/dashboard/guardian/form', [UserActions::class, 'guardianForm'])->name('guardian.form');
+    Route::post('/dashboard/guardian/form', [UserActions::class, 'storeGuardian'])->name('guardian.store');
+    Route::get('/dashboard/guardian/form/edit', [UserActions::class, 'editGuardian'])->name('guardian.edit');
+    Route::put('/dashboard/guardian/form/update', [UserActions::class, 'updateGuardian'])->name('guardian.update');
 });
 
 require __DIR__ . '/auth.php';

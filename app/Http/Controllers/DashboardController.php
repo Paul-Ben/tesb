@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Department;
+use App\Models\Guardian;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -27,12 +28,29 @@ class DashboardController extends Controller
     public function admin()
     {
         $authUser = Auth::user();
-        return view('dashboards.admin' , compact('authUser'));
+        $notification = array(
+            'message' => 'Welcome to your dashboard.',
+            'alert-type' => 'success'
+        );
+        return view('dashboards.admin' , compact('authUser'))->with($notification);
     }
 
     public function user()
     {
         $authUser = Auth::user();
-        return view('dashboards.user', compact('authUser'));
+        $guardian = Guardian::where('user_id', $authUser ->id)->first();
+        if (!$guardian) {
+            session()->flash('message', 'Please fill the guardian form to proceed.');
+            $notification = array(
+                'message' => 'Please fill the guardian form to proceed.',
+                'alert-type' => 'info'
+            );
+            return redirect()->route('guardian.form')->with($notification);
+        }
+        $notification = array(
+            'message' => 'Welcome to your dashboard.',
+            'alert-type' => 'success'
+        );
+        return view('dashboards.user', compact('authUser', 'guardian'))->with($notification);
     }
 }

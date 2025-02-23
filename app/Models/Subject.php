@@ -8,4 +8,15 @@ use Illuminate\Database\Eloquent\Model;
 class Subject extends Model
 {
     use HasFactory;
+    protected $guarded = [];
+
+    public function classCategory()
+    {
+        return $this->belongsTo(ClassCategory::class);
+    }
+
+    public function schoolSession()
+    {
+        return $this->belongsTo(SchoolSession::class);
+    }
 }

@@ -8,6 +8,7 @@ use App\Models\Guardian;
 use App\Models\Role;
 use App\Models\SchoolSession;
 use App\Models\Student;
+use App\Models\Subject;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -407,5 +408,67 @@ class AdminActions extends Controller
     {
         $authUser = Auth::user();
         return view('users.guardian.create', compact('authUser'));
+    }
+
+    public function subjectIndex()
+    {
+        $authUser = Auth::user();
+        $subjects = Subject::all();
+        return view('admin.subject.allindex', compact('subjects', 'authUser'));
+    }
+    public function subject_index(Classroom $classroom)
+    {
+        $authUser = Auth::user();
+        $subjects = Subject::where('classroom_id', $classroom->id)->get();
+        return view('admin.subject.index', compact('subjects', 'classroom', 'authUser'));
+    }
+
+    public function createSubject(Classroom $classroom)
+    {
+        $authUser = Auth::user();
+        $classrooms = Classroom::all();
+        return view('admin.subject.create', compact('classroom', 'authUser'));
+    }
+    public function storeSubject(Request $request, Classroom $classroom)
+    {
+        $request->validate([
+            'name' => 'required',
+            'code' => 'required',
+            // 'classroom_id' => 'required|exists:classrooms,id',
+        ]);
+
+        Subject::create([
+            'name' => $request->name,
+            'classroom_id' => $classroom->id,
+            'code' => $request->code,
+        ]);
+        $notification = array(
+            'message' => 'Subject created successfully.',
+            'alert-type' => 'success'
+        );
+        return redirect()->route('class.subjects', $classroom)->with($notification);
+    }
+
+    public function editSubject(Subject $subject)
+    {
+        $authUser = Auth::user();
+        return view('admin.subject.edit', compact('subject', 'authUser'));
+    }
+    public function updateSubject(Request $request, Subject $subject)
+    {
+        $request->validate([
+            'name' => 'required',
+            'code' => 'required',
+        ]);
+
+        $subject->update([
+            'name' => $request->name,
+            'code' => $request->code,
+        ]);
+        $notification = array(
+            'message' => 'Subject updated successfully.',
+            'alert-type' => 'success'
+        );
+        return redirect()->route('class.subjects', $subject->classroom)->with($notification);
     }
 }

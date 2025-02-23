@@ -19,4 +19,9 @@ class Subject extends Model
     {
         return $this->belongsTo(SchoolSession::class);
     }
+    public function classroom()
+    {
+        return $this->belongsTo(Classroom::class);
+    }
+    
 }

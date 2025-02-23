@@ -49,6 +49,7 @@
                                             <div class="dropdown-menu">
                                                 <a href="{{ route('category.edit', $classCategory) }}"
                                                     class="dropdown-item">Edit</a>
+                                                    
                                                     <form action="{{ route('category.delete', $classCategory) }}" method="POST">
                                                         @csrf
                                                         @method('DELETE')

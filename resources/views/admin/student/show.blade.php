@@ -21,7 +21,8 @@
                     <!-- Student Information -->
                     <div class="col-md-8">
                         <div class="card-body">
-                            <h1 class="card-title text-center text-md-start">Student Name: {{$student->last_name." ".$student->middle_name." ".$student->first_name}}</h1>
+                            <h1 class="card-title text-center text-md-start"> {{$student->last_name." ".$student->middle_name." ".$student->first_name}}</h1>
+                            <h1 class="card-title text-center text-md-start"> {{$student->std_number}}</h1>
                             <p class="card-text text-muted mb-1">Date of Birth: {{$student->date_of_birth}}</p>
                             <p class="card-text text-muted mb-1">Class: {{$student->classroom->name}}</p>
                         </div>

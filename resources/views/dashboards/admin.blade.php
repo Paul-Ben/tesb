@@ -75,6 +75,7 @@
                         <div class="dropdown-menu bg-transparent border-0">
                             <a href="{{route('category.index')}}" class="dropdown-item">Class Category</a>
                             <a href="{{route('classroom.index')}}" class="dropdown-item">Class LIst</a>
+                            <a href="{{route('subjects')}}" class="dropdown-item">Subject List</a>
                         </div>
                     </div>
                     <a href="{{route('users.index')}}" class="nav-item nav-link"><i class="fa fa-user-circle me-2"></i>Manage User</a>

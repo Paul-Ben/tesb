@@ -83,6 +83,13 @@ Route::prefix('admin')->middleware(['auth', 'role:Admin'])->group(function () {
     Route::delete('/dashboard/students/{student}/delete', [AdminActions::class, 'deleteStudent'])->name('student.delete');
     Route::get('/dashboard/students/{student}/show', [AdminActions::class, 'showStudent'])->name('student.show');
     Route::get('/dashboard/class_students/{classroom}', [AdminActions::class, 'viewClassstudents'])->name('class.students');
+    Route::get('/dashboard/class_subjects', [AdminActions::class, 'subjectIndex'])->name('subjects');
+    Route::get('/dashboard/class_subjects/{classroom}', [AdminActions::class, 'subject_index'])->name('class.subjects');
+    Route::get('/dashboard/class_subjects/{classroom}/create', [AdminActions::class, 'createSubject'])->name('subject.create');
+    Route::post('/dashboard/class_subjects/{classroom}/create', [AdminActions::class, 'storeSubject'])->name('subject.store');
+    Route::get('/dashboard/class_subjects/{subject}/edit', [AdminActions::class, 'editSubject'])->name('subject.edit');
+    Route::put('/dashboard/class_subjects/{subject}/update', [AdminActions::class, 'updateSubject'])->name('subject.update');
+    Route::delete('/dashboard/class_subjects/{subject}/delete', [AdminActions::class, 'deleteSubject'])->name('subject.delete');
 
 });
 

@@ -11,7 +11,7 @@
                         </a>
                     </button>
                     <button type="button" class="btn btn-primary m-2">
-                        <a href="{{ route('classroom.create') }}" style="color: #fff;">
+                        <a href="{{ route('subject.create', $classroom) }}" style="color: #fff;">
                             <i class="fa fa-plus me-2"></i>Add
                         </a>
                     </button>
@@ -26,34 +26,33 @@
         <div class="row g-4">
             <div class="col-12">
                 <div class="bg-light rounded h-100 p-4">
-                    <h6 class="mb-4">All Classroom Lists</h6>
+                    <h6 class="mb-4">All Class Categories.</h6>
                     <table class="table table-hover">
                         <thead>
                             <tr>
                                 <th scope="col">S/N</th>
-                                <th scope="col">Class Name</th>
                                 <th scope="col">Class Category</th>
-                                <th scope="col">Class Teacher</th>
+                                <th scope="col">Subject</th>
+                                <th scope="col">Code</th>
                                 <th scope="col">Action</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @forelse ($classrooms as $key => $classroom)
+                            @forelse ($subjects as $key => $subject)
                                 <tr>
                                     <th scope="row">{{ $key + 1 }}</th>
-                                    <td><a href="{{route('class.students', $classroom)}}">{{ $classroom->name }}</a></td>
-                                    <td>{{ $classroom->classCategory->name }}</td>
-                                    <td>{{ $classroom->teacher_name }}</td>
+                                    <td>{{ $subject->classroom->name }}</td>
+                                    <td>{{ $subject->name }}</td>
+                                    <td>{{ $subject->code }}</td>
                                     <td>
                                         <div class="nav-item dropdown">
                                             <a href="#" class="nav-link dropdown-toggle"
                                                 data-bs-toggle="dropdown">Update</a>
                                             <div class="dropdown-menu">
-                                                <a href="{{ route('classroom.edit', $classroom) }}"
+                                                <a href="{{ route('subject.edit', $subject) }}"
                                                     class="dropdown-item">Edit</a>
-                                                    <a href="{{ route('class.subjects', $classroom) }}"
-                                                    class="dropdown-item">Add Subjects</a>
-                                                <form action="{{ route('classroom.delete', $classroom) }}" method="POST">
+
+                                                <form action="{{ route('subject.delete', $subject) }}" method="POST">
                                                     @csrf
                                                     @method('DELETE')
                                                     <button type="submit" class="dropdown-item">Delete</button>

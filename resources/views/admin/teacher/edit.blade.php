@@ -1,106 +1,75 @@
-@extends('layouts.admin.dashboard')
+@extends('dashboards.admin')
 @section('content')
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 text-gray-900">
-                    <form class="max-w-full mx-auto">
-                        <!-- Student Data -->
-                        <h2 class="text-lg font-bold mb-5">Student Data</h2>
-                        <div class="grid grid-cols-3 gap-6">
-                            <div class="mb-5">
-                                <label for="first_name"
-                                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">First Name</label>
-                                <input type="text" id="first_name"
-                                    class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light"
-                                    placeholder="First Name" required />
-                            </div>
-                            <div class="mb-5">
-                                <label for="middle_name"
-                                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Middle Name</label>
-                                <input type="text" id="middle_name"
-                                    class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light"
-                                    placeholder="Middle Name" />
-                            </div>
-                            <div class="mb-5">
-                                <label for="last_name"
-                                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Last Name</label>
-                                <input type="text" id="last_name"
-                                    class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light"
-                                    placeholder="Last Name" required />
-                            </div>
-                            <div class="mb-5">
-                                <label for="email"
-                                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Student Email</label>
-                                <input type="email" id="email"
-                                    class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light"
-                                    placeholder="email@email.com" required />
-                            </div>
-                            <div class="mb-5">
-                                <label for="date_of_birth"
-                                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Date of
-                                    Birth</label>
-                                <input type="date" id="date_of_birth" name="date_of_birth"
-                                    class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light"
-                                    required />
-                            </div>
-                            <div class="mb-5">
-                                <label for="passport"
-                                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Passport</label>
-                                <input type="file" id="passport"
-                                    class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light" />
-                            </div>
-                            <div class="mb-5">
-                                <label for="class_id"
-                                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Student
-                                    Class</label>
-                                <select name="class_id" id="class_id"
-                                    class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light">
-                                    <option value="">Select a Class</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <!-- Guardian Data -->
-                        <h2 class="text-lg font-bold mb-5 mt-8">Guardian Data</h2>
-                        <div class="grid grid-cols-3 gap-6">
-                            <div class="mb-5">
-                                <label for="guardian_name"
-                                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Guardian
-                                    Name</label>
-                                <input type="text" id="guardian_name" name="guardian_name"
-                                    class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light" />
-                            </div>
-                            <div class="mb-5">
-                                <label for="guardian_phone"
-                                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Guardian
-                                    Phone</label>
-                                <input type="text" id="guardian_phone" name="guardian_phone"
-                                    class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light" />
-                            </div>
-                            <div class="mb-5">
-                                <label for="guardian_email"
-                                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Guardian
-                                    Email</label>
-                                <input type="email" id="guardian_email" name="guardian_email"
-                                    class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light"
-                                    placeholder="guardian@email.com" />
-                            </div>
-                            <div class="mb-5 col-span-2">
-                                <label for="address"
-                                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Guardian
-                                    Address</label>
-                                <textarea name="address" id="address" cols="30" rows="3"
-                                    class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light"></textarea>
-                            </div>
-                        </div>
-
-                        <button type="submit"
-                            class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Register
-                            Student</button>
-                    </form>
+    <!-- Button Start -->
+    <div class="container-fluid pt-4 px-4">
+        <div class="col-12">
+            <div class="bg-light rounded h-100 p-4">
+                <div class="m-n2">
+                    <button type="button" class="btn btn-primary m-2">
+                        <a href="{{url()->previous()}}" style="color: #fff;">
+                            <i class="fa fa-arrow-left me-2"></i>Go Back
+                        </a>
+                    </button>
                 </div>
             </div>
         </div>
     </div>
+    <!-- Button End -->
+
+    <!-- Form Start -->
+    <div class="container-fluid pt-4 px-4">
+        <div class="row g-4">
+            <div class="col-12">
+                <div class="bg-light rounded h-100 p-4">
+                    <h6 class="mb-4">Fill All Fields Required</h6>
+                    <form action="{{route('teacher.update', $teacher)}}" method="POST">
+                        @csrf
+                        @method('PUT')
+                        <div class="row">
+                            <div class="col-sm-12 col-xl-6 mb-3">
+                                <label for="exampleInputEmail1" class="form-label">First Name</label>
+                                <input type="text" name="first_name" value="{{$teacher->first_name}}" class="form-control" required>
+                            </div>
+                            <div class="col-sm-12 col-xl-6 mb-3">
+                                <label for="exampleInputEmail1" class="form-label">Middle Name</label>
+                                <input type="text" name="middle_name" value="{{$teacher->middle_name}}" class="form-control">
+                            </div>
+                            <div class="col-sm-12 col-xl-6 mb-3">
+                                <label for="exampleInputEmail1" class="form-label">Last Name</label>
+                                <input type="text" name="last_name" value="{{$teacher->last_name}}" class="form-control" required>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12 col-xl-6 mb-3">
+                                <label for="exampleInputEmail1" class="form-label">Email</label>
+                                <input type="email" name="email" value="{{$teacher->email}}" class="form-control" required>
+                            </div>
+                            <div class="col-sm-12 col-xl-6 mb-3">
+                                <label for="exampleInputEmail1" class="form-label">Phone Number</label>
+                                <input type="tel" name="phone_number" value="{{$teacher->phone_number}}" class="form-control" required>
+                            </div>
+                            <div class="col-sm-12 col-xl-6 mb-3">
+                                <label for="exampleInputEmail1" class="form-label">Date of Birth</label>
+                                <input type="date" name="date_of_birth" value="{{$teacher->date_of_birth}}" class="form-control" required>
+                            </div>
+                            <div class="col-sm-12 col-xl-6 mb-3">
+                                <label for="exampleInputEmail1" class="form-label">Qualification</label>
+                                <input type="text" name="qualification" value="{{$teacher->qualification}}" class="form-control">
+                            </div>
+                            <div class="col-sm-12 col-xl-6 mb-3">
+                                <label for="exampleInputEmail1" class="form-label">Address</label>
+                                <input type="text" name="address" value="{{$teacher->address}}" class="form-control" required>
+                            </div>
+                        </div>
+                        <div style="text-align: center;">
+                            <button type="submit" class="btn btn-primary">Submit</button>
+                            <button type="reset" class="btn btn-secondary">Reset</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <!-- Form End -->
 @endsection

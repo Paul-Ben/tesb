@@ -91,6 +91,13 @@ Route::prefix('admin')->middleware(['auth', 'role:Admin'])->group(function () {
     Route::put('/dashboard/class_subjects/{subject}/update', [AdminActions::class, 'updateSubject'])->name('subject.update');
     Route::delete('/dashboard/class_subjects/{subject}/delete', [AdminActions::class, 'deleteSubject'])->name('subject.delete');
 
+    Route::get('/dashboard/teachers', [AdminActions::class, 'teacher_index'])->name('teacher.index');
+    Route::get('/dashboard/teachers/create', [AdminActions::class, 'create_teacher'])->name('teacher.create');
+    Route::post('/dashboard/teachers/create', [AdminActions::class, 'store_teacher'])->name('teacher.store');
+    Route::get('/dashboard/teachers/{teacher}/edit', [AdminActions::class, 'edit_teacher'])->name('teacher.edit');
+    Route::put('/dashboard/teachers/{teacher}/update', [AdminActions::class, 'update_teacher'])->name('teacher.update');
+    Route::delete('/dashboard/teachers/{teacher}/delete', [AdminActions::class, 'delete_teacher'])->name('teacher.destroy');
+    
 });
 
 Route::prefix('user')->middleware(['auth', 'role:User'])->group(function () {

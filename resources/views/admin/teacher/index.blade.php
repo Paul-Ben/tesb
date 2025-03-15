@@ -1,94 +1,77 @@
-@extends('layouts.admin.dashboard')
+@extends('dashboards.admin')
 @section('content')
-
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 text-gray-900">
-                    
-
-                    <div>
-                        <h2 class="text-lg font-bold mb-4">Student Information</h2>
-                        <div class="text-right ">
-                            <a href="{{route('student.create')}}">
-                            <button type="button" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
-                                <strong>+</strong> Add Student
-                            </button>
+    <!-- Button Start -->
+    <div class="container-fluid pt-4 px-4">
+        <div class="col-12">
+            <div class="bg-light rounded h-100 p-4">
+                <div class="m-n2 d-flex justify-content-end ">
+                    <button type="button" class="btn btn-primary m-2">
+                        <a href="{{ url()->previous() }}" style="color: #fff;">
+                            <i class="fa fa-arrow-left me-2"></i>Go Back
                         </a>
-                        </div>
-                        
-                    </div>
-                    <div class="relative overflow-x-auto">
-                        <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-                            <thead
-                                class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                                <tr>
-                                    <th scope="col" class="px-6 py-3">
-                                        Product name
-                                    </th>
-                                    <th scope="col" class="px-6 py-3">
-                                        Color
-                                    </th>
-                                    <th scope="col" class="px-6 py-3">
-                                        Category
-                                    </th>
-                                    <th scope="col" class="px-6 py-3">
-                                        Price
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                                    <th scope="row"
-                                        class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                        Apple MacBook Pro 17"
-                                    </th>
-                                    <td class="px-6 py-4">
-                                        Silver
-                                    </td>
-                                    <td class="px-6 py-4">
-                                        Laptop
-                                    </td>
-                                    <td class="px-6 py-4">
-                                        $2999
-                                    </td>
-                                </tr>
-                                <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                                    <th scope="row"
-                                        class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                        Microsoft Surface Pro
-                                    </th>
-                                    <td class="px-6 py-4">
-                                        White
-                                    </td>
-                                    <td class="px-6 py-4">
-                                        Laptop PC
-                                    </td>
-                                    <td class="px-6 py-4">
-                                        $1999
-                                    </td>
-                                </tr>
-                                <tr class="bg-white dark:bg-gray-800">
-                                    <th scope="row"
-                                        class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                        Magic Mouse 2
-                                    </th>
-                                    <td class="px-6 py-4">
-                                        Black
-                                    </td>
-                                    <td class="px-6 py-4">
-                                        Accessories
-                                    </td>
-                                    <td class="px-6 py-4">
-                                        $99
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-
+                    </button>
+                    <button type="button" class="btn btn-primary m-2">
+                        <a href="{{ route('teacher.create') }}" style="color: #fff;">
+                            <i class="fa fa-plus me-2"></i>Add
+                        </a>
+                    </button>
                 </div>
             </div>
         </div>
     </div>
+    <!-- Button End -->
+
+    <!-- Table Start -->
+    <div class="container-fluid pt-4 px-4">
+        <div class="row g-4">
+            <div class="col-12">
+                <div class="bg-light rounded h-100 p-4">
+                    <h6 class="mb-4">All Class Categories.</h6>
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th scope="col">S/N</th>
+                                <th scope="col">Teacher Name</th>
+                                <th scope="col">Email</th>
+                                <th scope="col">Phone</th>
+                                <th scope="col">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @forelse ($teachers as $key => $teacher)
+                                <tr>
+                                    <th scope="row">{{ $key + 1 }}</th>
+                                    <td>{{ $teacher->first_name." ".$teacher->middle_name." ".$teacher->last_name }}</td>
+                                    <td>{{ $teacher->email }}</td>
+                                    <td>{{ $teacher->phone_number }}</td>
+                                    <td>
+                                        <div class="nav-item dropdown">
+                                            <a href="#" class="nav-link dropdown-toggle"
+                                                data-bs-toggle="dropdown">Update</a>
+                                            <div class="dropdown-menu">
+                                                <a href="{{ route('teacher.edit', $teacher) }}"
+                                                    class="dropdown-item">Edit</a>
+
+                                                <form action="{{ route('subject.delete', $teacher) }}" method="POST">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="dropdown-item">Delete</button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td class="text-center" colspan="4">No Data Found</td>
+                                </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Table End -->
 @endsection
+

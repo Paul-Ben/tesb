@@ -78,6 +78,7 @@
                             <a href="{{route('subjects')}}" class="dropdown-item">Subject List</a>
                         </div>
                     </div>
+                    <a href="{{route('teacher.index')}}" class="nav-item nav-link"><i class="fa fa-user-circle me-2"></i>Manage Teachers</a>
                     <a href="{{route('users.index')}}" class="nav-item nav-link"><i class="fa fa-user-circle me-2"></i>Manage User</a>
                     <div class="nav-item dropdown">
                         <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="far fa-file-alt me-2"></i>Pages</a>

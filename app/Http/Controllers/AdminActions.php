@@ -9,6 +9,7 @@ use App\Models\Role;
 use App\Models\SchoolSession;
 use App\Models\Student;
 use App\Models\Subject;
+use App\Models\Teacher;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -470,5 +471,71 @@ class AdminActions extends Controller
             'alert-type' => 'success'
         );
         return redirect()->route('class.subjects', $subject->classroom)->with($notification);
+    }
+
+    public function teacher_index()
+    {
+        $authUser = Auth::user();
+        $teachers = Teacher::all();
+        return view('admin.teacher.index', compact('teachers', 'authUser'));
+    }
+
+    public function create_teacher()
+    {
+        $authUser = Auth::user();
+        return view('admin.teacher.create', compact('authUser'));
+    }
+
+    public function store_teacher(Request $request)
+    {
+        $teacher = $request->validate([
+            'first_name' => 'required',
+            'last_name' => 'required',
+            'middle_name' => 'string|nullable',
+            'email' => 'required|email|unique:teachers',
+            'date_of_birth' => 'required|date',
+            'phone_number' => 'required',
+            'address' => 'required',
+            'qualification' => 'string|nullable',
+        ]);
+
+        Teacher::create($teacher);
+
+        return redirect()->route('teacher.index')->with('success', 'Teacher created successfully!');
+    }
+    public function edit_teacher(Teacher $teacher)
+    {
+        $authUser = Auth::user();
+        return view('admin.teacher.edit', compact('teacher', 'authUser'));
+    }
+    public function update_teacher(Request $request, Teacher $teacher)
+    {
+        $request->validate([
+            'first_name' => 'required',
+            'last_name' => 'required',
+            'middle_name' => 'string|nullable',
+            'email' => 'required|email|unique:teachers,email,' . $teacher->id,
+            'date_of_birth' => 'required|date',
+            'phone_number' => 'required',
+            'address' => 'required',
+            'qualification' => 'string|nullable',
+        ]);
+
+        $teacher->update([
+            'first_name' => $request->first_name,
+            'last_name' => $request->last_name,
+            'middle_name' => $request->middle_name,
+            'email' => $request->email,
+            'date_of_birth' => $request->date_of_birth,
+            'phone_number' => $request->phone_number,
+            'address' => $request->address,
+            'qualification' => $request->qualification,
+        ]);
+        return redirect()->route('teacher.index')->with('success', 'Teacher updated successfully!');
+    }
+    public function delete_teacher(Teacher $teacher)
+    {
+        $teacher->delete();
+        return redirect()->route('teacher.index')->with('success', 'Teacher deleted successfully!');
     }
 }

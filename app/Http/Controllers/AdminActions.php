@@ -11,8 +11,11 @@ use App\Models\Student;
 use App\Models\Subject;
 use App\Models\Teacher;
 use App\Models\User;
+use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 
 class AdminActions extends Controller
@@ -148,7 +151,10 @@ class AdminActions extends Controller
     public function classroomIndex()
     {
         $authUser = Auth::user();
-        $classrooms = Classroom::with('classCategory')->get();
+        $classrooms = Classroom::with('classCategory', 'teacher')->get();
+        // $classrooms = Classroom::with('classCategory')->paginate(10);
+        // $teachers = Teacher::all();
+        // dd($classrooms);
         return view('admin.classroom.index', compact('classrooms', 'authUser'));
     }
 
@@ -156,7 +162,8 @@ class AdminActions extends Controller
     {
         $authUser = Auth::user();
         $classCategories = ClassCategory::all();
-        return view('admin.classroom.create', compact('classCategories', 'authUser'));
+        $teachers = Teacher::all();
+        return view('admin.classroom.create', compact('classCategories', 'authUser', 'teachers'));
     }
 
     public function storeClassroom(Request $request)
@@ -164,7 +171,7 @@ class AdminActions extends Controller
         $validated = $request->validate([
             'name' => 'required',
             'category_id' => 'required',
-            'teacher_name' => 'required'
+            'teacher_id' => 'required',
         ]);
         Classroom::create($validated);
         Log::info('Classroom created successfully');
@@ -176,7 +183,8 @@ class AdminActions extends Controller
         $authUser = Auth::user();
         $category = ClassCategory::find($classroom->category_id);
         $classCategories = ClassCategory::all();
-        return view('admin.classroom.edit', compact('classroom', 'classCategories', 'category', 'authUser'));
+        $teachers = Teacher::all();
+        return view('admin.classroom.edit', compact('classroom', 'classCategories', 'category', 'authUser', 'teachers'));
     }
 
     public function updateClassroom(Request $request, Classroom $classroom)
@@ -184,7 +192,7 @@ class AdminActions extends Controller
         $validated = $request->validate([
             'name' => 'required',
             'category_id' => 'required',
-            'teacher_name' => 'required'
+            'teacher_id' => 'required'
         ]);
         $classroom->update($validated);
         Log::info('Classroom updated successfully');
@@ -486,23 +494,93 @@ class AdminActions extends Controller
         return view('admin.teacher.create', compact('authUser'));
     }
 
+    // public function store_teacher(Request $request)
+    // {
+    //     $teacher = $request->validate([
+    //         'first_name' => 'required',
+    //         'last_name' => 'required',
+    //         'middle_name' => 'string|nullable',
+    //         'email' => 'required|email|unique:teachers',
+    //         'date_of_birth' => 'required|date',
+    //         'phone_number' => 'required',
+    //         'address' => 'required',
+    //         'qualification' => 'string|nullable',
+    //     ]);
+
+    //     $user = User::create([
+    //         'name' => $request->first_name." ".$request->last_name,
+    //         'email' => $request->email,
+    //         'password' => Hash::make('Teacher@123'),
+    //         'role_id' => 4,
+    //     ]);
+
+    //     event(new Registered($user));
+
+    //     $teacher['user_id'] = $user->id;
+
+    //     Teacher::create($teacher);
+
+       
+    //     $notification = array(
+    //         'message' => 'Teacher created successfully.',
+    //         'alert-type' => 'success'
+    //         );
+
+    //     return redirect()->route('teacher.index')->with($notification);
+    // }
     public function store_teacher(Request $request)
-    {
-        $teacher = $request->validate([
-            'first_name' => 'required',
-            'last_name' => 'required',
-            'middle_name' => 'string|nullable',
-            'email' => 'required|email|unique:teachers',
-            'date_of_birth' => 'required|date',
-            'phone_number' => 'required',
-            'address' => 'required',
-            'qualification' => 'string|nullable',
+{
+    // Validate input with proper unique check for users table
+    $validated = $request->validate([
+        'first_name' => 'required|string|max:255',
+        'last_name' => 'required|string|max:255',
+        'middle_name' => 'nullable|string|max:255',
+        'email' => 'required|email|unique:users,email', // Check uniqueness in users table
+        'date_of_birth' => 'required|date',
+        'phone_number' => 'required|string|max:20',
+        'address' => 'required|string|max:255',
+        'qualification' => 'nullable|string|max:255',
+    ]);
+
+    try {
+        DB::beginTransaction();
+
+        // Create user with validated data
+        $user = User::create([
+            'name' => "{$validated['first_name']} {$validated['last_name']}",
+            'email' => $validated['email'],
+            'password' => Hash::make('Teacher@123'),
+            'role_id' => 4, // Ensure this matches your roles configuration
         ]);
 
-        Teacher::create($teacher);
+        // Create teacher profile
+        Teacher::create([
+            'user_id' => $user->id,
+            'first_name' => $validated['first_name'],
+            'last_name' => $validated['last_name'],
+            'middle_name' => $validated['middle_name'] ?? null,
+            'email' => $validated['email'],
+            'date_of_birth' => $validated['date_of_birth'],
+            'phone_number' => $validated['phone_number'],
+            'address' => $validated['address'],
+            'qualification' => $validated['qualification'] ?? null,
+        ]);
 
-        return redirect()->route('teacher.index')->with('success', 'Teacher created successfully!');
+        event(new Registered($user));
+
+        DB::commit();
+
+        return redirect()->route('teacher.index')
+            ->with('success', 'Teacher created successfully.');
+
+    } catch (\Exception $e) {
+        DB::rollBack();
+        Log::error('Teacher creation failed: ' . $e->getMessage());
+
+        return back()->withInput()
+            ->with('error', 'Error creating teacher. Please try again.');
     }
+}
     public function edit_teacher(Teacher $teacher)
     {
         $authUser = Auth::user();

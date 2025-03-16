@@ -6,7 +6,7 @@
             <div class="bg-light rounded h-100 p-4">
                 <div class="m-n2">
                     <button type="button" class="btn btn-primary m-2">
-                        <a href="{{url()->previous()}}" style="color: #fff;">
+                        <a href="{{ url()->previous() }}" style="color: #fff;">
                             <i class="fa fa-arrow-left me-2"></i>Go Back
                         </a>
                     </button>
@@ -15,14 +15,24 @@
         </div>
     </div>
     <!-- Button End -->
-
+    <div>
+        @if ($errors->any())
+            <div class="alert alert-danger">
+                <ul class="mb-0">
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+    </div>
     <!-- Form Start -->
     <div class="container-fluid pt-4 px-4">
         <div class="row g-4">
             <div class="col-12">
                 <div class="bg-light rounded h-100 p-4">
                     <h6 class="mb-4">Fill All Fields Required</h6>
-                    <form action="{{route('teacher.store')}}" method="POST">
+                    <form action="{{ route('teacher.store') }}" method="POST">
                         @csrf
                         <div class="row">
                             <div class="col-sm-12 col-xl-6 mb-3">

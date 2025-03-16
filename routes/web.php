@@ -44,7 +44,7 @@ Route::prefix('superadmin')->middleware(['auth', 'role:Super Admin'])->group(fun
     Route::get('/dashboard', [DashboardController::class, 'superAdmin'])->name('superadmin.dashboard');
 });
 
-Route::prefix('admin')->middleware(['auth', 'role:Admin'])->group(function () {
+Route::prefix('admin')->middleware(['auth', 'role:Admin, Teacher'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'admin'])->name('admin.dashboard');
     Route::get('/dashboard/roles', [AdminActions::class, 'viewRoles'])->name('role.index');
     Route::get('/dashboard/users', [AdminActions::class, 'viewUsers'])->name('users.index');
@@ -98,6 +98,10 @@ Route::prefix('admin')->middleware(['auth', 'role:Admin'])->group(function () {
     Route::put('/dashboard/teachers/{teacher}/update', [AdminActions::class, 'update_teacher'])->name('teacher.update');
     Route::delete('/dashboard/teachers/{teacher}/delete', [AdminActions::class, 'delete_teacher'])->name('teacher.destroy');
     
+});
+
+Route::prefix('teacher')->middleware(['auth', 'role:Teacher'])->group(function () {
+    Route::get('/dashboard', [DashboardController::class, 'teacher'])->name('teacher.dashboard');
 });
 
 Route::prefix('user')->middleware(['auth', 'role:User'])->group(function () {

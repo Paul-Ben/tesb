@@ -25,12 +25,14 @@ class AuthenticatedSessionController extends Controller
      */
     public function store(LoginRequest $request): RedirectResponse
     {
+        // dd($request);
         $request->authenticate();
 
         $request->session()->regenerate();
 
         $user = Auth::user();
         // dd($user->role->name);
+        // dd($user->name);
 
         switch ($user->role->name) {
             case 'Super Admin':
@@ -39,10 +41,12 @@ class AuthenticatedSessionController extends Controller
                 return redirect()->route('admin.dashboard');
             case 'User':
                 return redirect()->route('user.dashboard');
+            case 'Teacher':
+                return redirect()->route('teacher.dashboard');
             default:
                 Auth::logout();
                 return redirect()->route('login')
-                ->with('error','Email-Address And Password Are Wrong.');
+                    ->with('error', 'Email-Address And Password Are Wrong.');
         }
 
         // return redirect()->intended(RouteServiceProvider::HOME);

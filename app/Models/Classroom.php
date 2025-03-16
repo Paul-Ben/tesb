@@ -24,4 +24,8 @@ class Classroom extends Model
     {
         return $this->hasMany(Subject::class);
     }
+    public function teacher()
+    {
+        return $this->belongsTo(Teacher::class, 'teacher_id');
+    }
 }

@@ -43,7 +43,7 @@
                                     <th scope="row">{{ $key + 1 }}</th>
                                     <td><a href="{{route('class.students', $classroom)}}">{{ $classroom->name }}</a></td>
                                     <td>{{ $classroom->classCategory->name }}</td>
-                                    <td>{{ $classroom->teacher_name }}</td>
+                                    <td>{{ $classroom->teacher->first_name." ".$classroom->teacher->last_name }}</td>
                                     <td>
                                         <div class="nav-item dropdown">
                                             <a href="#" class="nav-link dropdown-toggle"

@@ -47,7 +47,14 @@
                             <!-- Teacher Name -->
                             <div class="col-sm-12 col-xl-6 mb-3">
                                 <label for="teacher_name" class="form-label">Teacher Name</label>
-                                <input type="text" name="teacher_name" value="{{$classroom->teacher_name}}" class="form-control">
+                                <select name="teacher_id" class="form-control" required>
+                                    <!-- Populate this dropdown with categories from the database -->
+                                    <option value="{{$classroom->teacher->id}} ">{{ $classroom->teacher->first_name." ".$classroom->teacher->last_name }}</option>
+                                    @foreach($teachers as $teacher)
+                                        <option value="{{ $teacher->id }}">{{ $teacher->first_name." ".$teacher->last_name }}</option>
+                                    @endforeach
+                                </select>
+                                {{-- <input type="text" name="teacher_name" value="{{$classroom->teacher_name}}" class="form-control"> --}}
                             </div>
                         </div>
     

@@ -42,9 +42,14 @@
                                     <input type="text" name="middle_name" id="middle_name" class="form-control">
                                 </div>
                                 <div class="form-group">
-                                    <label for="nationality">Nationality</label>
-                                    <input type="text" name="nationality" id="nationality" class="form-control" required>
+                                    <label for="nationality">Gender</label>
+                                    <select name="gender" id="" class="form-control">
+                                        <option value="">Select Gender</option>
+                                        <option value="Male">Male</option>
+                                        <option value="Female">Female</option>
+                                    </select>
                                 </div>
+                                
                                 <div class="form-group">
                                     <label for="lga">LGA</label>
                                     <select name="lga" id="lga" class="form-control">
@@ -68,6 +73,15 @@
                                     <p id="error-message" style="color: red; display: none;">Please select a valid image
                                         file.</p>
                                 </div>
+                                <div class="form-group">
+                                    <label for="address">Paarent/Guardian</label>
+                                    <select name="guardian_id" id="guardian_id" class="form-control" required>
+                                        <option value="" selected>Select Guardian</option>
+                                        @foreach ($guardians as $guardian)
+                                            <option value="{{ $guardian->id }}">{{ $guardian->guardian_name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
                             </div>
 
                             <!-- Right Column -->
@@ -80,6 +94,10 @@
                                 <div class="form-group">
                                     <label for="std_number">Student Number</label>
                                     <input type="text" value="{{'TesB'. '/'. substr(rand(1,1000000).microtime(true), 0,6)}}" name="std_number" id="std_number" class="form-control" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="nationality">Nationality</label>
+                                    <input type="text" name="nationality" id="nationality" class="form-control" required>
                                 </div>
                                 <div class="form-group">
                                     <label for="stateoforigin">State of Origin</label>
@@ -108,15 +126,7 @@
                                         <option value="O-">O-</option>
                                         </select>
                                 </div>
-                                <div class="form-group">
-                                    <label for="address">Paarent/Guardian</label>
-                                    <select name="guardian_id" id="guardian_id" class="form-control" required>
-                                        <option value="" selected>Select Guardian</option>
-                                        @foreach ($guardians as $guardian)
-                                            <option value="{{ $guardian->id }}">{{ $guardian->guardian_name }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
+                                
                             </div>
                         </div>
 
@@ -142,7 +152,6 @@
                                     </select>
                                 </div>
                             </div>
-
                         </div>
                         <div class="mt-3"><button type="submit" class="btn btn-primary">Submit</button></div>
 

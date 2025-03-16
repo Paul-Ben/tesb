@@ -4,6 +4,7 @@ use App\Http\Controllers\AdminActions;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\FrontendController;
+use App\Http\Controllers\TeacherController;
 use App\Http\Controllers\UserActions;
 use Illuminate\Support\Facades\Route;
 
@@ -102,6 +103,10 @@ Route::prefix('admin')->middleware(['auth', 'role:Admin, Teacher'])->group(funct
 
 Route::prefix('teacher')->middleware(['auth', 'role:Teacher'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'teacher'])->name('teacher.dashboard');
+    Route::get('/dashboard/classrooms', [TeacherController::class, 'teacher_classes'])->name('teacher.classroom');
+    Route::get('/dashboard/class_students/{classroom}', [TeacherController::class, 'viewClassstudents'])->name('teacher.students');
+    Route::get('/dashboard/students/{student}/show', [TeacherController::class, 'showStudent'])->name('teacher.show_student');
+Route::get('/dashboard/class_subjects', [TeacherController::class, 'subject_index'])->name('teacher.subjects');
 });
 
 Route::prefix('user')->middleware(['auth', 'role:User'])->group(function () {

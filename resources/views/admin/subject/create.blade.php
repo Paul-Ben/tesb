@@ -38,10 +38,16 @@
                             </div>
     
                             <!-- Teacher Name -->
-                            {{-- <div class="col-sm-12 col-xl-6 mb-3">
+                            <div class="col-sm-12 col-xl-6 mb-3">
                                 <label for="teacher_name" class="form-label">Teacher Name</label>
-                                <input type="text" name="teacher_name" class="form-control">
-                            </div> --}}
+                                {{-- <input type="text" name="teacher_name" class="form-control"> --}}
+                                <select name="teacher_id" id="" class="form-control">
+                                    <option value=" ">Select teacher</option>
+                                    @foreach($teachers as $teacher)
+                                    <option value="{{$teacher->id}}">{{$teacher->first_name." ".$teacher->last_name}}</option>
+                                    @endforeach
+                                </select>
+                            </div>
                         </div>
     
                         <!-- Submit and Reset Buttons -->

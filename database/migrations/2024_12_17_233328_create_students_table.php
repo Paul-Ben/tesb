@@ -20,6 +20,7 @@ return new class extends Migration
             $table->date('date_of_birth');
             $table->string('image')->nullable();
             $table->string('nationality');
+            $table->string('gender');
             $table->string('stateoforigin')->nullable();
             $table->string('lga')->nullable();
             $table->string('genotype');

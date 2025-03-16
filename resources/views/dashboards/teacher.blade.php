@@ -61,7 +61,7 @@
                 </div>
                 <div class="navbar-nav w-100">
                     <a href="{{route('teacher.dashboard')}}" class="nav-item nav-link active"><i class="fa fa-tachometer-alt me-2"></i>Dashboard</a>
-                    {{-- <a href="{{route('session.index')}}" class="nav-item nav-link"><i class="fa fa-th me-2"></i>Session</a> --}}
+                    <a href="{{route('teacher.classroom')}}" class="nav-item nav-link"><i class="fa fa-th me-2"></i>Classes</a>
                     {{-- <a href="{{route('role.index')}}" class="nav-item nav-link"><i class="fa fa-th me-2"></i>Roles</a> --}}
                     <div class="nav-item dropdown">
                         <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="fa fa-graduation-cap me-2"></i>Student Record</a>
@@ -202,7 +202,7 @@
                             <div class="bg-light rounded d-flex align-items-center justify-content-between p-4">
                                 <i class="fa fa-chart-line fa-3x text-primary"></i>
                                 <div class="ms-3">
-                                    <p class="mb-2">Today Sale</p>
+                                    <p class="mb-2">My Classes</p>
                                     <h6 class="mb-0">$1234</h6>
                                 </div>
                             </div>
@@ -211,7 +211,7 @@
                             <div class="bg-light rounded d-flex align-items-center justify-content-between p-4">
                                 <i class="fa fa-chart-bar fa-3x text-primary"></i>
                                 <div class="ms-3">
-                                    <p class="mb-2">Total Sale</p>
+                                    <p class="mb-2">My Students</p>
                                     <h6 class="mb-0">$1234</h6>
                                 </div>
                             </div>
@@ -220,7 +220,7 @@
                             <div class="bg-light rounded d-flex align-items-center justify-content-between p-4">
                                 <i class="fa fa-chart-area fa-3x text-primary"></i>
                                 <div class="ms-3">
-                                    <p class="mb-2">Today Revenue</p>
+                                    <p class="mb-2">My Subjects</p>
                                     <h6 class="mb-0">$1234</h6>
                                 </div>
                             </div>
@@ -229,7 +229,7 @@
                             <div class="bg-light rounded d-flex align-items-center justify-content-between p-4">
                                 <i class="fa fa-chart-pie fa-3x text-primary"></i>
                                 <div class="ms-3">
-                                    <p class="mb-2">Total Revenue</p>
+                                    <p class="mb-2">Results</p>
                                     <h6 class="mb-0">$1234</h6>
                                 </div>
                             </div>

@@ -327,6 +327,7 @@ class AdminActions extends Controller
             'nationality' => $request->nationality,
             'stateoforigin' => $request->stateoforigin,
             'lga' => $request->lga,
+            'gender' => $request->gender,
             'genotype' => $request->genotype,
             'bgroup' => $request->bgroup,
             'guardian_id' => $request->guardian_id,
@@ -361,6 +362,7 @@ class AdminActions extends Controller
             'nationality' => 'required',
             'stateoforigin' => 'required',
             'lga' => 'required',
+            'gender'=> 'required',
             'genotype' => 'required',
             'bgroup' => 'required',
             'class_id' => 'required|exists:classrooms,id',
@@ -388,6 +390,7 @@ class AdminActions extends Controller
             'nationality' => $request->nationality,
             'stateoforigin' => $request->stateoforigin,
             'lga' => $request->lga,
+            'gender'=> $request->gender,
             'genotype' => $request->genotype,
             'bgroup' => $request->bgroup,
             'class_id' => $request->class_id,
@@ -436,13 +439,15 @@ class AdminActions extends Controller
     {
         $authUser = Auth::user();
         $classrooms = Classroom::all();
-        return view('admin.subject.create', compact('classroom', 'authUser'));
+        $teachers = Teacher::all();
+        return view('admin.subject.create', compact('classroom', 'authUser', 'teachers'));
     }
     public function storeSubject(Request $request, Classroom $classroom)
     {
         $request->validate([
             'name' => 'required',
             'code' => 'required',
+            'teacher_id' => 'required'
             // 'classroom_id' => 'required|exists:classrooms,id',
         ]);
 
@@ -450,6 +455,7 @@ class AdminActions extends Controller
             'name' => $request->name,
             'classroom_id' => $classroom->id,
             'code' => $request->code,
+            'teacher_id' => $request->teacher_id,
         ]);
         $notification = array(
             'message' => 'Subject created successfully.',
@@ -616,4 +622,5 @@ class AdminActions extends Controller
         $teacher->delete();
         return redirect()->route('teacher.index')->with('success', 'Teacher deleted successfully!');
     }
+    
 }

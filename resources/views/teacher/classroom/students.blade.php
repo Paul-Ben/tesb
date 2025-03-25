@@ -51,13 +51,19 @@
                                             <a href="#" class="nav-link dropdown-toggle"
                                                 data-bs-toggle="dropdown">Update</a>
                                             <div class="dropdown-menu">
-                                                <a href="{{ route('student.edit', $student) }}"
+                                                <a href="{{ route('create.result', $student) }}"
+                                                    class="dropdown-item">Upload Result</a>
+                                                    <a href="{{ route('view.result', $student) }}"
+                                                    class="dropdown-item">View Result</a>
+                                                    @role('Admin')
+                                                    <a href="{{ route('student.edit', $student) }}"
                                                     class="dropdown-item">Edit</a>
                                                 <form action="{{ route('classroom.delete', $student) }}" method="POST">
                                                     @csrf
                                                     @method('DELETE')
                                                     <button type="submit" class="dropdown-item">Delete</button>
                                                 </form>
+                                                @endrole
                                             </div>
                                         </div>
                                     </td>

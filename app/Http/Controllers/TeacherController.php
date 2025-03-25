@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Classroom;
+use App\Models\Result;
+use App\Models\SchoolSession;
 use App\Models\Student;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -38,6 +40,33 @@ class TeacherController extends Controller
     {
         $authUser = Auth::user();
         return view('teacher.classroom.show', compact('student', 'authUser'));
+    }
+
+    public function resultIndex(Request $request)
+    {
+        $authUser = Auth::user();
+
+        return view('teacher.result.index', compact('authUser'));
+    }
+    public function searchStudentForResult(Request $request)
+    {
+        $authUser = Auth::user();
+        $query = $request->input('query');
+
+        // Search for students where student_number is similar to the query
+        $students = Student::where('std_number', 'LIKE', "%{$query}%")
+                            ->orWhere('first_name', 'LIKE', "%{$query}%") // Optional: Search by name too
+                            ->get();
+
+        return view('teacher.result.searchResult', compact('authUser', 'students'));// Return the same view
+    }
+
+    public function createResult(Student $student)
+    {
+        $authUser = Auth::user();
+       $schoolSession = SchoolSession::where('status', 'active')->first();
+      
+        return view('teacher.result.create', compact('authUser', 'student', 'schoolSession'));
     }
 
 }

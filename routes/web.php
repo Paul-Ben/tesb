@@ -4,6 +4,7 @@ use App\Http\Controllers\AdminActions;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\FrontendController;
+use App\Http\Controllers\ResultController;
 use App\Http\Controllers\TeacherController;
 use App\Http\Controllers\UserActions;
 use Illuminate\Support\Facades\Route;
@@ -54,7 +55,7 @@ Route::prefix('admin')->middleware(['auth', 'role:Admin, Teacher'])->group(funct
     Route::get('/dashboard/users/{user}/edit', [AdminActions::class, 'editUser'])->name('users.edit');
     Route::put('/dashboard/users/{user}/update', [AdminActions::class, 'updateUser'])->name('users.update');
     Route::delete('/dashboard/users/{user}/delete', [AdminActions::class, 'deleteUser'])->name('users.delete');
-    
+
     Route::get('/dashboard/categories', [AdminActions::class, 'classCategoryIndex'])->name('category.index');
     Route::get('/dashboard/categories/create', [AdminActions::class, 'createclassCategory'])->name('category.create');
     Route::post('/dashboard/categories/create', [AdminActions::class, 'storeCategory'])->name('category.store');
@@ -98,7 +99,6 @@ Route::prefix('admin')->middleware(['auth', 'role:Admin, Teacher'])->group(funct
     Route::get('/dashboard/teachers/{teacher}/edit', [AdminActions::class, 'edit_teacher'])->name('teacher.edit');
     Route::put('/dashboard/teachers/{teacher}/update', [AdminActions::class, 'update_teacher'])->name('teacher.update');
     Route::delete('/dashboard/teachers/{teacher}/delete', [AdminActions::class, 'delete_teacher'])->name('teacher.destroy');
-    
 });
 
 Route::prefix('teacher')->middleware(['auth', 'role:Teacher'])->group(function () {
@@ -106,7 +106,12 @@ Route::prefix('teacher')->middleware(['auth', 'role:Teacher'])->group(function (
     Route::get('/dashboard/classrooms', [TeacherController::class, 'teacher_classes'])->name('teacher.classroom');
     Route::get('/dashboard/class_students/{classroom}', [TeacherController::class, 'viewClassstudents'])->name('teacher.students');
     Route::get('/dashboard/students/{student}/show', [TeacherController::class, 'showStudent'])->name('teacher.show_student');
-Route::get('/dashboard/class_subjects', [TeacherController::class, 'subject_index'])->name('teacher.subjects');
+    Route::get('/dashboard/class_subjects', [TeacherController::class, 'subject_index'])->name('teacher.subjects');
+    Route::get('/dashboard/result/index', [TeacherController::class, 'resultIndex'])->name('result.index');
+    Route::get('/dashboard/result/search', [TeacherController::class, 'searchStudentForResult'])->name('search.result');
+    Route::get('/dashboard/result/{student}/create', [TeacherController::class, "createResult"])->name('create.result');
+    Route::post('/results/store', [ResultController::class, 'store'])->name('results.store');
+    Route::get('/dashboard/student/{student}/result', [ResultController::class, 'viewResult'])->name('view.result');
 });
 
 Route::prefix('user')->middleware(['auth', 'role:User'])->group(function () {

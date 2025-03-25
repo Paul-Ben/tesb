@@ -61,26 +61,26 @@
                 </div>
                 <div class="navbar-nav w-100">
                     <a href="{{route('teacher.dashboard')}}" class="nav-item nav-link active"><i class="fa fa-tachometer-alt me-2"></i>Dashboard</a>
-                    <a href="{{route('teacher.classroom')}}" class="nav-item nav-link"><i class="fa fa-th me-2"></i>Classes</a>
-                    {{-- <a href="{{route('role.index')}}" class="nav-item nav-link"><i class="fa fa-th me-2"></i>Roles</a> --}}
-                    <div class="nav-item dropdown">
+                    <a href="{{route('teacher.classroom')}}" class="nav-item nav-link"><i class="fa fa-graduation-cap me-2"></i>Classes</a>
+                    <a href="{{route('result.index')}}" class="nav-item nav-link"><i class="fa fa-th me-2"></i>Search Results</a>
+                    {{-- <div class="nav-item dropdown">
                         <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="fa fa-graduation-cap me-2"></i>Student Record</a>
                         <div class="dropdown-menu bg-transparent border-0">
-                            {{-- <a href="{{route('student.index')}}" class="dropdown-item">Student Information</a> --}}
+                            <a href="{{route('student.index')}}" class="dropdown-item">Student Information</a>
                             <a href="#" class="dropdown-item">Class Student</a>
                         </div>
-                    </div>
-                    <div class="nav-item dropdown">
+                    </div> --}}
+                    {{-- <div class="nav-item dropdown">
                         <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="fa fa-file me-2"></i>Class Manager</a>
                         <div class="dropdown-menu bg-transparent border-0">
-                            {{-- <a href="{{route('category.index')}}" class="dropdown-item">Class Category</a> --}}
-                            {{-- <a href="{{route('classroom.index')}}" class="dropdown-item">Class LIst</a> --}}
-                            {{-- <a href="{{route('subjects')}}" class="dropdown-item">Subject List</a> --}}
+                            <a href="{{route('category.index')}}" class="dropdown-item">Class Category</a>
+                            <a href="{{route('classroom.index')}}" class="dropdown-item">Class LIst</a>
+                            <a href="{{route('subjects')}}" class="dropdown-item">Subject List</a>
                         </div>
-                    </div>
+                    </div> --}}
                     {{-- <a href="{{route('teacher.index')}}" class="nav-item nav-link"><i class="fa fa-user-circle me-2"></i>Manage Teachers</a> --}}
                     {{-- <a href="{{route('users.index')}}" class="nav-item nav-link"><i class="fa fa-user-circle me-2"></i>Manage User</a> --}}
-                    <div class="nav-item dropdown">
+                    {{-- <div class="nav-item dropdown">
                         <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="far fa-file-alt me-2"></i>Pages</a>
                         <div class="dropdown-menu bg-transparent border-0">
                             <a href="signin.html" class="dropdown-item">Sign In</a>
@@ -88,7 +88,7 @@
                             <a href="404.html" class="dropdown-item">404 Error</a>
                             <a href="blank.html" class="dropdown-item">Blank Page</a>
                         </div>
-                    </div>
+                    </div> --}}
                 </div>
             </nav>
         </div>

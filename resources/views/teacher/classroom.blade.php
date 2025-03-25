@@ -49,10 +49,12 @@
                                             <a href="#" class="nav-link dropdown-toggle"
                                                 data-bs-toggle="dropdown">Update</a>
                                             <div class="dropdown-menu">
-                                                <a href="{{ route('classroom.edit', $classroom) }}"
+                                                {{-- <a href="{{ route('classroom.edit', $classroom) }}"
                                                     class="dropdown-item">Edit</a>
                                                     <a href="{{ route('class.subjects', $classroom) }}"
-                                                    class="dropdown-item">Add Subjects</a>
+                                                    class="dropdown-item">Add Subjects</a> --}}
+                                                    <a href="#"
+                                                    class="dropdown-item">Upload Class Results</a>
                                                 {{-- <form action="{{ route('classroom.delete', $classroom) }}" method="POST">
                                                     @csrf
                                                     @method('DELETE')

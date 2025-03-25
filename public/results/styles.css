@@ -1,0 +1,140 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+    background-color: #f4f4f4;
+    /* Change to landscape orientation */
+    width: 100%;
+    height: 100%;
+}
+
+@media print {
+    .button-container {
+        display: none;
+    }
+}
+
+.report-card {
+    width: 95%; /* Adjust width to utilize landscape space */
+    margin: auto;
+    background-color: #fff;
+    padding: 20px;
+    border: 1px solid #ddd;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.header .school-info {
+    display: flex;
+    flex-direction: row; /* Display items horizontally */
+    align-items: center;
+    text-align: left; /* Align text to the left */
+}
+
+.header .school-info img {
+    margin-left: 10px; /* Add some space between the text and the logo */
+}
+
+.header .school-info > div {
+    margin-left: 5px; /* Gap between logo and school name */
+}
+
+.header .school-info h1,
+.header .school-info p {
+    margin: 0; /* Remove default margins */
+}
+
+.header .school-info h1 {
+    margin-bottom: 2px; /* Reduce gap between school name and address */
+}
+
+.student-photo {
+    text-align: right;
+}
+
+.student-info {
+    margin-bottom: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.student-info p {
+    flex: 1 0 20%;
+    margin: 0;
+}
+
+.grades-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+.grades-table th, .grades-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+    font-size: 0.8em; /* Reduce font size for better fit */
+}
+
+.grades-table th {
+    background-color: #f2f2f2;
+}
+
+.skills-assessment {
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: space-between; /* This creates equal space between tables */
+    gap: 20px; /* This adds a consistent gap between tables */
+    flex-wrap: wrap; /* This allows tables to wrap to the next line */
+}
+
+
+
+.skills-table {
+    flex: 1;
+    width: 50%;
+    border-collapse: collapse;
+}
+
+.skills-table th, .skills-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+.skills-table th {
+    background-color: #f2f2f2;
+}
+
+.teacher-comments {
+    margin-bottom: 20px;
+}
+
+.footer {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 30px;
+}
+
+.button-container {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.button-container button {
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+}

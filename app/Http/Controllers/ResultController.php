@@ -135,34 +135,56 @@ class ResultController extends Controller
         return 'F';
     }
 
-    public function viewResult(Student $student)
+    // public function viewResult(Student $student)
+    // {
+    //    $age = Carbon::parse($student->date_of_birth)->age;        // Retrieve the active session
+    //     $activeSession = SchoolSession::where('status', 'active')->first();
+
+    //     // Retrieve the student's result details
+    //     $results = Result::with('subjects','affectiveDevelopment')->where('student_id', $student->id)->first();
+    //     // dd($result);
+    //     if (!$results) {
+    //         $notification = [
+    //             'message' => 'No result found for this student.',
+    //             'alert-type' => 'error',
+    //         ];
+    //         return redirect()->back()->with($notification);
+    //     }
+    //     // dd($result);
+    //     // Retrieve subjects and scores related to the result
+    //     // $subjects = ResultSubject::where('result_id', $results->id)->get();
+    //     // dd($subjects);
+    //     // Retrieve affective development records
+    //     $affectiveDevelopment = ResultAffectiveDevelopment::where('result_id', $results->id)->get();
+    //     $table1 = $affectiveDevelopment->take(4);
+    //     $table2 = $affectiveDevelopment->slice(4);
+    //     // Pass the retrieved data to a view
+    //     $notification = [
+    //         'message' => 'Result generated for this student.',
+    //         'alert-type' => 'success',
+    //     ];
+    //     return view('teacher.result.show', compact('student', 'results', 'table1', 'table2', 'age'));
+    // }
+    public function getResults(Student $student, Result $result)
     {
-       $age = Carbon::parse($student->date_of_birth)->age;        // Retrieve the active session
-        $activeSession = SchoolSession::where('status', 'active')->first();
-
-        // Retrieve the student's result details
-        $result = Result::where('student_id', $student->id)->first();
-
-        if (!$result) {
-            $notification = [
+        $authUser = auth()->user();
+        $results = Result::where('student_id', $student->id)->get();
+        if (!$results) {
+            return redirect()->back()->with([
                 'message' => 'No result found for this student.',
                 'alert-type' => 'error',
-            ];
-            return redirect()->back()->with($notification);
+            ]);
         }
-        // dd($result);
-        // Retrieve subjects and scores related to the result
-        $subjects = ResultSubject::where('result_id', $result->id)->get();
-        // dd($subjects);
-        // Retrieve affective development records
+        return view('teacher.result.studentResult', compact('student', 'results', 'authUser'));
+    }
+
+    public function singleResultView(Student $student, Result $result)
+    {
+        $student = Student::where('id', $result->student_id)->first();
+        $age = Carbon::parse($student->date_of_birth)->age;
         $affectiveDevelopment = ResultAffectiveDevelopment::where('result_id', $result->id)->get();
         $table1 = $affectiveDevelopment->take(4);
         $table2 = $affectiveDevelopment->slice(4);
-        // Pass the retrieved data to a view
-        $notification = [
-            'message' => 'Result generated for this student.',
-            'alert-type' => 'success',
-        ];
-        return view('teacher.result.show', compact('student', 'result', 'subjects', 'table1', 'table2', 'age'));
+        return view('teacher.result.show', compact('student', 'result', 'table1', 'table2', 'age'));
     }
 }

@@ -62,7 +62,8 @@
                 <div class="navbar-nav w-100">
                     <a href="{{route('admin.dashboard')}}" class="nav-item nav-link active"><i class="fa fa-tachometer-alt me-2"></i>Dashboard</a>
                     <a href="{{route('session.index')}}" class="nav-item nav-link"><i class="fa fa-th me-2"></i>Session</a>
-                    <a href="{{route('role.index')}}" class="nav-item nav-link"><i class="fa fa-th me-2"></i>Roles</a>
+                    <a href="{{route('term.index')}}" class="nav-item nav-link"><i class="fa fa-th me-2"></i>Term</a>
+                    {{-- <a href="{{route('role.index')}}" class="nav-item nav-link"><i class="fa fa-th me-2"></i>Roles</a> --}}
                     <div class="nav-item dropdown">
                         <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="fa fa-graduation-cap me-2"></i>Student Record</a>
                         <div class="dropdown-menu bg-transparent border-0">

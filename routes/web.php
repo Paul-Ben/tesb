@@ -99,6 +99,13 @@ Route::prefix('admin')->middleware(['auth', 'role:Admin, Teacher'])->group(funct
     Route::get('/dashboard/teachers/{teacher}/edit', [AdminActions::class, 'edit_teacher'])->name('teacher.edit');
     Route::put('/dashboard/teachers/{teacher}/update', [AdminActions::class, 'update_teacher'])->name('teacher.update');
     Route::delete('/dashboard/teachers/{teacher}/delete', [AdminActions::class, 'delete_teacher'])->name('teacher.destroy');
+
+    Route::get('/dashboard/term/index', [AdminActions::class, 'termIndex'])->name('term.index');
+    Route::get('/dashboard/term/create', [AdminActions::class, 'createTerm'])->name('term.create');
+    Route::post('/dashboard/term/create', [AdminActions::class, 'storeTerm'])->name('term.store');
+    Route::get('/dashboard/term/{term}/edit', [AdminActions::class, 'editTerm'])->name('term.edit');
+    Route::put('/dashboard/term/{term}/update', [AdminActions::class, 'updateTerm'])->name('term.update');
+    Route::delete('/dashboard/term/{term}/delete', [AdminActions::class, 'deleteTerm'])->name('term.delete');
 });
 
 Route::prefix('teacher')->middleware(['auth', 'role:Teacher'])->group(function () {
@@ -111,7 +118,10 @@ Route::prefix('teacher')->middleware(['auth', 'role:Teacher'])->group(function (
     Route::get('/dashboard/result/search', [TeacherController::class, 'searchStudentForResult'])->name('search.result');
     Route::get('/dashboard/result/{student}/create', [TeacherController::class, "createResult"])->name('create.result');
     Route::post('/results/store', [ResultController::class, 'store'])->name('results.store');
-    Route::get('/dashboard/student/{student}/result', [ResultController::class, 'viewResult'])->name('view.result');
+    // Route::get('/dashboard/student/{student}/result', [ResultController::class, 'viewResult'])->name('view.result');
+    Route::get('/dashboard/student/{student}/resultlist', [ResultController::class, 'getResults'])->name('get.results');
+    Route::get('/dashboard/student/{result}/result', [ResultController::class, 'singleResultView'])->name('single.result');
+    
 });
 
 Route::prefix('user')->middleware(['auth', 'role:User'])->group(function () {

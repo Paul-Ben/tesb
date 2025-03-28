@@ -53,7 +53,7 @@
                                             <div class="dropdown-menu">
                                                 <a href="{{ route('create.result', $student) }}"
                                                     class="dropdown-item">Upload Result</a>
-                                                    <a href="{{ route('view.result', $student) }}"
+                                                    <a href="{{ route('get.results', $student) }}"
                                                     class="dropdown-item">View Result</a>
                                                     @role('Admin')
                                                     <a href="{{ route('student.edit', $student) }}"

@@ -19,4 +19,12 @@ class SchoolSession extends Model
     {
         return $this->hasMany(Subject::class);
     }
+    public function results()
+    {
+        return $this->hasMany(Result::class);
+    }
+    public function terms()
+    {
+        return $this->hasMany(Term::class);
+    }
 }

@@ -32,18 +32,6 @@
                                 <label for="sessionName" class="form-label">Session Name</label>
                                 <input type="text" name="sessionName" value="{{$schoolsession->sessionName}}" class="form-control" required>
                             </div>
-    
-                            <!-- Term Name Field -->
-                            <div class="col-sm-12 col-xl-6 mb-3">
-                                <label for="termName" class="form-label">Term Name</label>
-                                <select name="termName" class="form-control" id="" required>
-                                    <option value="{{$schoolsession->termName}}">{{Str::ucfirst($schoolsession->termName)}}</option>
-                                    <option value="first">First Term</option>
-                                    <option value="second">Second Term</option>
-                                    <option value="third">Third Term</option>
-                                </select>
-                            </div>
-    
                             <!-- Status Field -->
                             <div class="col-sm-12 col-xl-6 mb-3">
                                 <label for="status" class="form-label">Status</label>

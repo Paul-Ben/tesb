@@ -43,6 +43,14 @@
                                     <input type="text" name="middle_name" value="{{$student->middle_name}}" id="middle_name" class="form-control">
                                 </div>
                                 <div class="form-group">
+                                    <label for="nationality">Gender</label>
+                                    <select name="gender" id="" class="form-control">
+                                        <option value="{{$student->gender}}">{{$student->gender}}</option>
+                                        <option value="Male">Male</option>
+                                        <option value="Female">Female</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
                                     <label for="nationality">Nationality</label>
                                     <input type="text" name="nationality" value="{{$student->nationality}}" id="nationality" class="form-control" required>
                                 </div>

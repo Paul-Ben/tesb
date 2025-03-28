@@ -138,10 +138,10 @@
                     </div>
                     <div class="term-info col-md-4">
                         <p><strong>TERM:</strong> <input type="text" name="term"
-                                value="{{ Str::ucfirst($schoolSession->termName) }}" placeholder="Term"
+                                value="{{ Str::ucfirst($term->name) }}" placeholder="Term"
                                 class="form-control"></p>
                         <p><strong>SESSION:</strong> <input type="text" name="session"
-                                value="{{ $schoolSession->sessionName }}" placeholder="Session" class="form-control"></p>
+                                value="{{ $term->schoolSession->sessionName }}" placeholder="Session" class="form-control"></p>
                     </div>
                 </header>
 

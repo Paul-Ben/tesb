@@ -10,6 +10,7 @@ use App\Models\SchoolSession;
 use App\Models\Student;
 use App\Models\Subject;
 use App\Models\Teacher;
+use App\Models\Term;
 use App\Models\User;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
@@ -225,18 +226,20 @@ class AdminActions extends Controller
     {
         $validated = $request->validate([
             'sessionName' => 'required',
-            'termName' => 'required',
             'status' => 'required'
         ]);
         $staus = $validated['status'] == 'active' ? 1 : 0;
         SchoolSession::create([
             'sessionName' => $validated['sessionName'],
-            'termName' => $validated['termName'],
             'status' => $validated['status'],
-            'staus' => $staus
+            
         ]);
         Log::info('Session created successfully');
-        return redirect()->route('session.index')->with('success', 'Session created successfully');
+        $notification = array(
+            'message' => 'Session created successfully.',
+            'alert-type' => 'success'
+        );
+        return redirect()->route('session.index')->with($notification);
     }
 
     public function editschoolSession(SchoolSession $schoolsession)
@@ -248,15 +251,12 @@ class AdminActions extends Controller
     {
         $validated = $request->validate([
             'sessionName' => 'required',
-            'termName' => 'required',
             'status' => 'required'
         ]);
         $staus = $validated['status'] == 'active' ? 1 : 0;
         $schoolsession->update([
             'sessionName' => $validated['sessionName'],
-            'termName' => $validated['termName'],
             'status' => $validated['status'],
-            'staus' => $staus
         ]);
         Log::info('Session updated successfully');
         return redirect()->route('session.index')->with('success', 'Session updated successfully');
@@ -267,6 +267,82 @@ class AdminActions extends Controller
         Log::info('Session deleted successfully');
         return redirect()->route('session.index')->with('success', 'Session deleted successfully');
     }
+    public function termIndex()
+    {
+        $authUser = Auth::user();
+        $terms = Term::with('schoolSession')->get();
+        $sessions = schoolSession::all();
+        return view('admin.term.index', compact('terms','sessions', 'authUser'));
+    }
+    public function createTerm(Request $request)
+    {
+        $authUser = Auth::user();
+        $sessions = SchoolSession::where('status', 'active')->get();
+        // dd($sessions);
+        return view('admin.term.create', compact('sessions', 'authUser'));
+    }
+    public function storeTerm(Request $request)
+    {
+        $request->validate([
+            'name' => 'required',
+            'session_id' => 'required|exists:school_sessions,id',
+            'start_date' => 'nullable|date',
+            'end_date' => 'nullable|date',
+            'status' => 'required|in:active,inactive',
+        ]);
+
+        Term::create([
+            'name' => $request->name,
+            'session_id' => $request->session_id,
+            'startDate' => $request->start_date,
+            'endDate' => $request->end_date,
+            'status' => $request->status,
+        ]);
+        $notification = array(
+            'message' => 'Term created successfully.',
+            'alert-type' => 'success'
+        );
+        return redirect()->route('term.index')->with($notification);
+    }
+    public function editTerm(Term $term)
+    {
+        $authUser = Auth::user();
+        $sessions = SchoolSession::all();
+        return view('admin.term.edit', compact('term', 'sessions', 'authUser'));
+    }
+    public function updateTerm(Request $request, Term $term)
+    {
+        $request->validate([
+            'name' => 'required',
+            'session_id' => 'required|exists:school_sessions,id',
+            'start_date' => 'nullable|date',
+            'end_date' => 'nullable|date',
+            'status' => 'required|in:active,inactive',
+        ]);
+
+        $term->update([
+            'name' => $request->name,
+            'session_id' => $request->session_id,
+            'startDate' => $request->start_date,
+            'endDate' => $request->end_date,
+            'status' => $request->status,
+        ]);
+        $notification = array(
+            'message' => 'Term updated successfully.',
+            'alert-type' => 'success'
+        );
+        return redirect()->route('term.index')->with($notification);
+    }
+    public function deleteTerm(Term $term)
+    {
+        $term->delete();
+        $notification = array(
+            'message' => 'Term deleted successfully.',
+            'alert-type' => 'success'
+        );
+        return redirect()->route('term.index')->with($notification);
+    }
+ 
 
     public function studentIndex()
     {

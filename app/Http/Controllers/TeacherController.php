@@ -6,6 +6,8 @@ use App\Models\Classroom;
 use App\Models\Result;
 use App\Models\SchoolSession;
 use App\Models\Student;
+use App\Models\Subject;
+use App\Models\Term;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -64,9 +66,16 @@ class TeacherController extends Controller
     public function createResult(Student $student)
     {
         $authUser = Auth::user();
-       $schoolSession = SchoolSession::where('status', 'active')->first();
-      
-        return view('teacher.result.create', compact('authUser', 'student', 'schoolSession'));
+        $subjects = Subject::where('classroom_id', $student->class_id)->get();
+    //    $schoolSession = SchoolSession::where('status', 'active')->first();
+        $term = Term::where('status', 'active')->first();
+        if (!$term) {
+            return redirect()->back()->with([
+                'message' => 'No active term found.',
+                'alert-type' => 'error',
+            ]);
+        }
+        return view('teacher.result.create', compact('authUser', 'subjects', 'student', 'term'));
     }
 
 }

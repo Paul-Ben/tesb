@@ -91,7 +91,7 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach ($subjects as $subject)
+                @foreach ($result->subjects as $subject)
                     <tr>
                         <td>{{ $subject->subject }}</td>
                         {{-- <td>{{$subject->assignment}}</td> --}}

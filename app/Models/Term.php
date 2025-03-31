@@ -5,13 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class ResultAffectiveDevelopment extends Model
+class Term extends Model
 {
     use HasFactory;
     protected $guarded = [];
 
-    public function result()
+    public function schoolSession()
     {
-        return $this->belongsTo(Result::class, 'result_id');
+        return $this->belongsTo(SchoolSession::class,"session_id");
     }
 }

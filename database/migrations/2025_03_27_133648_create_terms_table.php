@@ -11,10 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('school_sessions', function (Blueprint $table) {
+        Schema::create('terms', function (Blueprint $table) {
             $table->id();
-            $table->string('sessionName');
-            $table->enum('status', ['active','inactive'])->default('inactive');
+            $table->foreignId('session_id')->constrained('school_sessions')->cascadeOnDelete();
+            $table->string('name');
+            $table->date('startDate')->nullable();
+            $table->date('endDate')->nullable();
+            $table->enum('status',['active', 'inactive'])->default('active');
             $table->timestamps();
         });
     }
@@ -24,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('school_sessions');
+        Schema::dropIfExists('terms');
     }
 };

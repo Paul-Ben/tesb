@@ -78,9 +78,6 @@
             <thead>
                 <tr>
                     <th>Subject</th>
-                    {{-- <th>Assignment (10)</th>
-                    <th>1st CA (10)</th>
-                    <th>2nd CA (10)</th> --}}
                     <th>Total CA (30)</th>
                     <th>Examination (70)</th>
                     <th>Total (100)</th>
@@ -95,9 +92,6 @@
                 @foreach ($result->subjects as $subject)
                     <tr>
                         <td>{{ $subject->subject }}</td>
-                        {{-- <td>{{$subject->assignment}}</td> --}}
-                        {{-- <td>{{$subject->ca}}</td> --}}
-                        {{-- <td>{{$subject->second_ca}}</td> --}}
                         <td>{{ $subject->ca }}</td>
                         <td>{{ $subject->exam }}</td>
                         <td>{{ $subject->total }}</td>
@@ -108,51 +102,11 @@
                         <td>{{ $subject->grade }}</td>
                     </tr>
                 @endforeach
-                {{-- <tr>
-                    <td>Mathematics</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr> --}}
-                {{-- <tr>
-                    <td>English Language</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>Basic Science</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr> --}}
                 <!-- Add more subjects as needed -->
             </tbody>
         </table>
         <div><h3>Skills Assessment</h3></div>
         <div class="skills-assessment">
-            {{-- <h3>Skills Assessment</h3> --}}
             <table class="skills-table">
                 <thead>
                     <tr>
@@ -252,29 +206,7 @@
             });
         });
     </script>
-    {{-- <script>
-        document.getElementById('downloadButton').addEventListener('click', function() {
-            // Create a new canvas
-            const reportCard = document.querySelector('.report-card');
-
-            html2canvas(reportCard, {
-                scale: 2
-            }).then(canvas => { // Increase scale for better resolution
-                // Convert the canvas to a data URL
-                const dataURL = canvas.toDataURL('image/png');
-
-                // Create a dummy link and set the filename
-                const link = document.createElement('a');
-                link.href = dataURL;
-                link.download = 'report_card.png';
-
-                // Append the link to the body, click it, and remove it
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-            });
-        });
-    </script> --}}
+   
     <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
     <script>

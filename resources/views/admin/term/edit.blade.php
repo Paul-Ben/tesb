@@ -10,6 +10,15 @@
                             <i class="fa fa-arrow-left me-2"></i>Go Back
                         </a>
                     </button>
+                    @if ($errors->any())
+                        <div class="alert alert-danger">
+                            <ul>
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
                 </div>
             </div>
         </div>
@@ -17,73 +26,57 @@
     <!-- Button End -->
 
     <!-- Form Start -->
-    {{-- <div class="container-fluid pt-4 px-4">
-        <div class="row g-4">
-            <div class="col-12">
-                <div class="bg-light rounded h-100 p-4">
-                    <h6 class="mb-4">Fill All Fields Required</h6>
-                    <form action="{{route('category.store')}}" method="POST">
-                        @csrf
-                        <div class="row">
-                            <div class="col-sm-12 col-xl-6 mb-3">
-                                <label for="exampleInputEmail1" class="form-label">Category Name</label>
-                                <input type="text" name="name" class="form-control" required>
-                            </div>
-                            <div class="col-sm-12 col-xl-6 mb-3">
-                                <label for="exampleInputEmail1" class="form-label">Abbreviation</label>
-                                <input type="text" name="abbreviation" class="form-control" required>
-                            </div>
-                        </div>
-                        <div style="text-align: center;">
-                            <button type="submit" class="btn btn-primary">Submit</button>
-                            <button type="reset" class="btn btn-secondary">Reset</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-
-        </div>
-    </div> --}}
     <div class="container-fluid pt-4 px-4">
         <div class="row g-4">
             <div class="col-12">
                 <div class="bg-light rounded h-100 p-4">
                     <h6 class="mb-4">Fill All Fields Required</h6>
-                    <form action="{{ route('session.store') }}" method="POST">
+                    <form action="{{ route('term.update', $term) }}" method="POST">
                         @csrf
+                        @method('PUT')
                         <div class="row">
                             <!-- Session Name Field -->
                             <div class="col-sm-12 col-xl-6 mb-3">
-                                <label for="sessionName" class="form-label">Session Name</label>
-                                <input type="text" name="sessionName" class="form-control" required>
+                                <label for="termName" class="form-label">Session</label>
+                                <select name="session_id" class="form-control" id="session_id">
+                                    <option value="{{$term->session_id}}">{{$term->schoolSession->sessionName}}</option>
+                                    @foreach ($sessions as $session)
+                                        <option value="{{ $session->id }}">{{ $session->sessionName }}</option>
+                                    @endforeach
+                                </select>
                             </div>
-    
+
                             <!-- Term Name Field -->
-                            {{-- <div class="col-sm-12 col-xl-6 mb-3">
+                            <div class="col-sm-12 col-xl-6 mb-3">
                                 <label for="termName" class="form-label">Term Name</label>
-                                <select name="termName" class="form-control" id="" required>
+                                <select name="name" class="form-control" id="" required>
+                                    <option value="{{$term->name}}">{{$term->name}}</option>
                                     <option value="first">First Term</option>
                                     <option value="second">Second Term</option>
                                     <option value="third">Third Term</option>
                                 </select>
-                            </div> --}}
-    
+                            </div>
+
                             <!-- Status Field -->
                             <div class="col-sm-12 col-xl-6 mb-3">
                                 <label for="status" class="form-label">Status</label>
                                 <select name="status" class="form-control" required>
+                                    <option value="{{$term->status}}">{{$term->status}}</option>
                                     <option value="active">Active</option>
                                     <option value="inactive">Inactive</option>
                                 </select>
                             </div>
-    
-                            <!-- Staus Field (Likely a typo, should be 'status') -->
-                            {{-- <div class="col-sm-12 col-xl-6 mb-3">
-                                <label for="staus" class="form-label">Staus</label>
-                                <input type="text" name="staus" class="form-control">
-                            </div> --}}
+
+                            <div class="col-sm-12 col-xl-6 mb-3">
+                                <label for="termName" class="form-label">Start Date</label>
+                                <input type="date" value="{{$term->startDate}}" name="start_date" class="form-control" required>
+                            </div>
+                            <div class="col-sm-12 col-xl-6 mb-3">
+                                <label for="termName" class="form-label">End Date</label>
+                                <input type="date" value="{{$term->endDate}}" name="end_date" class="form-control" required>
+                            </div>
                         </div>
-    
+
                         <!-- Submit and Reset Buttons -->
                         <div style="text-align: center;">
                             <button type="submit" class="btn btn-primary">Submit</button>
@@ -96,4 +89,3 @@
     </div>
     <!-- Form End -->
 @endsection
-

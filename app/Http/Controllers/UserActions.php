@@ -3,8 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Models\Guardian;
+<<<<<<< HEAD
 use App\Models\Teacher;
 
+=======
+use App\Models\Result;
+use App\Models\ResultAffectiveDevelopment;
+use App\Models\Student;
+use Carbon\Carbon;
+>>>>>>> d1ca19be4e3adf4d5dea06d0c66254316a28f13a
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -64,5 +71,54 @@ class UserActions extends Controller
         return redirect()->route('user.dashboard')->with($notification);
     }
 
+<<<<<<< HEAD
     
+=======
+    public function getGuardianStudents()
+    {
+        $authUser = Auth::user();
+        $guardian = Guardian::where('user_id', $authUser->id)->first();
+        $students = $guardian->students;
+        if ($students) {
+            
+            return view('users.guardian.students', compact('students', 'authUser', 'guardian'));
+        } else {
+            return redirect()->back()->with([
+                'message' => 'No student information found.',
+                'alert-type' => 'error'
+            ]);
+        }
+    }
+    public function showStudent(Student $student)
+    {
+        $authUser = Auth::user();
+        $guardian = Guardian::where('user_id', $authUser->id)->first();
+        return view('users.guardian.student', compact('student', 'authUser', 'guardian'));
+    }
+
+    public function getResults(Student $student, Result $result)
+    {
+        $authUser = auth()->user();
+        $guardian = Guardian::where('user_id', $authUser->id)->first();
+        $results = Result::where('student_id', $student->id)->get();
+        if (!$results) {
+            return redirect()->back()->with([
+                'message' => 'No result found for this student.',
+                'alert-type' => 'error',
+            ]);
+        }
+        return view('users.result.index', compact('student', 'results', 'authUser', 'guardian'));
+    }
+
+    public function singleResultView(Student $student, Result $result)
+    {
+        
+        $student = Student::where('id', $result->student_id)->first();
+        $age = Carbon::parse($student->date_of_birth)->age;
+        $affectiveDevelopment = ResultAffectiveDevelopment::where('result_id', $result->id)->get();
+        $table1 = $affectiveDevelopment->take(4);
+        $table2 = $affectiveDevelopment->slice(4);
+        return view('users.result.show', compact('student', 'result', 'table1', 'table2', 'age'));
+    }
+>>>>>>> d1ca19be4e3adf4d5dea06d0c66254316a28f13a
 }

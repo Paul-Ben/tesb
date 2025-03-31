@@ -10,6 +10,7 @@ use App\Models\SchoolSession;
 use App\Models\Student;
 use App\Models\Subject;
 use App\Models\Teacher;
+use App\Models\Term;
 use App\Models\User;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
@@ -225,18 +226,20 @@ class AdminActions extends Controller
     {
         $validated = $request->validate([
             'sessionName' => 'required',
-            'termName' => 'required',
             'status' => 'required'
         ]);
         $staus = $validated['status'] == 'active' ? 1 : 0;
         SchoolSession::create([
             'sessionName' => $validated['sessionName'],
-            'termName' => $validated['termName'],
             'status' => $validated['status'],
-            'staus' => $staus
+
         ]);
         Log::info('Session created successfully');
-        return redirect()->route('session.index')->with('success', 'Session created successfully');
+        $notification = array(
+            'message' => 'Session created successfully.',
+            'alert-type' => 'success'
+        );
+        return redirect()->route('session.index')->with($notification);
     }
 
     public function editschoolSession(SchoolSession $schoolsession)
@@ -248,15 +251,12 @@ class AdminActions extends Controller
     {
         $validated = $request->validate([
             'sessionName' => 'required',
-            'termName' => 'required',
             'status' => 'required'
         ]);
         $staus = $validated['status'] == 'active' ? 1 : 0;
         $schoolsession->update([
             'sessionName' => $validated['sessionName'],
-            'termName' => $validated['termName'],
             'status' => $validated['status'],
-            'staus' => $staus
         ]);
         Log::info('Session updated successfully');
         return redirect()->route('session.index')->with('success', 'Session updated successfully');
@@ -267,6 +267,82 @@ class AdminActions extends Controller
         Log::info('Session deleted successfully');
         return redirect()->route('session.index')->with('success', 'Session deleted successfully');
     }
+    public function termIndex()
+    {
+        $authUser = Auth::user();
+        $terms = Term::with('schoolSession')->get();
+        $sessions = schoolSession::all();
+        return view('admin.term.index', compact('terms', 'sessions', 'authUser'));
+    }
+    public function createTerm(Request $request)
+    {
+        $authUser = Auth::user();
+        $sessions = SchoolSession::where('status', 'active')->get();
+        // dd($sessions);
+        return view('admin.term.create', compact('sessions', 'authUser'));
+    }
+    public function storeTerm(Request $request)
+    {
+        $request->validate([
+            'name' => 'required',
+            'session_id' => 'required|exists:school_sessions,id',
+            'start_date' => 'nullable|date',
+            'end_date' => 'nullable|date',
+            'status' => 'required|in:active,inactive',
+        ]);
+
+        Term::create([
+            'name' => $request->name,
+            'session_id' => $request->session_id,
+            'startDate' => $request->start_date,
+            'endDate' => $request->end_date,
+            'status' => $request->status,
+        ]);
+        $notification = array(
+            'message' => 'Term created successfully.',
+            'alert-type' => 'success'
+        );
+        return redirect()->route('term.index')->with($notification);
+    }
+    public function editTerm(Term $term)
+    {
+        $authUser = Auth::user();
+        $sessions = SchoolSession::all();
+        return view('admin.term.edit', compact('term', 'sessions', 'authUser'));
+    }
+    public function updateTerm(Request $request, Term $term)
+    {
+        $request->validate([
+            'name' => 'required',
+            'session_id' => 'required|exists:school_sessions,id',
+            'start_date' => 'nullable|date',
+            'end_date' => 'nullable|date',
+            'status' => 'required|in:active,inactive',
+        ]);
+
+        $term->update([
+            'name' => $request->name,
+            'session_id' => $request->session_id,
+            'startDate' => $request->start_date,
+            'endDate' => $request->end_date,
+            'status' => $request->status,
+        ]);
+        $notification = array(
+            'message' => 'Term updated successfully.',
+            'alert-type' => 'success'
+        );
+        return redirect()->route('term.index')->with($notification);
+    }
+    public function deleteTerm(Term $term)
+    {
+        $term->delete();
+        $notification = array(
+            'message' => 'Term deleted successfully.',
+            'alert-type' => 'success'
+        );
+        return redirect()->route('term.index')->with($notification);
+    }
+
 
     public function studentIndex()
     {
@@ -362,7 +438,7 @@ class AdminActions extends Controller
             'nationality' => 'required',
             'stateoforigin' => 'required',
             'lga' => 'required',
-            'gender'=> 'required',
+            'gender' => 'required',
             'genotype' => 'required',
             'bgroup' => 'required',
             'class_id' => 'required|exists:classrooms,id',
@@ -370,16 +446,20 @@ class AdminActions extends Controller
             'image' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
-        if ($student->image && file_exists(public_path('images/' . $student->image))) {
-            unlink(public_path('images/' . $student->image));
-        }
+        $imagePath = $student->image; // Keep existing image by default
 
-        $filename = null;
+        // Only process image if a new one was uploaded
         if ($request->hasFile('image')) {
-            $filePath = $request->file('image');
-            $filename = time() . '_' . $filePath->getClientOriginalName();
-            $image = $filePath->move(public_path('images/'), $filename);
-            $file = $request->merge(['file_path' => $filename]);
+            // Delete old image if it exists
+            if ($student->image && file_exists(public_path('images/' . $student->image))) {
+                unlink(public_path('images/' . $student->image));
+            }
+
+            // Store new image
+            $file = $request->file('image');
+            $filename = time() . '_' . $file->getClientOriginalName();
+            $file->move(public_path('images/'), $filename);
+            $imagePath = $filename;
         }
         $student->update([
             'first_name' => $request->first_name,
@@ -390,7 +470,7 @@ class AdminActions extends Controller
             'nationality' => $request->nationality,
             'stateoforigin' => $request->stateoforigin,
             'lga' => $request->lga,
-            'gender'=> $request->gender,
+            'gender' => $request->gender,
             'genotype' => $request->genotype,
             'bgroup' => $request->bgroup,
             'class_id' => $request->class_id,
@@ -526,7 +606,7 @@ class AdminActions extends Controller
 
     //     Teacher::create($teacher);
 
-       
+
     //     $notification = array(
     //         'message' => 'Teacher created successfully.',
     //         'alert-type' => 'success'
@@ -535,58 +615,57 @@ class AdminActions extends Controller
     //     return redirect()->route('teacher.index')->with($notification);
     // }
     public function store_teacher(Request $request)
-{
-    // Validate input with proper unique check for users table
-    $validated = $request->validate([
-        'first_name' => 'required|string|max:255',
-        'last_name' => 'required|string|max:255',
-        'middle_name' => 'nullable|string|max:255',
-        'email' => 'required|email|unique:users,email', // Check uniqueness in users table
-        'date_of_birth' => 'required|date',
-        'phone_number' => 'required|string|max:20',
-        'address' => 'required|string|max:255',
-        'qualification' => 'nullable|string|max:255',
-    ]);
-
-    try {
-        DB::beginTransaction();
-
-        // Create user with validated data
-        $user = User::create([
-            'name' => "{$validated['first_name']} {$validated['last_name']}",
-            'email' => $validated['email'],
-            'password' => Hash::make('Teacher@123'),
-            'role_id' => 4, // Ensure this matches your roles configuration
+    {
+        // Validate input with proper unique check for users table
+        $validated = $request->validate([
+            'first_name' => 'required|string|max:255',
+            'last_name' => 'required|string|max:255',
+            'middle_name' => 'nullable|string|max:255',
+            'email' => 'required|email|unique:users,email', // Check uniqueness in users table
+            'date_of_birth' => 'required|date',
+            'phone_number' => 'required|string|max:20',
+            'address' => 'required|string|max:255',
+            'qualification' => 'nullable|string|max:255',
         ]);
 
-        // Create teacher profile
-        Teacher::create([
-            'user_id' => $user->id,
-            'first_name' => $validated['first_name'],
-            'last_name' => $validated['last_name'],
-            'middle_name' => $validated['middle_name'] ?? null,
-            'email' => $validated['email'],
-            'date_of_birth' => $validated['date_of_birth'],
-            'phone_number' => $validated['phone_number'],
-            'address' => $validated['address'],
-            'qualification' => $validated['qualification'] ?? null,
-        ]);
+        try {
+            DB::beginTransaction();
 
-        event(new Registered($user));
+            // Create user with validated data
+            $user = User::create([
+                'name' => "{$validated['first_name']} {$validated['last_name']}",
+                'email' => $validated['email'],
+                'password' => Hash::make('Teacher@123'),
+                'role_id' => 4, // Ensure this matches your roles configuration
+            ]);
 
-        DB::commit();
+            // Create teacher profile
+            Teacher::create([
+                'user_id' => $user->id,
+                'first_name' => $validated['first_name'],
+                'last_name' => $validated['last_name'],
+                'middle_name' => $validated['middle_name'] ?? null,
+                'email' => $validated['email'],
+                'date_of_birth' => $validated['date_of_birth'],
+                'phone_number' => $validated['phone_number'],
+                'address' => $validated['address'],
+                'qualification' => $validated['qualification'] ?? null,
+            ]);
 
-        return redirect()->route('teacher.index')
-            ->with('success', 'Teacher created successfully.');
+            event(new Registered($user));
 
-    } catch (\Exception $e) {
-        DB::rollBack();
-        Log::error('Teacher creation failed: ' . $e->getMessage());
+            DB::commit();
 
-        return back()->withInput()
-            ->with('error', 'Error creating teacher. Please try again.');
+            return redirect()->route('teacher.index')
+                ->with('success', 'Teacher created successfully.');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error('Teacher creation failed: ' . $e->getMessage());
+
+            return back()->withInput()
+                ->with('error', 'Error creating teacher. Please try again.');
+        }
     }
-}
     public function edit_teacher(Teacher $teacher)
     {
         $authUser = Auth::user();
@@ -623,5 +702,4 @@ class AdminActions extends Controller
         $teacher->delete();
         return redirect()->route('teacher.index')->with('success', 'Teacher deleted successfully!');
     }
-    
 }

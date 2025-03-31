@@ -17,6 +17,10 @@ class Result extends Model
 
     public function affectiveDevelopment()
     {
-        return $this->hasMany(ResultAffectiveDevelopment::class);
+        return $this->hasMany(ResultAffectiveDevelopment::class, 'result_id');
+    }
+    public function sesison()
+    {
+        return $this->belongsTo(SchoolSession::class);
     }
 }

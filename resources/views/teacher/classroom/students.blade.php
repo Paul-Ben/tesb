@@ -10,11 +10,11 @@
                             <i class="fa fa-arrow-left me-2"></i>Go Back
                         </a>
                     </button>
-                    {{-- <button type="button" class="btn btn-primary m-2">
-                        <a href="{{ route('student.create') }}" style="color: #fff;">
-                            <i class="fa fa-plus me-2"></i>Add
+                    <button type="button" class="btn btn-primary m-2">
+                        <a href="{{route('promote.students', $classroom)}}" style="color: #fff;">
+                            <i class="fa fa-plus me-2"></i>Promote Students
                         </a>
-                    </button> --}}
+                    </button>
                 </div>
             </div>
         </div>
@@ -26,8 +26,8 @@
         <div class="row g-4">
             <div class="col-12">
                 <div class="bg-light rounded h-100 p-4">
-                    <h6 class="mb-4">All Students Lists</h6>
-                    <table class="table table-hover">
+                    <h6 class="mb-4">Class Students Lists</h6>
+                    <table id="teacherStudents" class="table table-hover">
                         <thead>
                             <tr>
                                 <th scope="col">S/N</th>
@@ -80,4 +80,28 @@
         </div>
     </div>
     <!-- Table End -->
+    <script>
+        $(document).ready(function() {
+            $('#teacherStudents').DataTable({
+                responsive: true,
+                autoWidth: false,
+                paging: true, // Enable pagination
+                searching: true, // Enable search
+                ordering: true, // Enable sorting
+                lengthMenu: [10, 25, 50, 100], // Dropdown for showing entries
+                columnDefs: [{
+                        orderable: false,
+                        targets: -1
+                    } // Disable sorting on last column (Actions)
+                ],
+                language: {
+                    searchPlaceholder: "Search here...",
+                    zeroRecords: "No matching records found",
+                    lengthMenu: "Show entries",
+                    // info: "Showing START to END of TOTAL entries",
+                    infoFiltered: "(filtered from MAX total entries)",
+                }
+            });
+        });
+    </script>
 @endsection

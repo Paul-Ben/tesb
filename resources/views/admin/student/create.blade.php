@@ -4,6 +4,15 @@
     <div class="container-fluid pt-4 px-4">
         <div class="col-12">
             <div class="bg-light rounded h-100 p-4">
+                @if ($errors->any())
+                    <div class="alert alert-danger">
+                        <ul>
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
                 <div class="m-n2 d-flex justify-content-end ">
                     <button type="button" class="btn btn-primary m-2">
                         <a href="{{ url()->previous() }}" style="color: #fff;">
@@ -17,7 +26,6 @@
                         </a>
                     </button>
                 </div>
-                <h3>{{ $errors }}</h3>
             </div>
         </div>
     </div>
@@ -49,11 +57,11 @@
                                         <option value="Female">Female</option>
                                     </select>
                                 </div>
-                                
                                 <div class="form-group">
-                                    <label for="lga">LGA</label>
-                                    <select name="lga" id="lga" class="form-control">
-                                        <option value="" selected>Select LGA</option>
+                                    <label for="stateoforigin">State of Origin</label>
+                                    <select name="stateoforigin" id="state" class="form-control"
+                                        onchange="selectLGA(this)">
+                                        <option value="" selected="selected">Select State</option>
                                     </select>
                                 </div>
                                 <div class="form-group">
@@ -93,19 +101,21 @@
 
                                 <div class="form-group">
                                     <label for="std_number">Student Number</label>
-                                    <input type="text" value="{{'TesB'. '/'. substr(rand(1,1000000).microtime(true), 0,6)}}" name="std_number" id="std_number" class="form-control" required>
+                                    <input type="text"
+                                        value="{{ 'TesB' . '/' . substr(rand(1, 1000000) . microtime(true), 0, 6) }}"
+                                        name="std_number" id="std_number" class="form-control" required readonly>
                                 </div>
                                 <div class="form-group">
                                     <label for="nationality">Nationality</label>
                                     <input type="text" name="nationality" id="nationality" class="form-control" required>
                                 </div>
                                 <div class="form-group">
-                                    <label for="stateoforigin">State of Origin</label>
-                                    <select name="stateoforigin" id="state" class="form-control"
-                                        onchange="selectLGA(this)">
-                                        <option value="" selected="selected">Select State</option>
+                                    <label for="lga">LGA</label>
+                                    <select name="lga" id="lga" class="form-control">
+                                        <option value="" selected>Select LGA</option>
                                     </select>
                                 </div>
+
                                 <div class="form-group">
                                     <label for="date_of_birth">Date of Birth</label>
                                     <input type="date" name="date_of_birth" id="date_of_birth" class="form-control"
@@ -124,9 +134,9 @@
                                         <option value="AB-">AB-</option>
                                         <option value="O+">O+</option>
                                         <option value="O-">O-</option>
-                                        </select>
+                                    </select>
                                 </div>
-                                
+
                             </div>
                         </div>
 

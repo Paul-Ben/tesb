@@ -118,10 +118,11 @@ Route::prefix('teacher')->middleware(['auth', 'role:Teacher'])->group(function (
     Route::get('/dashboard/result/search', [TeacherController::class, 'searchStudentForResult'])->name('search.result');
     Route::get('/dashboard/result/{student}/create', [TeacherController::class, "createResult"])->name('create.result');
     Route::post('/results/store', [ResultController::class, 'store'])->name('results.store');
-    // Route::get('/dashboard/student/{student}/result', [ResultController::class, 'viewResult'])->name('view.result');
+    Route::get('/dashboard/student/{student}/result', [ResultController::class, 'viewResult'])->name('view.result');
     Route::get('/dashboard/student/{student}/resultlist', [ResultController::class, 'getResults'])->name('get.results');
-    Route::get('/dashboard/student/{result}/result', [ResultController::class, 'singleResultView'])->name('single.result');
-    
+    Route::get('/dashboard/student/result/{result}/result', [ResultController::class, 'singleResultView'])->name('single.result');
+    Route::get('/dashboard/promote-students/{classroom}', [TeacherController::class,'promoteStudents'])->name('promote.students');
+    Route::put('/dashboard/promote-student', [TeacherController::class,'promote'])->name('promote');
 });
 
 Route::prefix('user')->middleware(['auth', 'role:User'])->group(function () {
@@ -130,6 +131,11 @@ Route::prefix('user')->middleware(['auth', 'role:User'])->group(function () {
     Route::post('/dashboard/guardian/form', [UserActions::class, 'storeGuardian'])->name('guardian.store');
     Route::get('/dashboard/guardian/form/edit', [UserActions::class, 'editGuardian'])->name('guardian.edit');
     Route::put('/dashboard/guardian/form/update', [UserActions::class, 'updateGuardian'])->name('guardian.update');
+    Route::get('/dashboard/guardian/students', [UserActions::class, 'getGuardianStudents'])->name('guardian.students');
+    Route::get('/dashboard/guardian/students/{student}/show', [UserActions::class, 'showStudent'])->name('guardian.show_student');
+    Route::get('/dashboard/guardian/students/{student}/result', [UserActions::class, 'viewResult'])->name('guardian.view.result');
+    Route::get('/dashboard/guardian/students/{student}/resultlist', [UserActions::class, 'getResults'])->name('guardian.get.results');
+    Route::get('/dashboard/guardian/students/result/{result}/result', [UserActions::class, 'singleResultView'])->name('guardian.single.result');
 });
 
 require __DIR__ . '/auth.php';

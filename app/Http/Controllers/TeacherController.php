@@ -35,8 +35,37 @@ class TeacherController extends Controller
     {
         $authUser = Auth::user();
         $students = Student::where('class_id', $classroom->id)->get();
+        $classStudents = $classroom->students;
         return view('teacher.classroom.students', compact('students', 'classroom', 'authUser'));
     }
+
+    public function promoteStudents(Request $request, Classroom $classroom)
+    {
+        $authUser = Auth::user();
+        $classrooms = Classroom::all();
+        return view('teacher.classroom.promoteForm', compact('classroom', 'authUser', 'classrooms'));
+    }
+    public function promote(Request $request, Classroom $classroom)
+    {
+        $authUser = Auth::user();
+        $request->validate([
+            'current_class_id' => 'required|exists:classrooms,id',
+            'new_class_id' => 'required|exists:classrooms,id',
+        ]);
+        $currentClassId = $request->input('current_class_id');
+        $newClassId = $request->input('new_class_id');
+        $students = Student::where('class_id', $currentClassId)->get();
+        $students->each(function ($student) use ($newClassId) {
+            $student->class_id = $newClassId;
+            $student->save();
+        });
+        // Optionally, you can redirect back with a success message
+        return redirect()->back()->with([
+            'message' => 'Students promoted successfully.',
+            'alert-type' => 'success',
+        ]);
+    }
+
 
     public function showStudent(Student $student)
     {
@@ -67,7 +96,6 @@ class TeacherController extends Controller
     {
         $authUser = Auth::user();
         $subjects = Subject::where('classroom_id', $student->class_id)->get();
-    //    $schoolSession = SchoolSession::where('status', 'active')->first();
         $term = Term::where('status', 'active')->first();
         if (!$term) {
             return redirect()->back()->with([
@@ -75,7 +103,37 @@ class TeacherController extends Controller
                 'alert-type' => 'error',
             ]);
         }
-        return view('teacher.result.create', compact('authUser', 'subjects', 'student', 'term'));
+        $classroom = Classroom::with('classCategory')->find($student->class_id);
+        if (!$classroom) {
+            return redirect()->back()->with([
+                'message' => 'Classroom not found.',
+                'alert-type' => 'error',
+            ]);
+        }
+        // dd($classroom->classCategory->name);
+        if ($classroom->classCategory->name == 'Kindergarten') 
+        {
+            return view('teacher.result.create', compact('authUser', 'subjects', 'student', 'term'));
+        }
+        elseif ($classroom->classCategory->name == 'Primary') 
+        {
+            return view('teacher.result.createPrimary', compact('authUser', 'subjects', 'student', 'term'));
+        }
+        elseif ($classroom->classCategory->name == 'Junior Secondary School') 
+        {
+            return view('teacher.result.createJss', compact('authUser', 'subjects', 'student', 'term'));
+        }elseif ($classroom->classCategory->name == 'Senior Secondary School') 
+        {
+            return view('teacher.result.createSss', compact('authUser', 'subjects', 'student', 'term'));
+        }
+        else
+        {
+            return redirect()->back()->with([
+                'message' => 'Classroom category not recognized.',
+                'alert-type' => 'error',
+            ]);
+        }
+        
     }
 
 }

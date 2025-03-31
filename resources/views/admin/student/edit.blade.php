@@ -51,12 +51,11 @@
                                     </select>
                                 </div>
                                 <div class="form-group">
-                                    <label for="nationality">Nationality</label>
-                                    <input type="text" name="nationality" value="{{$student->nationality}}" id="nationality" class="form-control" required>
-                                </div>
-                                <div class="form-group">
-                                    <label for="lga">LGA</label>
-                                    <input type="text" name="lga" value="{{$student->lga}}" id="lga" class="form-control">
+                                    <label for="stateoforigin">State of Origin</label>
+                                    <select name="stateoforigin" id="state" class="form-control"
+                                        onchange="selectLGA(this)">
+                                        <option value="{{$student->stateoforigin}}" selected="selected">{{$student->stateoforigin}}</option>
+                                    </select>
                                 </div>
                                 <div class="form-group">
                                     <label for="genotype">Genotype</label>
@@ -90,8 +89,14 @@
                                     <input type="text" name="std_number" value="{{$student->std_number}}" id="std_number" class="form-control" required>
                                 </div>
                                 <div class="form-group">
-                                    <label for="stateoforigin">State of Origin</label>
-                                    <input type="text" name="stateoforigin" value="{{$student->stateoforigin}}" id="stateoforigin" class="form-control">
+                                    <label for="nationality">Nationality</label>
+                                    <input type="text" name="nationality" value="{{$student->nationality}}" id="nationality" class="form-control" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="lga">LGA</label>
+                                    <select name="lga" id="lga" class="form-control">
+                                        <option value="{{$student->lga}}" selected>{{$student->lga}}</option>
+                                    </select>
                                 </div>
                                 <div class="form-group">
                                     <label for="date_of_birth">Date of Birth</label>
@@ -175,5 +180,39 @@
         }
     });
     </script>
-   
+   <script>
+    //Fetch all States
+    fetch('https://nga-states-lga.onrender.com/fetch')
+        .then((res) => res.json())
+        .then((data) => {
+            var x = document.getElementById("state");
+            for (let index = 0; index < Object.keys(data).length; index++) {
+                var option = document.createElement("option");
+                option.text = data[index];
+                option.value = data[index];
+                x.add(option);
+            }
+        });
+    //Fetch Local Goverments based on selected state
+    function selectLGA(target) {
+        var state = target.value;
+        fetch('https://nga-states-lga.onrender.com/?state=' + state)
+            .then((res) => res.json())
+            .then((data) => {
+                var x = document.getElementById("lga");
+
+                var select = document.getElementById("lga");
+                var length = select.options.length;
+                for (i = length - 1; i >= 0; i--) {
+                    select.options[i] = null;
+                }
+                for (let index = 0; index < Object.keys(data).length; index++) {
+                    var option = document.createElement("option");
+                    option.text = data[index];
+                    option.value = data[index];
+                    x.add(option);
+                }
+            });
+    }
+</script>
 @endsection

@@ -27,14 +27,14 @@
             <div class="col-12">
                 <div class="bg-light rounded h-100 p-4">
                     <h6 class="mb-4">All Classroom Lists</h6>
-                    <table class="table table-hover">
+                    <table id="classList" class="table table-hover">
                         <thead>
                             <tr>
                                 <th scope="col">S/N</th>
                                 <th scope="col">Class Name</th>
                                 <th scope="col">Class Category</th>
                                 <th scope="col">Class Teacher</th>
-                                <th scope="col">Action</th>
+                                {{-- <th scope="col">Action</th> --}}
                             </tr>
                         </thead>
                         <tbody>
@@ -44,25 +44,25 @@
                                     <td><a href="{{route('teacher.students', $classroom)}}">{{ $classroom->name }}</a></td>
                                     <td>{{ $classroom->classCategory->name }}</td>
                                     <td>{{ $classroom->teacher->first_name." ".$classroom->teacher->last_name }}</td>
-                                    <td>
+                                    {{-- <td>
                                         <div class="nav-item dropdown">
                                             <a href="#" class="nav-link dropdown-toggle"
                                                 data-bs-toggle="dropdown">Update</a>
                                             <div class="dropdown-menu">
-                                                {{-- <a href="{{ route('classroom.edit', $classroom) }}"
+                                                <a href="{{ route('classroom.edit', $classroom) }}"
                                                     class="dropdown-item">Edit</a>
                                                     <a href="{{ route('class.subjects', $classroom) }}"
-                                                    class="dropdown-item">Add Subjects</a> --}}
+                                                    class="dropdown-item">Add Subjects</a>
                                                     <a href="#"
                                                     class="dropdown-item">Upload Class Results</a>
-                                                {{-- <form action="{{ route('classroom.delete', $classroom) }}" method="POST">
+                                                <form action="{{ route('classroom.delete', $classroom) }}" method="POST">
                                                     @csrf
                                                     @method('DELETE')
                                                     <button type="submit" class="dropdown-item">Delete</button>
-                                                </form> --}}
+                                                </form>
                                             </div>
                                         </div>
-                                    </td>
+                                    </td> --}}
                                 </tr>
                             @empty
                                 <tr>

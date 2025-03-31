@@ -93,6 +93,9 @@ class ResultController extends Controller
                 'ca' => $ca,
                 'exam' => $exam,
                 'total' => $total,
+                'lowest_in_class' => $request->lowest_in_class[$key],
+                'highest_in_class' => $request->highest_in_class[$key],
+                'position' => $request->position[$key],
                 'grade' => $grade,
                 'remark' => $request->remark[$key] ?? '',
             ]);

@@ -14,12 +14,12 @@ return new class extends Migration
         Schema::create('guardians', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->string('guardian_name');
-            $table->string('guardian_phone');
-            $table->string('guardian_email');
+            $table->string('guardian_name')->nullable();
+            $table->string('guardian_phone')->nullable();
+            $table->string('guardian_email')->nullable();
             $table->string('address')->nullable();
-            $table->string('nationality');
-            $table->string('image');
+            $table->string('nationality')->nullable();
+            $table->string('image')->nullable();
             $table->string('stateoforigin')->nullable();
             $table->string('lga')->nullable();
             $table->timestamps();

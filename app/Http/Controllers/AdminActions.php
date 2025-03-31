@@ -592,6 +592,7 @@ class AdminActions extends Controller
         $authUser = Auth::user();
         return view('admin.teacher.edit', compact('teacher', 'authUser'));
     }
+    
     public function update_teacher(Request $request, Teacher $teacher)
     {
         $request->validate([

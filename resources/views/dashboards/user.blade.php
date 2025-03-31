@@ -52,7 +52,7 @@
                 </a>
                 <div class="d-flex align-items-center ms-4 mb-4">
                     <div class="position-relative">
-                        <img class="rounded-circle" src="{{asset($guardian->image ?? null)}}" alt=""
+                        <img class="rounded-circle" src="{{$authUser->guardian->image ? asset('storage/' . $authUser->guardian->image) : asset('uploads/avatars/default-avatar.jpg')}}" alt=""
                             style="width: 40px; height: 40px;">
                         <div
                             class="bg-success rounded-circle border-2 border-white position-absolute end-0 bottom-0 p-1">
@@ -177,12 +177,12 @@
                     </div>
                     <div class="nav-item dropdown">
                         <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
-                            <img class="rounded-circle me-lg-2" src="{{asset($guardian->image ?? null)}}" alt=""
+                            <img class="rounded-circle me-lg-2" src="{{$authUser->guardian->image ? asset('storage/' . $authUser->guardian->image) : asset('uploads/avatars/default-avatar.jpg')}}" alt=""
                                 style="width: 40px; height: 40px;">
                             <span class="d-none d-lg-inline-flex">{{$authUser->name}}</span>
                         </a>
                         <div class="dropdown-menu dropdown-menu-end bg-light border-0 rounded-0 rounded-bottom m-0">
-                            <a href="#" class="dropdown-item">My Profile</a>
+                            <a href="{{ route('profile.edit') }}" class="dropdown-item">My Profile</a>
                             <a href="#" class="dropdown-item">Settings</a>
                             {{-- <a href="#" class="dropdown-item">Log Out</a> --}}
                             <form method="POST" action="{{ route('logout') }}">
@@ -284,7 +284,18 @@
     <script src="{{ asset('dashboard/lib/tempusdominus/js/moment.min.js') }}"></script>
     <script src="{{ asset('dashboard/lib/tempusdominus/js/moment-timezone.min.js') }}"></script>
     <script src="{{ asset('dashboard/lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js') }}"></script>
-
+    <script>
+        function previewImage(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('profileImage').src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+    </script>
     <!-- Template Javascript -->
     <script src="{{ asset('dashboard/js/main.js') }}"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>

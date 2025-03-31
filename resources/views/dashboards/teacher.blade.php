@@ -30,6 +30,50 @@
     <!-- Template Stylesheet -->
     <link href="{{asset('dashboard/css/style.css')}}" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css" rel="stylesheet">
+    <style>
+        .image-container {
+            position: relative;
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            overflow: hidden;
+            cursor: pointer;
+            border: 3px solid #ddd;
+        }
+
+        .image-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+            transition: opacity 0.3s ease-in-out;
+        }
+
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 14px;
+            border-radius: 50%;
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+        }
+
+        .image-container:hover .overlay {
+            opacity: 1;
+        }
+
+        .file-input {
+            display: none;
+        }
+    </style>
 </head>
 
 <body>
@@ -63,6 +107,7 @@
                     <a href="{{route('teacher.dashboard')}}" class="nav-item nav-link active"><i class="fa fa-tachometer-alt me-2"></i>Dashboard</a>
                     <a href="{{route('teacher.classroom')}}" class="nav-item nav-link"><i class="fa fa-graduation-cap me-2"></i>Classes</a>
                     <a href="{{route('result.index')}}" class="nav-item nav-link"><i class="fa fa-th me-2"></i>Search Results</a>
+                    {{-- <a href="{{ route('teacher.edit', ['teacher' => $authUser]) }}"> <i class="fa fa-th me-2"></i>Profile</a> --}}
                     {{-- <div class="nav-item dropdown">
                         <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="fa fa-graduation-cap me-2"></i>Student Record</a>
                         <div class="dropdown-menu bg-transparent border-0">
@@ -175,10 +220,10 @@
                     <div class="nav-item dropdown">
                         <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
                             <img class="rounded-circle me-lg-2" src="img/user.jpg" alt="" style="width: 40px; height: 40px;">
-                            <span class="d-none d-lg-inline-flex">John Doe</span>
+                            <span class="d-none d-lg-inline-flex">{{ $authUser->name }}</span>
                         </a>
                         <div class="dropdown-menu dropdown-menu-end bg-light border-0 rounded-0 rounded-bottom m-0">
-                            <a href="#" class="dropdown-item">My Profile</a>
+                            <a href="{{ route('profile.edit') }}" class="dropdown-item">My Profile</a>
                             <a href="#" class="dropdown-item">Settings</a>
                             {{-- <a href="#" class="dropdown-item">Log Out</a> --}}
                             <form method="POST" action="{{ route('logout') }}">
@@ -280,7 +325,18 @@
     <script src="{{asset('dashboard/lib/tempusdominus/js/moment.min.js')}}"></script>
     <script src="{{asset('dashboard/lib/tempusdominus/js/moment-timezone.min.js')}}"></script>
     <script src="{{asset('dashboard/lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js')}}"></script>
-
+    <script>
+        function previewImage(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('profileImage').src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+    </script>
     <!-- Template Javascript -->
     <script src="{{asset('dashboard/js/main.js')}}"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>

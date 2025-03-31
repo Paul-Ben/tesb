@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Guardian;
+use App\Models\Teacher;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -61,4 +63,6 @@ class UserActions extends Controller
         );
         return redirect()->route('user.dashboard')->with($notification);
     }
+
+    
 }

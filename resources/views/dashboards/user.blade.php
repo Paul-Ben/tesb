@@ -30,6 +30,50 @@
     <!-- Template Stylesheet -->
     <link href="{{ asset('dashboard/css/style.css') }}" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css" rel="stylesheet">
+    <style>
+        .image-container {
+            position: relative;
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            overflow: hidden;
+            cursor: pointer;
+            border: 3px solid #ddd;
+        }
+
+        .image-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+            transition: opacity 0.3s ease-in-out;
+        }
+
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 14px;
+            border-radius: 50%;
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+        }
+
+        .image-container:hover .overlay {
+            opacity: 1;
+        }
+
+        .file-input {
+            display: none;
+        }
+    </style>
 </head>
 
 <body>
@@ -48,7 +92,7 @@
         <div class="sidebar pe-4 pb-3">
             <nav class="navbar bg-light navbar-light">
                 <a href="index.html" class="navbar-brand mx-4 mb-3">
-                    <h3 class="text-primary"><i class="fa fa-hashtag me-2"></i>DASHMIN</h3>
+                    <h3 class="text-primary">Tes'B Academy</h3>
                 </a>
                 <div class="d-flex align-items-center ms-4 mb-4">
                     <div class="position-relative">
@@ -75,7 +119,9 @@
                             <a href="element.html" class="dropdown-item">Other Elements</a>
                         </div>
                     </div> --}}
-                    <a href="{{route('guardian.students')}}" class="nav-item nav-link"><i class="fa fa-th me-2"></i>My Students</a>
+                    <a href="{{route('guardian.students')}}" class="nav-item nav-link"><i class="fa fa-users me-2"></i>My Students</a>
+                    <a href="{{route('guardian.students')}}" class="nav-item nav-link"><i class="fa fa-receipt me-2"></i>Fee Payments</a>
+
                     {{-- <a href="form.html" class="nav-item nav-link"><i class="fa fa-keyboard me-2"></i>Forms</a>
                     <a href="table.html" class="nav-item nav-link"><i class="fa fa-table me-2"></i>Tables</a>
                     <a href="chart.html" class="nav-item nav-link"><i class="fa fa-chart-bar me-2"></i>Charts</a> --}}
@@ -193,34 +239,34 @@
                 <!-- Sale & Revenue Start -->
                 <div class="container-fluid pt-4 px-4">
                     <div class="row g-4">
-                        <div class="col-sm-6 col-xl-3">
+                        <div class="col-sm-6 col-xl-4">
                             <div class="bg-light rounded d-flex align-items-center justify-content-between p-4">
-                                <i class="fa fa-chart-line fa-3x text-primary"></i>
+                                <i class="fa fa-user-graduate fa-3x text-primary"></i>
                                 <div class="ms-3">
-                                    <p class="mb-2">Today Sale</p>
-                                    <h6 class="mb-0">$1234</h6>
+                                    <p class="mb-2">My Student</p>
+                                    <h6 class="mb-0">{{ $wards }}</h6>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-sm-6 col-xl-3">
+                        <div class="col-sm-6 col-xl-4">
                             <div class="bg-light rounded d-flex align-items-center justify-content-between p-4">
                                 <i class="fa fa-chart-bar fa-3x text-primary"></i>
                                 <div class="ms-3">
-                                    <p class="mb-2">Total Sale</p>
-                                    <h6 class="mb-0">$1234</h6>
+                                    <p class="mb-2">Payment History</p>
+                                    <h6 class="mb-0">2</h6>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-sm-6 col-xl-3">
+                        <div class="col-sm-6 col-xl-4">
                             <div class="bg-light rounded d-flex align-items-center justify-content-between p-4">
-                                <i class="fa fa-chart-area fa-3x text-primary"></i>
+                                <i class="fa fa-calendar-alt fa-3x text-primary"></i>
                                 <div class="ms-3">
-                                    <p class="mb-2">Today Revenue</p>
-                                    <h6 class="mb-0">$1234</h6>
+                                    <p class="mb-2">Current Session</p>
+                                    <h6 class="mb-0">{{ $session->sessionName }}</h6>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-sm-6 col-xl-3">
+                        {{-- <div class="col-sm-6 col-xl-3">
                             <div class="bg-light rounded d-flex align-items-center justify-content-between p-4">
                                 <i class="fa fa-chart-pie fa-3x text-primary"></i>
                                 <div class="ms-3">
@@ -228,34 +274,81 @@
                                     <h6 class="mb-0">$1234</h6>
                                 </div>
                             </div>
-                        </div>
+                        </div> --}}
                     </div>
                 </div>
                 <!-- Sale & Revenue End -->
+
+                <div class="container-fluid pt-4 px-4">
+                    <div class="row g-4">
+                        <div class="col-12">
+                            <div class="bg-light rounded h-100 p-4">
+                                <h6 class="mb-4">Recent Fee Payment</h6>
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">S/N</th>
+                                            <th scope="col">Transaction ID</th>
+                                            <th scope="col">Reg. No</th>
+                                            <th scope="col">Student Name</th>
+                                            <th scope="col">Amount </th>
+                                            <th scope="col">Status</th>
+                                            <th scope="col">Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    
+                                            <tr>
+                                                <th scope="row">1</th>
+                                                <td><a href="#">Erafd53652hd</a></td>
+                                                <td>Tes-203-445</td>
+                                                <td>John Doe</td>
+                                                <td>$24,500</td>
+                                                <td> <span class="badge text-success "> success </span> </td>
+                                                <td> <button class="btn btn-success btn-sm"> view </button> </td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">2</th>
+                                                <td><a href="#">Erafd53652hd</a></td>
+                                                <td>Tes-203-445</td>
+                                                <td>John Doe</td>
+                                                <td>$24,500</td>
+                                                <td> <span class="badge text-success "> success </span> </td>
+                                                <td> <button class="btn btn-success btn-sm"> view </button> </td>
+                                            </tr>
+                                            {{-- <tr>
+                                                <td class="text-center" colspan="4">No Data Found</td>
+                                            </tr> --}}
+                                  
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             @endif
 
             <div>
                 @yield('content')
             </div>
 
-            <!-- Footer Start -->
-            <div class="container-fluid pt-4 px-4">
-                <div class="bg-light rounded-top p-4">
-                    <div class="row">
-                        <div class="col-12 col-sm-6 text-center text-sm-start">
-                            &copy; <a href="#">Your Site Name</a>, All Right Reserved.
-                        </div>
-                        <div class="col-12 col-sm-6 text-center text-sm-end">
-                            <!--/*** This template is free as long as you keep the footer author’s credit link/attribution link/backlink. If you'd like to use the template without the footer author’s credit link/attribution link/backlink, you can purchase the Credit Removal License from "https://htmlcodex.com/credit-removal". Thank you for your support. ***/-->
-                            Designed By <a href="https://htmlcodex.com">HTML Codex</a>
-                            </br>
-                            Distributed By <a class="border-bottom" href="https://themewagon.com"
-                                target="_blank">ThemeWagon</a>
+                      <!-- Footer Start -->
+                      <div class="container-fluid pt-4 px-4">
+                        <div class="bg-light rounded-top p-4">
+                            <div class="row">
+                                <div class="col-12 col-sm-6 text-center text-sm-start">
+                                    &copy; <a href="#">Tes'B Academy</a>, All Right Reserved. 
+                                </div>
+                                <div class="col-12 col-sm-6 text-center text-sm-end">
+                                    <!--/*** This template is free as long as you keep the footer author’s credit link/attribution link/backlink. If you'd like to use the template without the footer author’s credit link/attribution link/backlink, you can purchase the Credit Removal License from "https://htmlcodex.com/credit-removal". Thank you for your support. ***/-->
+                                    Designed By <a href="#">ozt</a>
+                                </br>
+                                {{-- Distributed By <a class="border-bottom" href="https://themewagon.com" target="_blank">ThemeWagon</a> --}}
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </div>
-            <!-- Footer End -->
+                    <!-- Footer End -->
         </div>
         <!-- Content End -->
 
@@ -274,6 +367,10 @@
     <script src="{{ asset('dashboard/lib/tempusdominus/js/moment.min.js') }}"></script>
     <script src="{{ asset('dashboard/lib/tempusdominus/js/moment-timezone.min.js') }}"></script>
     <script src="{{ asset('dashboard/lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js') }}"></script>
+  
+    <!-- Template Javascript -->
+    <script src="{{ asset('dashboard/js/main.js') }}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
     <script>
         function previewImage(event) {
             const file = event.target.files[0];
@@ -286,9 +383,6 @@
             }
         }
     </script>
-    <!-- Template Javascript -->
-    <script src="{{ asset('dashboard/js/main.js') }}"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
     <script>
         @if (Session::has('message'))
             var type = "{{ Session::get('alert-type', 'info') }}"

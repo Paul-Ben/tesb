@@ -30,6 +30,50 @@
     <!-- Template Stylesheet -->
     <link href="{{asset('dashboard/css/style.css')}}" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css" rel="stylesheet">
+    <style>
+        .image-container {
+            position: relative;
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            overflow: hidden;
+            cursor: pointer;
+            border: 3px solid #ddd;
+        }
+
+        .image-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+            transition: opacity 0.3s ease-in-out;
+        }
+
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 14px;
+            border-radius: 50%;
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+        }
+
+        .image-container:hover .overlay {
+            opacity: 1;
+        }
+
+        .file-input {
+            display: none;
+        }
+    </style>
 </head>
 
 <body>
@@ -51,7 +95,7 @@
                 </a>
                 <div class="d-flex align-items-center ms-4 mb-4">
                     <div class="position-relative">
-                        <img class="rounded-circle" src="img/user.jpg" alt="" style="width: 40px; height: 40px;">
+                        <img class="rounded-circle" src="{{ $authUser->admin->image ? asset('storage/' . $authUser->admin->image) : asset('uploads/avatars/default-avatar.jpg') }}" alt="" style="width: 40px; height: 40px;">
                         <div class="bg-success rounded-circle border-2 border-white position-absolute end-0 bottom-0 p-1"></div>
                     </div>
                     <div class="ms-3">
@@ -61,26 +105,26 @@
                 </div>
                 <div class="navbar-nav w-100">
                     <a href="{{route('admin.dashboard')}}" class="nav-item nav-link active"><i class="fa fa-tachometer-alt me-2"></i>Dashboard</a>
-                    <a href="{{route('session.index')}}" class="nav-item nav-link"><i class="fa fa-th me-2"></i>Session</a>
-                    <a href="{{route('term.index')}}" class="nav-item nav-link"><i class="fa fa-th me-2"></i>Term</a>
+                    <a href="{{route('session.index')}}" class="nav-item nav-link"><i class="fa fa-calendar me-2"></i>Session</a>
+                    <a href="{{route('term.index')}}" class="nav-item nav-link"><i class="fa fa-book-open me-2"></i>Term</a>
                     {{-- <a href="{{route('role.index')}}" class="nav-item nav-link"><i class="fa fa-th me-2"></i>Roles</a> --}}
                     <div class="nav-item dropdown">
-                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="fa fa-graduation-cap me-2"></i>Student Record</a>
+                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="fa fa-id-card me-2"></i>Student Record</a>
                         <div class="dropdown-menu bg-transparent border-0">
                             <a href="{{route('student.index')}}" class="dropdown-item">Student Information</a>
                             <a href="#" class="dropdown-item">Class Student</a>
                         </div>
                     </div>
                     <div class="nav-item dropdown">
-                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="fa fa-file me-2"></i>Class Manager</a>
+                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="fa fa-chalkboard me-2"></i>Class Manager</a>
                         <div class="dropdown-menu bg-transparent border-0">
                             <a href="{{route('category.index')}}" class="dropdown-item">Class Category</a>
                             <a href="{{route('classroom.index')}}" class="dropdown-item">Class LIst</a>
                             <a href="{{route('subjects')}}" class="dropdown-item">Subject List</a>
                         </div>
                     </div>
-                    <a href="{{route('teacher.index')}}" class="nav-item nav-link"><i class="fa fa-user-circle me-2"></i>Manage Teachers</a>
-                    <a href="{{route('users.index')}}" class="nav-item nav-link"><i class="fa fa-user-circle me-2"></i>Manage User</a>
+                    <a href="{{route('teacher.index')}}" class="nav-item nav-link"><i class="fa fa-chalkboard-teacher me-2"></i>Manage Teachers</a>
+                    <a href="{{route('users.index')}}" class="nav-item nav-link"><i class="fa fa-users me-2"></i>Manage User</a>
                     <div class="nav-item dropdown">
                         <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="far fa-file-alt me-2"></i>Pages</a>
                         <div class="dropdown-menu bg-transparent border-0">
@@ -175,7 +219,7 @@
                     </div>
                     <div class="nav-item dropdown">
                         <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
-                            <img class="rounded-circle me-lg-2" src="img/user.jpg" alt="" style="width: 40px; height: 40px;">
+                            <img class="rounded-circle me-lg-2" src="{{ $authUser->admin->image ? asset('storage/' . $authUser->admin->image) : asset('uploads/avatars/default-avatar.jpg') }}" alt="" style="width: 40px; height: 40px;">
                             <span class="d-none d-lg-inline-flex">John Doe</span>
                         </a>
                         <div class="dropdown-menu dropdown-menu-end bg-light border-0 rounded-0 rounded-bottom m-0">
@@ -201,37 +245,37 @@
                     <div class="row g-4">
                         <div class="col-sm-6 col-xl-3">
                             <div class="bg-light rounded d-flex align-items-center justify-content-between p-4">
-                                <i class="fa fa-chart-line fa-3x text-primary"></i>
+                                <i class="fa fa-user-graduate fa-3x text-primary"></i>
                                 <div class="ms-3">
-                                    <p class="mb-2">Today Sale</p>
-                                    <h6 class="mb-0">$1234</h6>
+                                    <p class="mb-2">Total Student</p>
+                                    <h6 class="mb-0">{{ $students }}</h6>
                                 </div>
                             </div>
                         </div>
                         <div class="col-sm-6 col-xl-3">
                             <div class="bg-light rounded d-flex align-items-center justify-content-between p-4">
-                                <i class="fa fa-chart-bar fa-3x text-primary"></i>
+                                <i class="fa fa-chalkboard-teacher fa-3x text-primary"></i>
                                 <div class="ms-3">
-                                    <p class="mb-2">Total Sale</p>
-                                    <h6 class="mb-0">$1234</h6>
+                                    <p class="mb-2">Total Classes</p>
+                                    <h6 class="mb-0">{{ $classes }}</h6>
                                 </div>
                             </div>
                         </div>
                         <div class="col-sm-6 col-xl-3">
                             <div class="bg-light rounded d-flex align-items-center justify-content-between p-4">
-                                <i class="fa fa-chart-area fa-3x text-primary"></i>
+                                <i class="fa fa-user-tie fa-3x text-primary"></i>
                                 <div class="ms-3">
-                                    <p class="mb-2">Today Revenue</p>
-                                    <h6 class="mb-0">$1234</h6>
+                                    <p class="mb-2">Today Teachers</p>
+                                    <h6 class="mb-0">{{ $teachers }}</h6>
                                 </div>
                             </div>
                         </div>
                         <div class="col-sm-6 col-xl-3">
                             <div class="bg-light rounded d-flex align-items-center justify-content-between p-4">
-                                <i class="fa fa-chart-pie fa-3x text-primary"></i>
+                                <i class="fa fa-calendar-alt fa-3x text-primary"></i>
                                 <div class="ms-3">
-                                    <p class="mb-2">Total Revenue</p>
-                                    <h6 class="mb-0">$1234</h6>
+                                    <p class="mb-2">Current Session</p>
+                                    <h6 class="mb-0">{{ $session->sessionName }}</h6>
                                 </div>
                             </div>
                         </div>
@@ -239,13 +283,59 @@
                 </div>
                 <!-- Sale & Revenue End -->
             </div>
-                
+            <div class="container-fluid pt-4 px-4">
+                <div class="row g-4">
+                    <div class="col-12">
+                        <div class="bg-light rounded h-100 p-4">
+                            <h6 class="mb-4">Recent School Fee Payment</h6>
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">S/N</th>
+                                        <th scope="col">Transaction ID</th>
+                                        <th scope="col">Reg. No</th>
+                                        <th scope="col">Student Name</th>
+                                        <th scope="col">Amount </th>
+                                        <th scope="col">Status</th>
+                                        <th scope="col">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                
+                                        <tr>
+                                            <th scope="row">1</th>
+                                            <td><a href="#">Erafd53652hd</a></td>
+                                            <td>Tes-203-445</td>
+                                            <td>John Doe</td>
+                                            <td>$24,500</td>
+                                            <td> <span class="badge text-success "> success </span> </td>
+                                            <td> <button class="btn btn-success btn-sm"> view </button> </td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row">2</th>
+                                            <td><a href="#">Erafd53652hd</a></td>
+                                            <td>Tes-203-445</td>
+                                            <td>John Doe</td>
+                                            <td>$24,500</td>
+                                            <td> <span class="badge text-success "> success </span> </td>
+                                            <td> <button class="btn btn-success btn-sm"> view </button> </td>
+                                        </tr>
+                                        {{-- <tr>
+                                            <td class="text-center" colspan="4">No Data Found</td>
+                                        </tr> --}}
+                              
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
             @endif
            
             <div>
               @yield('content')
             </div>
-
+           
             <!-- Footer Start -->
             <div class="container-fluid pt-4 px-4">
                 <div class="bg-light rounded-top p-4">
@@ -281,7 +371,18 @@
     <script src="{{asset('dashboard/lib/tempusdominus/js/moment.min.js')}}"></script>
     <script src="{{asset('dashboard/lib/tempusdominus/js/moment-timezone.min.js')}}"></script>
     <script src="{{asset('dashboard/lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js')}}"></script>
-
+    <script>
+        function previewImage(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('profileImage').src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+    </script>
     <!-- Template Javascript -->
     <script src="{{asset('dashboard/js/main.js')}}"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>

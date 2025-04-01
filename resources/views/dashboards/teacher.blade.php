@@ -98,7 +98,7 @@
                 </a>
                 <div class="d-flex align-items-center ms-4 mb-4">
                     <div class="position-relative">
-                        <img class="rounded-circle" src="img/user.jpg" alt="" style="width: 40px; height: 40px;">
+                        <img class="rounded-circle" src="{{ $authUser->teacher->image ? asset('storage/' . $authUser->teacher->image) : asset('uploads/avatars/default-avatar.jpg') }}" alt="" style="width: 40px; height: 40px;">
                         <div class="bg-success rounded-circle border-2 border-white position-absolute end-0 bottom-0 p-1"></div>
                     </div>
                     <div class="ms-3">
@@ -108,8 +108,8 @@
                 </div>
                 <div class="navbar-nav w-100">
                     <a href="{{route('teacher.dashboard')}}" class="nav-item nav-link active"><i class="fa fa-tachometer-alt me-2"></i>Dashboard</a>
-                    <a href="{{route('teacher.classroom')}}" class="nav-item nav-link"><i class="fa fa-graduation-cap me-2"></i>Classes</a>
-                    <a href="{{route('result.index')}}" class="nav-item nav-link"><i class="fa fa-th me-2"></i>Search Results</a>
+                    <a href="{{route('teacher.classroom')}}" class="nav-item nav-link"><i class="fa fa-chalkboard-teacher  me-2"></i>Classes</a>
+                    <a href="{{route('result.index')}}" class="nav-item nav-link"><i class="fa fa-search me-2"></i>Search Results</a>
                     {{-- <a href="{{ route('teacher.edit', ['teacher' => $authUser]) }}"> <i class="fa fa-th me-2"></i>Profile</a> --}}
                     {{-- <div class="nav-item dropdown">
                         <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="fa fa-graduation-cap me-2"></i>Student Record</a>
@@ -222,7 +222,7 @@
                     </div>
                     <div class="nav-item dropdown">
                         <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
-                            <img class="rounded-circle me-lg-2" src="img/user.jpg" alt="" style="width: 40px; height: 40px;">
+                            <img class="rounded-circle me-lg-2" src="{{  $authUser->teacher->image ? asset('storage/' . $authUser->teacher->image) : asset('uploads/avatars/default-avatar.jpg')  }}" alt="" style="width: 40px; height: 40px;">
                             <span class="d-none d-lg-inline-flex">{{ $authUser->name }}</span>
                         </a>
                         <div class="dropdown-menu dropdown-menu-end bg-light border-0 rounded-0 rounded-bottom m-0">
@@ -248,16 +248,16 @@
                     <div class="row g-4">
                         <div class="col-sm-6 col-xl-3">
                             <div class="bg-light rounded d-flex align-items-center justify-content-between p-4">
-                                <i class="fa fa-chart-line fa-3x text-primary"></i>
+                                <i class="fa fa-chalkboard-teacher fa-3x text-primary"></i>
                                 <div class="ms-3">
                                     <p class="mb-2">My Classes</p>
-                                    <h6 class="mb-0">$1234</h6>
+                                    <h6 class="mb-0">{{ $classes }}</h6>
                                 </div>
                             </div>
                         </div>
                         <div class="col-sm-6 col-xl-3">
                             <div class="bg-light rounded d-flex align-items-center justify-content-between p-4">
-                                <i class="fa fa-chart-bar fa-3x text-primary"></i>
+                                <i class="fa fa-user-graduate fa-3x text-primary"></i>
                                 <div class="ms-3">
                                     <p class="mb-2">My Students</p>
                                     <h6 class="mb-0">$1234</h6>
@@ -266,7 +266,7 @@
                         </div>
                         <div class="col-sm-6 col-xl-3">
                             <div class="bg-light rounded d-flex align-items-center justify-content-between p-4">
-                                <i class="fa fa-chart-area fa-3x text-primary"></i>
+                                <i class="fa fa-book-open fa-3x text-primary"></i>
                                 <div class="ms-3">
                                     <p class="mb-2">My Subjects</p>
                                     <h6 class="mb-0">$1234</h6>
@@ -275,7 +275,7 @@
                         </div>
                         <div class="col-sm-6 col-xl-3">
                             <div class="bg-light rounded d-flex align-items-center justify-content-between p-4">
-                                <i class="fa fa-chart-pie fa-3x text-primary"></i>
+                                <i class="fa fa-file-alt fa-3x text-primary"></i>
                                 <div class="ms-3">
                                     <p class="mb-2">Results</p>
                                     <h6 class="mb-0">$1234</h6>

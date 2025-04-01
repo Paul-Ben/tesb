@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Storage;
 
 use App\Models\Teacher;
 use App\Models\Guardian;
+use App\Models\Admin;
 use App\Models\User;
 
 
@@ -25,10 +26,26 @@ class ProfileController extends Controller
     public function edit(Request $request): View
     {
         $authUser = Auth::user();
-        $user = User::with(['teacher', 'guardian'])->where('id', $authUser->id)->first();
-        return view('profile.edit', [
+        $user = User::with(['teacher', 'guardian', 'admin'])->where('id', $authUser->id)->first();
+        if($authUser->role->name == 'Teacher') {
+
+        return view('profile.teacher_edit', [
             'authUser' =>  $user,
         ]);
+
+        }else if($authUser->role->name == 'User') {
+
+            return view('profile.guardian_edit', [
+                'authUser' =>  $user,
+            ]);
+
+        }else if($authUser->role->name == 'Admin') {
+
+            return view('profile.admin_edit', [
+                'authUser' =>  $user,
+            ]);
+        }
+
     }
 
     /**
@@ -44,10 +61,11 @@ class ProfileController extends Controller
 
         // $request->user()->save();
         $authUser = Auth::user();
+        $admin = Admin::where('user_id',$authUser->id)->first();
         $teacher = Teacher::where('user_id', $authUser->id)->first();
-        $user = User::where('id',$authUser->id)->first();
         $guardian = Guardian::where('user_id',$authUser->id)->first();
-
+        $user = User::where('id',$authUser->id)->first();
+      
         if($authUser->role->name == 'Teacher') {
 
             $request->validate([
@@ -59,13 +77,27 @@ class ProfileController extends Controller
                 'phone_number' => 'string|nullable',
                 'address' => 'nullable|string',
                 'qualification' => 'string|nullable',
+                'avatar' => 'nullable|image|mimes:jpg,jpeg,png|max:4048',
             ]);
 
             $user->update([
                 'name' =>  $request->first_name .' '. $request->last_name,
                 'email'  => $request->email
             ]);
-    
+
+
+            if ($request->hasFile('avatar')) {
+                $oldImage = $teacher->image;
+                $fullname =  $request->first_name. ' '.  $request->last_name;
+                $imageName = str_replace(' ', '_', $fullname) . '_' . time() . '.' . $request->file('avatar')->getClientOriginalExtension();
+                $avatarPath = $request->file('avatar')->storeAs('avatars', $imageName, 'public');
+                
+                if ($oldImage && Storage::disk('public')->exists($oldImage)) {
+                    Storage::disk('public')->delete($oldImage);
+                }
+                $teacher->image = $avatarPath;
+           }
+           
             $teacher->update([
                 'first_name' => $request->first_name,
                 'last_name' => $request->last_name,
@@ -76,6 +108,8 @@ class ProfileController extends Controller
                 'address' => $request->address,
                 'qualification' => $request->qualification,
             ]);
+
+            
     
             $notification = [
                 'message' => 'Profile Updated Successfully',
@@ -108,8 +142,8 @@ class ProfileController extends Controller
                 $avatarPath = $request->file('avatar')->storeAs('avatars', $imageName, 'public');
                 if ($oldImage && Storage::disk('public')->exists($oldImage)) {
                     Storage::disk('public')->delete($oldImage);
+                 }
                 $guardian->image = $avatarPath;
-            }
           }
   
             $guardian->update([
@@ -129,6 +163,57 @@ class ProfileController extends Controller
     
             return Redirect::route('profile.edit')->with($notification);
     
+        }else if($authUser->role->name == 'Admin')
+        {
+            $request->validate([
+                'first_name' => 'nullable|string',
+                'last_name' => 'nullable|string',
+                'middle_name' => 'string|nullable',
+                'email' => 'email|unique:teachers,email,' . $authUser->admin->id,
+                'date_of_birth' => 'nullable|date',
+                'phone_number' => 'string|nullable',
+                'address' => 'nullable|string',
+                'qualification' => 'string|nullable',
+                'avatar' => 'nullable|image|mimes:jpg,jpeg,png|max:4048',
+            ]);
+
+            $user->update([
+                'name' =>  $request->first_name .' '. $request->last_name,
+                'email'  => $request->email
+            ]);
+
+
+            if ($request->hasFile('avatar')) {
+                $oldImage = $admin->image;
+                $fullname =  $request->first_name. ' '.  $request->last_name;
+                $imageName = str_replace(' ', '_', $fullname) . '_' . time() . '.' . $request->file('avatar')->getClientOriginalExtension();
+                $avatarPath = $request->file('avatar')->storeAs('avatars', $imageName, 'public');
+                
+                if ($oldImage && Storage::disk('public')->exists($oldImage)) {
+                    Storage::disk('public')->delete($oldImage);
+                }
+                $admin->image = $avatarPath;
+           }
+           
+            $admin->update([
+                'first_name' => $request->first_name,
+                'last_name' => $request->last_name,
+                'middle_name' => $request->middle_name,
+                'email' => $request->email,
+                'date_of_birth' => $request->date_of_birth,
+                'phone_number' => $request->phone_number,
+                'address' => $request->address,
+                'qualification' => $request->qualification,
+            ]);
+
+            
+    
+            $notification = [
+                'message' => 'Profile Updated Successfully',
+                'alert-type' => 'success',
+            ];
+    
+            return Redirect::route('profile.edit')->with($notification);
         }
       
         $notification = [

@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Department;
 use App\Models\Guardian;
+use App\Models\Student;
+use App\Models\SchoolSession;
+use App\Models\Classroom;
 use App\Models\Teacher;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -29,16 +32,23 @@ class DashboardController extends Controller
     public function admin()
     {
         $authUser = Auth::user();
+        $students = Student::count();
+        $teachers = Teacher::count();
+        $classes = Classroom::count();
+        $session = SchoolSession::where('status', 'active')->first();
+        
         $notification = array(
             'message' => 'Welcome to your dashboard.',
             'alert-type' => 'success'
         );
-        return view('dashboards.admin', compact('authUser'))->with($notification);
+        return view('dashboards.admin', compact('authUser', 'students', 'teachers', 'session', 'classes'))->with($notification);
     }
 
     public function user()
     {
         $authUser = Auth::user();
+        $wards = Student::with('guardian')->count();
+        $session = SchoolSession::where('status', 'active')->first();
         $guardian = Guardian::where('user_id', $authUser->id)->first();
         if (!$guardian) {
             session()->flash('message', 'Please fill the guardian form to proceed.');
@@ -52,12 +62,14 @@ class DashboardController extends Controller
             'message' => 'Welcome to your dashboard.',
             'alert-type' => 'success'
         );
-        return view('dashboards.user', compact('authUser', 'guardian'))->with($notification);
+        return view('dashboards.user', compact('authUser', 'guardian', 'wards', 'session'))->with($notification);
     }
 
     public function teacher()
     {
         $authUser = Auth::user();
+        $classes = Classroom::with('teacher')->where('teacher_id', $authUser->id)->count();
+      
         // $teacher = Teacher::where('user_id', $authUser->id)->first();
         // if (!$teacher) {
         //     session()->flash('message', 'Please fill the teacher form to proceed.');
@@ -71,6 +83,6 @@ class DashboardController extends Controller
             'message' => 'Welcome to your dashboard.',
             'alert-type' => 'success'
         );
-        return view('dashboards.teacher', compact('authUser'))->with($notification);
+        return view('dashboards.teacher', compact('authUser', 'classes'))->with($notification);
     }
 }

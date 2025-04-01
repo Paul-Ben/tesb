@@ -3,15 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\Guardian;
-<<<<<<< HEAD
 use App\Models\Teacher;
 
-=======
 use App\Models\Result;
 use App\Models\ResultAffectiveDevelopment;
 use App\Models\Student;
 use Carbon\Carbon;
->>>>>>> d1ca19be4e3adf4d5dea06d0c66254316a28f13a
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -71,9 +69,6 @@ class UserActions extends Controller
         return redirect()->route('user.dashboard')->with($notification);
     }
 
-<<<<<<< HEAD
-    
-=======
     public function getGuardianStudents()
     {
         $authUser = Auth::user();
@@ -120,5 +115,5 @@ class UserActions extends Controller
         $table2 = $affectiveDevelopment->slice(4);
         return view('users.result.show', compact('student', 'result', 'table1', 'table2', 'age'));
     }
->>>>>>> d1ca19be4e3adf4d5dea06d0c66254316a28f13a
+
 }

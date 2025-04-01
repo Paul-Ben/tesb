@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Classroom;
 use App\Models\Result;
 use App\Models\ResultAffectiveDevelopment;
 use App\Models\ResultSubject;
@@ -188,6 +189,25 @@ class ResultController extends Controller
         $affectiveDevelopment = ResultAffectiveDevelopment::where('result_id', $result->id)->get();
         $table1 = $affectiveDevelopment->take(4);
         $table2 = $affectiveDevelopment->slice(4);
-        return view('teacher.result.show', compact('student', 'result', 'table1', 'table2', 'age'));
+        $classroom = Classroom::with('classCategory')->find($student->class_id);
+        $classCategoryName = $classroom->classCategory->name;
+
+        // Define a dynamic mapping between class categories and views
+        $categoryViews = [
+            'Kindergarten' => 'teacher.result.show',
+            'Primary' => 'teacher.result.showPrimary',
+            'Junior Secondary School' => 'teacher.result.showJs',
+            'Senior Secondary School' => 'teacher.result.showSs',
+        ];
+
+        // Check if the class category exists in the mapping
+        if (array_key_exists($classCategoryName, $categoryViews)) {
+            return view($categoryViews[$classCategoryName], compact('student', 'result', 'table1', 'table2', 'age'));
+        }
+
+        return redirect()->back()->with([
+            'message' => 'Classroom category not recognized.',
+            'alert-type' => 'error',
+        ]);
     }
 }

@@ -132,23 +132,23 @@
                 <header class="report-header row justify-content-between align-items-center mb-4">
                     <div class="school-info col-md-4">
                         <p><strong>STUDENT NO.:</strong> <input type="text" name="student_number"
-                                value="{{ $student->std_number }}" placeholder="Student Number" class="form-control"></p>
+                                value="{{ $student->std_number }}" placeholder="Student Number" class="form-control" readonly></p>
                         <input type="text" name="student_id" value="{{ $student->id }}" hidden>
                         <p><strong>STATE:</strong> <input type="text" value="{{ $student->stateoforigin }}"
-                                placeholder="State" class="form-control"></p>
+                                placeholder="State" class="form-control" readonly></p>
                     </div>
                     <div class="student-info col-md-4">
                         <p><strong>STUDENT'S NAME:</strong> <input type="text" name="student_name"
                                 value="{{ $student->first_name . ' ' . $student->last_name }}" placeholder="Student Name"
-                                class="form-control"></p>
+                                class="form-control" readonly></p>
                         <p><strong>CLASS:</strong> <input type="text" name="class"
-                                value="{{ $student->classroom->name }}" placeholder="Class" class="form-control"></p>
+                                value="{{ $student->classroom->name }}" placeholder="Class" class="form-control" readonly></p>
                     </div>
                     <div class="term-info col-md-4">
                         <p><strong>TERM:</strong> <input type="text" name="term"
-                                value="{{ Str::ucfirst($term->name) }}" placeholder="Term" class="form-control"></p>
+                                value="{{ Str::ucfirst($term->name) }}" placeholder="Term" class="form-control" readonly></p>
                         <p><strong>SESSION:</strong> <input type="text" name="session"
-                                value="{{ $term->schoolSession->sessionName }}" placeholder="Session" class="form-control">
+                                value="{{ $term->schoolSession->sessionName }}" placeholder="Session" class="form-control" readonly>
                         </p>
                     </div>
                 </header>
@@ -177,8 +177,8 @@
                         <thead class="thead-light">
                             <tr>
                                 <th class="border p-2">SUBJECT</th>
-                                <th class="border p-2">C.A. (40%)</th>
-                                <th class="border p-2">EXAM (60%)</th>
+                                <th class="border p-2">C.A. (60%)</th>
+                                <th class="border p-2">EXAM (40%)</th>
                                 <th class="border p-2">TOTAL (100%)</th>
                                 <th class="border p-2">LOWEST IN CLASS</th>
                                 <th class="border p-2">HIGHEST IN CLASS</th>
@@ -199,8 +199,8 @@
                                         @endforeach
                                     </select>
                                 </td>
-                                <td><input type="number" name="ca[]" class="form-control ca-input" max="40"></td>
-                                <td><input type="number" name="exam[]" class="form-control exam-input" max="60">
+                                <td><input type="number" name="ca[]" class="form-control ca-input" max="60"></td>
+                                <td><input type="number" name="exam[]" class="form-control exam-input" max="40">
                                 </td>
                                 <td><span class="total"></span></td>
                                 <td><input type="number" name="lowest_in_class[]" class="form-control"></td>

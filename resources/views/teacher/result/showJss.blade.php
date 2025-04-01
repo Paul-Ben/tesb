@@ -81,8 +81,8 @@
                     {{-- <th>Assignment (10)</th>
                     <th>1st CA (10)</th>
                     <th>2nd CA (10)</th> --}}
-                    <th>Total CA (50)</th>
-                    <th>Examination (50)</th>
+                    <th>Total CA (60)</th>
+                    <th>Examination (40)</th>
                     <th>Total (100)</th>
                     {{-- <th>Class Average</th> --}}
                     <th>Highest in Class</th>
@@ -95,9 +95,6 @@
                 @foreach ($result->subjects as $subject)
                     <tr>
                         <td>{{ $subject->subject }}</td>
-                        {{-- <td>{{$subject->assignment}}</td> --}}
-                        {{-- <td>{{$subject->ca}}</td> --}}
-                        {{-- <td>{{$subject->second_ca}}</td> --}}
                         <td>{{ $subject->ca }}</td>
                         <td>{{ $subject->exam }}</td>
                         <td>{{ $subject->total }}</td>
@@ -108,46 +105,6 @@
                         <td>{{ $subject->grade }}</td>
                     </tr>
                 @endforeach
-                {{-- <tr>
-                    <td>Mathematics</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr> --}}
-                {{-- <tr>
-                    <td>English Language</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>Basic Science</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr> --}}
-                <!-- Add more subjects as needed -->
             </tbody>
         </table>
         <div><h3>Skills Assessment</h3></div>

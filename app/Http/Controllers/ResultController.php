@@ -10,12 +10,14 @@ use App\Models\SchoolSession;
 use App\Models\Student;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class ResultController extends Controller
 {
     public function store(Request $request)
     {
         $request->validate([
+            'classCategory' => 'required|in:Kindergarten,Primary,Junior Secondary School,Senior Secondary School',
             'student_id' => 'required',
             'student_number' => 'required|string|max:255',
             'student_name' => 'required|string|max:255',
@@ -33,8 +35,26 @@ class ResultController extends Controller
             // Subjects validation
             'subject' => 'required|array',
             'subject.*' => 'required|string|max:255',
-            'ca.*' => 'required|integer|min:0|max:40',
-            'exam.*' => 'required|integer|min:0|max:60',
+            'ca.*' => [
+                'required',
+                'integer',
+                'min:0',
+                Rule::when($request->classCategory === 'Kindergarten', 'max:50'),
+                Rule::when($request->classCategory === 'Primary', 'max:40'),
+                Rule::when($request->classCategory === 'Junior Secondary School', 'max:60'),
+                Rule::when($request->classCategory === 'Senior Secondary School', 'max:30'),
+            ],
+            // 'ca.*' => 'required|integer|min:0|max:40',
+            // 'exam.*' => 'required|integer|min:0|max:60',
+            'exam.*'=> [ 
+                'required',
+                'integer',
+                'min:0',
+                Rule::when($request->classCategory === 'Kindergarten', 'max:50'),
+                Rule::when($request->classCategory === 'Primary', 'max:60'),
+                Rule::when($request->classCategory === 'Junior Secondary School', 'max:40'),
+                Rule::when($request->classCategory === 'Senior Secondary School', 'max:70'),
+            ],
             'remark.*' => 'nullable|string|max:255',
 
             // Affective Development validation
@@ -196,7 +216,7 @@ class ResultController extends Controller
         $categoryViews = [
             'Kindergarten' => 'teacher.result.show',
             'Primary' => 'teacher.result.showPrimary',
-            'Junior Secondary School' => 'teacher.result.showJs',
+            'Junior Secondary School' => 'teacher.result.showJss',
             'Senior Secondary School' => 'teacher.result.showSs',
         ];
 

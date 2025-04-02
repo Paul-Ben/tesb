@@ -142,7 +142,8 @@
                                 value="{{ $student->first_name . ' ' . $student->last_name }}" placeholder="Student Name"
                                 class="form-control" readonly></p>
                         <p><strong>CLASS:</strong> <input type="text" name="class"
-                                value="{{ $student->classroom->name }}" placeholder="Class" class="form-control" readonly></p>
+                                value="{{ $student->classroom->name }}" placeholder="Class" class="form-control" readonly>
+                            <input type="text" name="classCategory" value="{{$student->classroom->classCategory->name}}" hidden></p>
                     </div>
                     <div class="term-info col-md-4">
                         <p><strong>TERM:</strong> <input type="text" name="term"

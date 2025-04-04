@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\ClassCategory;
 use App\Models\Classroom;
+use App\Models\FeeSetup;
 use App\Models\Guardian;
 use App\Models\Role;
 use App\Models\SchoolSession;
@@ -701,5 +702,86 @@ class AdminActions extends Controller
     {
         $teacher->delete();
         return redirect()->route('teacher.index')->with('success', 'Teacher deleted successfully!');
+    }
+
+    public function feeIndex()
+    {
+        $authUser = Auth::user();
+        $fees = FeeSetup::all();
+        return view('admin.feesetup.index', compact('authUser', 'fees'));
+    }
+
+    public function createFee()
+    {
+        $authUser = Auth::user();
+        $terms = Term::where('status','=', 'active')->get();
+        return view('admin.feesetup.create', compact('authUser', 'terms'));
+    }
+    public function storeFee(Request $request)
+    {
+        // Validate input with proper unique check for users table
+        $request->validate([
+            'name'=> 'required',
+            'term_id' => 'required|exists:terms,id',
+            'amount' => 'required|numeric',
+            'status' => 'required|in:active,inactive',
+        ]);
+
+       $feeSetup = FeeSetup::create([
+            'name'=> $request->name,
+            'term_id' => $request->term_id,
+            'amount' => $request->amount,
+            'status' => $request->status,
+        ]);
+        // Check if the fee setup was created successfully
+        if (!$feeSetup) {
+            $notification = array(
+                'message' => 'Error creating fee setup.',
+                'alert-type' => 'error'
+            );
+            return back()->with('error', 'Error creating fee setup. Please try again.');
+        }
+        return redirect()->route('adminFee.setup')->with([
+            'message' => 'Fee created successfully.',
+            'alert-type' => 'success' 
+        ]);
+    }
+
+    public function editFee(FeeSetup $fee)
+    {
+        $authUser = Auth::user();
+        $terms = Term::all();
+        return view('admin.feesetup.edit', compact('fee', 'authUser', 'terms'));
+    }
+    public function updateFee(Request $request, FeeSetup $fee)
+    {
+        $request->validate([
+            'name'=> 'required',
+            'term_id' => 'required|exists:terms,id',
+            'amount' => 'required|numeric',
+            'status' => 'required|in:active,inactive',
+        ]);
+
+        $fee->update([
+            'name'=> $request->name,
+            'term_id' => $request->term_id,
+            'amount' => $request->amount,
+            'status' => $request->status,
+        ]);
+        $notification = array(
+            'message' => 'Fee updated successfully.',
+            'alert-type' => 'success'
+        );
+        return redirect()->route('adminFee.setup')->with($notification);
+    }
+
+    public function deleteFee(FeeSetup $fee)
+    {
+        $fee->delete();
+        $notification = array(
+            'message' => 'Fee deleted successfully.',
+            'alert-type' => 'success'
+        );
+        return redirect()->route('adminFee.setup')->with($notification);
     }
 }

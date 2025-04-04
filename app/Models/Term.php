@@ -14,4 +14,8 @@ class Term extends Model
     {
         return $this->belongsTo(SchoolSession::class,"session_id");
     }
+    public function fees()
+    {
+        return $this->hasMany(FeeSetup::class,"term_id");
+    }
 }

@@ -1,4 +1,4 @@
-@extends('dashboards.user')
+@extends('dashboards.admin')
 @section('content')
     <!-- Button Start -->
     <div class="container-fluid pt-4 px-4">
@@ -8,6 +8,11 @@
                     <button type="button" class="btn btn-primary m-2">
                         <a href="{{ url()->previous() }}" style="color: #fff;">
                             <i class="fa fa-arrow-left me-2"></i>Go Back
+                        </a>
+                    </button>
+                    <button type="button" class="btn btn-primary m-2">
+                        <a href="{{ route('fee.create') }}" style="color: #fff;">
+                            <i class="fa fa-plus me-2"></i>Add
                         </a>
                     </button>
                 </div>
@@ -21,37 +26,39 @@
         <div class="row g-4">
             <div class="col-12">
                 <div class="bg-light rounded h-100 p-4">
-                    <h6 class="mb-4">All Students Lists</h6>
+                    <h6 class="mb-4">All Fees.</h6>
                     <table class="table table-hover">
                         <thead>
                             <tr>
                                 <th scope="col">S/N</th>
-                                <th scope="col">Reg. No</th>
-                                <th scope="col">Student Name</th>
-                                <th scope="col">Student Class </th>
-                                <th scope="col">Gender</th>
+                                <th scope="col">Fee Item</th>
+                                <th scope="col">Amount (NGN)</th>
+                                <th scope="col">Term</th>
+                                <th scope="col">Status</th>
                                 <th scope="col">Action</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @forelse ($students as $key => $student)
+                            @forelse ($fees as $key => $fee)
                                 <tr>
                                     <th scope="row">{{ $key + 1 }}</th>
-                                    <td><a
-                                            href="{{ route('guardian.show_student', $student) }}">{{ $student->std_number }}</a>
-                                    </td>
-                                    <td>{{ $student->first_name . ' ' . $student->last_name }}</td>
-                                    <td>{{ $student->classroom->name }}</td>
-                                    <td>{{ $student->gender }}</td>
+                                    <td>{{ $fee->name }}</td>
+                                    <td>{{ $fee->amount }}</td>
+                                    <td>{{ $fee->term->name}}</td>
+                                    <td>{{ $fee->status}}</td>
                                     <td>
                                         <div class="nav-item dropdown">
                                             <a href="#" class="nav-link dropdown-toggle"
                                                 data-bs-toggle="dropdown">Update</a>
                                             <div class="dropdown-menu">
-                                                <a href="{{ route('fee.index', $student) }}"
-                                                    class="dropdown-item">Pay Fees</a>
-                                                <a href="{{ route('guardian.get.results', $student) }}"
-                                                    class="dropdown-item">View Results</a>
+                                                <a href="{{ route('fee.edit', $fee) }}"
+                                                    class="dropdown-item">Edit</a>
+                                                    
+                                                    <form action="{{ route('fee.delete', $fee) }}" method="POST">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button type="submit" class="dropdown-item">Delete</button>
+                                                    </form>
                                             </div>
                                         </div>
                                     </td>

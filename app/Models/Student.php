@@ -24,4 +24,8 @@ class Student extends Model
     {
         return $this->belongsTo(Guardian::class);
     }
+    public function registration()
+    {
+        return $this->hasMany(Registration::class);
+    }
 }

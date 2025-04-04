@@ -106,6 +106,12 @@ Route::prefix('admin')->middleware(['auth', 'role:Admin, Teacher'])->group(funct
     Route::get('/dashboard/term/{term}/edit', [AdminActions::class, 'editTerm'])->name('term.edit');
     Route::put('/dashboard/term/{term}/update', [AdminActions::class, 'updateTerm'])->name('term.update');
     Route::delete('/dashboard/term/{term}/delete', [AdminActions::class, 'deleteTerm'])->name('term.delete');
+    Route::get('/dashboard/fee-setup', [AdminActions::class, 'feeIndex'])->name('adminFee.setup');
+    Route::get('/dashboard/fee-setup/create', [AdminActions::class, 'createFee'])->name('fee.create');
+    Route::post('/dashboard/feeSetup/create', [AdminActions::class, 'storeFee'])->name('fee.store');
+    Route::get('/dashboard/fee-setup/{fee}/edit', [AdminActions::class, 'editFee'])->name('fee.edit');
+    Route::put('/dashboard/fee-setup/{fee}/update', [AdminActions::class, 'updateFee'])->name('fee.update');
+    Route::delete('/dashboard/fee-setup/{fee}/delete', [AdminActions::class, 'deleteFee'])->name('fee.delete');
 });
 
 Route::prefix('teacher')->middleware(['auth', 'role:Teacher'])->group(function () {
@@ -121,8 +127,8 @@ Route::prefix('teacher')->middleware(['auth', 'role:Teacher'])->group(function (
     Route::get('/dashboard/student/{student}/result', [ResultController::class, 'viewResult'])->name('view.result');
     Route::get('/dashboard/student/{student}/resultlist', [ResultController::class, 'getResults'])->name('get.results');
     Route::get('/dashboard/student/result/{result}/result', [ResultController::class, 'singleResultView'])->name('single.result');
-    Route::get('/dashboard/promote-students/{classroom}', [TeacherController::class,'promoteStudents'])->name('promote.students');
-    Route::put('/dashboard/promote-student', [TeacherController::class,'promote'])->name('promote');
+    Route::get('/dashboard/promote-students/{classroom}', [TeacherController::class, 'promoteStudents'])->name('promote.students');
+    Route::put('/dashboard/promote-student', [TeacherController::class, 'promote'])->name('promote');
 });
 
 Route::prefix('user')->middleware(['auth', 'role:User'])->group(function () {
@@ -136,6 +142,9 @@ Route::prefix('user')->middleware(['auth', 'role:User'])->group(function () {
     Route::get('/dashboard/guardian/students/{student}/result', [UserActions::class, 'viewResult'])->name('guardian.view.result');
     Route::get('/dashboard/guardian/students/{student}/resultlist', [UserActions::class, 'getResults'])->name('guardian.get.results');
     Route::get('/dashboard/guardian/students/result/{result}/result', [UserActions::class, 'singleResultView'])->name('guardian.single.result');
+    Route::get('/dashboard/{student}/fee-form', [UserActions::class, 'feeIndex'])->name('fee.index');
+    Route::get('/callback', [UserActions::class, 'paymentCallback'])->name('payment.callback');
+    Route::post('/dashboard/pay/fees', [UserActions::class, 'initialize'])->name('pay.fee');
 });
 
 require __DIR__ . '/auth.php';

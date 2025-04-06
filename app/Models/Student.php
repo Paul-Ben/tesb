@@ -28,4 +28,12 @@ class Student extends Model
     {
         return $this->hasMany(Registration::class);
     }
+    public function transactions()
+    {
+        return $this->hasMany(Transaction::class,'student_id');
+    }
+    public function manualPayments()
+    {
+        return $this->hasMany(ManualPayments::class, 'student_id');
+    }
 }

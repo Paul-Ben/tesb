@@ -6,12 +6,15 @@ use App\Models\ClassCategory;
 use App\Models\Classroom;
 use App\Models\FeeSetup;
 use App\Models\Guardian;
+use App\Models\ManualPayments;
+use App\Models\Registration;
 use App\Models\Role;
 use App\Models\SchoolSession;
 use App\Models\Student;
 use App\Models\Subject;
 use App\Models\Teacher;
 use App\Models\Term;
+use App\Models\Transaction;
 use App\Models\User;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
@@ -783,5 +786,113 @@ class AdminActions extends Controller
             'alert-type' => 'success'
         );
         return redirect()->route('adminFee.setup')->with($notification);
+    }
+
+    public function paymentIndex()
+    {
+        $authUser = Auth::user();
+        $payments = Transaction::with('student')->orderBy('id', 'desc')->get();
+        
+        return view('admin.payments.payments', compact('payments', 'authUser'));
+    }
+    public function paymentReceipt(Transaction $receipt)
+    {
+        $authUser = Auth::user();
+        return view('admin.payments.receipt', compact('receipt', 'authUser'));
+    }
+    public function allTransactions()
+    {
+        $authUser = Auth::user();
+        $transactions = Registration::with('student')->orderBy('id', 'desc')->get();
+        return view('admin.payments.registrations', compact('transactions', 'authUser'));
+    }
+    public function allManualPayments()
+    {
+        $authUser = Auth::user();
+        $manualPayments = ManualPayments::with('student')->orderBy('id', 'desc')->get();
+        return view('admin.payments.index', compact('manualPayments', 'authUser'));
+    }
+    public function createManualPayment(Student $student)
+    {
+        $authUser = Auth::user();
+       $guardian = $student->guardian;
+        $activeTerm = Term::where('status', 'active')->first();
+        $fees = FeeSetup::where('status', 'active')->get();
+        return view('admin.payments.create', compact('guardian', 'student', 'activeTerm', 'fees', 'authUser'));
+    }
+    public function storeManualPayment(Request $request)
+    {
+        $request->validate([
+            'amount' => 'required|numeric',
+            'term_id' => 'required|exists:terms,id',
+            'status' => 'required|in:paid,unpaid',
+            'student_name'=> 'required|string',
+            'student_id'=> 'required|exists:students,id',
+        ]);
+        $tx_ref = 'MAN_' . time() . '_' . $request->student_id;
+        $txr_id = 'MAN_' . time() . '_' . $request->student_id;
+
+        $manualPayment = ManualPayments::create([
+            'student_id' => $request->student_id,
+            'name' => $request->student_name,
+            'phone_number' => $request->guardian_phone,
+            'email' => $request->guardian_email,
+            'guardian_name'=> $request->guardian_name,
+            'student_class' => $request->student_class,
+            'student_number' => $request->student_number,
+            'term' => $request->term,
+            'session' => $request->session,
+            'session_id' => $request->session_id,
+            'amount' => $request->amount,
+            'term_id' => $request->term_id,
+            'payment_method' => 'manual',
+            'payitem'=> $request->payitem,
+            'paymentStatus' => $request->status,
+            'tx_ref'=> $tx_ref,
+            'txr_id'=> $txr_id
+        ]);
+
+        if (!$manualPayment) {
+            $notification = array(
+                'message' => 'Error creating manual payment. Please try again.',
+                'alert-type' => 'error'
+            );
+            
+            return back()->with($notification);
+        }
+        $notification = array(
+            'message' => 'Manual payment created successfully.',
+            'alert-type' => 'success'
+        );
+        return redirect()->route('admin.manualPayments')->with($notification);
+    }
+    public function manPaymentReceipt(ManualPayments $receipt)
+    {
+        $authUser = Auth::user();
+        return view('admin.payments.receipt', compact('receipt', 'authUser'));
+    }
+    public function editManualPayment(ManualPayments $manualPayment)
+    {
+        $authUser = Auth::user();
+        $activeTerm = Term::where('status', 'active')->first();
+        $fees = FeeSetup::where('status', 'active')->get();
+        return view('admin.payments.edit', compact('manualPayment', 'activeTerm', 'fees', 'authUser'));
+    }
+    public function updateManualPayment(Request $request, ManualPayments $manualPayment)
+    {
+        $request->validate([
+            'amount' => 'required|numeric',
+            'term_id' => 'required|exists:terms,id',
+            'payment_method' => 'required|string',
+            'status' => 'required|in:paid,unpaid',
+        ]);
+
+        $manualPayment->update([
+            'amount' => $request->amount,
+            'term_id' => $request->term_id,
+            'payment_method' => $request->payment_method,
+            'status' => $request->status,
+        ]);
+        return redirect()->route('manual.payment.index')->with('success', 'Manual payment updated successfully.');
     }
 }

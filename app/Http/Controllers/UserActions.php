@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Classroom;
 use App\Models\FeeSetup;
 use App\Models\Guardian;
 use App\Models\Registration;
@@ -83,7 +84,7 @@ class UserActions extends Controller
         $guardian = Guardian::where('user_id', $authUser->id)->first();
         $students = $guardian->students;
         if ($students) {
-            
+
             return view('users.guardian.students', compact('students', 'authUser', 'guardian'));
         } else {
             return redirect()->back()->with([
@@ -115,13 +116,46 @@ class UserActions extends Controller
 
     public function singleResultView(Student $student, Result $result)
     {
-        
+        $student = Student::where('id', $result->student_id)->first();
+
+        $checkPayment = $student->transactions()
+            ->where('term', $result->term)
+            ->where('session', $result->session)
+            ->where('student_class', $result->class)
+            ->first();
+
+        if (!$checkPayment) {
+            return redirect()->back()->with([
+                'message' => 'You need to pay your fees before you can view the result.',
+                'alert-type' => 'error',
+            ]);
+        }
         $student = Student::where('id', $result->student_id)->first();
         $age = Carbon::parse($student->date_of_birth)->age;
         $affectiveDevelopment = ResultAffectiveDevelopment::where('result_id', $result->id)->get();
         $table1 = $affectiveDevelopment->take(4);
         $table2 = $affectiveDevelopment->slice(4);
-        return view('users.result.show', compact('student', 'result', 'table1', 'table2', 'age'));
+        
+        $classroom = Classroom::with('classCategory')->find($student->class_id);
+        $classCategoryName = $classroom->classCategory->name;
+
+         // Define a dynamic mapping between class categories and views
+         $categoryViews = [
+            'Kindergarten' => 'users.result.show',
+            'Primary' => 'users.result.showPrimary',
+            'Junior Secondary School' => 'users.result.showJss',
+            'Senior Secondary School' => 'users.result.showSs',
+        ];
+        
+        // Check if the class category exists in the mapping
+        if (array_key_exists($classCategoryName, $categoryViews)) {
+            return view($categoryViews[$classCategoryName], compact('student', 'result', 'table1', 'table2', 'age'));
+        }
+        return redirect()->back()->with([
+            'message' => 'Classroom category not recognized.',
+            'alert-type' => 'error',
+        ]);
+        // return view('users.result.show', compact('student', 'result', 'table1', 'table2', 'age'));
     }
 
     public function feeIndex(Student $student)
@@ -143,8 +177,8 @@ class UserActions extends Controller
             ]);
         }
 
-    
-        return view('users.fee.index', compact('student', 'activeTerm', 'authUser', 'guardian','fees'));
+
+        return view('users.fee.index', compact('student', 'activeTerm', 'authUser', 'guardian', 'fees'));
     }
 
     public function initialize(Request $request)
@@ -152,10 +186,12 @@ class UserActions extends Controller
         $existingRegistration = Transaction::where('student_id', $request->student_id)
             ->where('term_id', $request->term_id)
             ->where('session_id', $request->session_id)
+            ->where('amount', $request->amount)
             ->first();
+
         if ($existingRegistration) {
             return redirect()->back()->with([
-                'message' => 'You have already paid for this term.',
+                'message' => 'You have already paid for this pay item this term.',
                 'alert-type' => 'error',
             ]);
         }
@@ -168,16 +204,16 @@ class UserActions extends Controller
             'amount' => 'required|numeric',
             'term' => 'required|string',
             'term_id' => 'required|exists:terms,id',
-            'student_class'=> 'required|string',
-            'student_number'=> 'required|string',
+            'student_class' => 'required|string',
+            'student_number' => 'required|string',
             'guardian_phone' => 'required|string',
-            'session'=> 'required|string',
+            'session' => 'required|string',
         ]);
 
         DB::beginTransaction();
 
         try {
-        
+
             $user = Registration::create([
                 'name' => $request->student_name,
                 'email' => $request->guardian_email,
@@ -195,7 +231,7 @@ class UserActions extends Controller
                 'tx_ref' => $txRef
             ]);
 
-            
+
             // $subaccountID = "RS_abc123xyz"; 
             // $mainAccountPercentage = 90; 
             // $subAccountPercentage = 10;
@@ -204,7 +240,7 @@ class UserActions extends Controller
                 'Authorization' => 'Bearer ' . $secretKey,
                 'Content-Type' => 'application/json',
             ];
-            
+
             $response = Http::withHeaders($headers)->post('https://api.flutterwave.com/v3/payments', [
                 'tx_ref' => $txRef,
                 'amount' => $request->amount,
@@ -286,4 +322,35 @@ class UserActions extends Controller
         return redirect()->route('home')->with('error', 'Payment failed.');
     }
 
+    public function generateReceipt(Student $student)
+    {
+        $authUser = Auth::user();
+        $guardian = Guardian::where('user_id', $authUser->id)->first();
+        $receipts = $student->transactions()->where('paymentStatus', 'successful')->get();
+
+        if ($receipts->isEmpty()) {
+            return redirect()->back()->with([
+                'message' => 'No receipt found for this student.',
+                'alert-type' => 'error',
+            ]);
+        }
+        return view('users.fee.receipts', compact('student', 'receipts', 'authUser', 'guardian'));
+    }
+
+    public function viewReceipt(Transaction $receipt)
+    {
+        $authUser = Auth::user();
+        return view('users.fee.showReceipt', compact('receipt', 'authUser'));
+    }
 }
+// In this code, we have added the following functionalities:
+// 1. **Guardian Form**: A form for guardians to fill out their information.
+// 2. **Store Guardian**: A method to store the guardian's information in the database.
+// 3. **Get Guardian Students**: A method to retrieve and display the students associated with a guardian.
+// 4. **Show Student**: A method to display a specific student's information.
+// 5. **Get Results**: A method to retrieve and display the results of a specific student.
+// 6. **Single Result View**: A method to view a specific result for a student.
+// 7. **Fee Index**: A method to display the fee setup for a specific student.
+// 8. **Initialize Payment**: A method to initiate a payment for a specific student.
+// 9. **Payment Callback**: A method to handle the payment callback from the payment gateway.
+// 10. **Generate Receipt**: A method to generate a receipt for a specific student.

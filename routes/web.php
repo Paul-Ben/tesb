@@ -112,6 +112,23 @@ Route::prefix('admin')->middleware(['auth', 'role:Admin, Teacher'])->group(funct
     Route::get('/dashboard/fee-setup/{fee}/edit', [AdminActions::class, 'editFee'])->name('fee.edit');
     Route::put('/dashboard/fee-setup/{fee}/update', [AdminActions::class, 'updateFee'])->name('fee.update');
     Route::delete('/dashboard/fee-setup/{fee}/delete', [AdminActions::class, 'deleteFee'])->name('fee.delete');
+    
+    Route::get('/dashboard/payments', [AdminActions::class, 'paymentIndex'])->name('payment.index');
+    Route::get('/dashboard/payments/create', [AdminActions::class, 'createPayment'])->name('payment.create');
+    Route::post('/dashboard/payments/create', [AdminActions::class, 'storePayment'])->name('payment.store');
+    Route::get('/dashboard/payments/{payment}/edit', [AdminActions::class, 'editPayment'])->name('payment.edit');
+    Route::put('/dashboard/payments/{payment}/update', [AdminActions::class, 'updatePayment'])->name('payment.update');
+    Route::delete('/dashboard/payments/{payment}/delete', [AdminActions::class, 'deletePayment'])->name('payment.delete');
+    Route::get('/dashboard/payment/{receipt}/receipt', [AdminActions::class, 'paymentReceipt'])->name('admin.viewReceipt');
+    Route::get('/dashboard/manpayment/{receipt}/receipt', [AdminActions::class, 'manPaymentReceipt'])->name('admin.manViewReceipt');
+    Route::get('/dashboard/all-transactions', [AdminActions::class, 'allTransactions'])->name('admin.allTransactions');
+    Route::get('/dashboard/manual-payments', [AdminActions::class, 'allManualPayments'])->name('admin.manualPayments');
+
+    Route::get('/dashboard/manual-payments/{student}/create', [AdminActions::class, 'createManualPayment'])->name('admin.manualPayment.create');
+    Route::post('/dashboard/manual-payments/create', [AdminActions::class, 'storeManualPayment'])->name('admin.manualPayment.store');
+    Route::get('/dashboard/manual-payments/{manualPayment}/edit', [AdminActions::class, 'editManualPayment'])->name('admin.manualPayment.edit');
+    Route::put('/dashboard/manual-payments/{manualPayment}/update', [AdminActions::class, 'updateManualPayment'])->name('admin.manualPayment.update');
+    Route::delete('/dashboard/manual-payments/{manualPayment}/delete', [AdminActions::class, 'deleteManualPayment'])->name('admin.manualPayment.delete');
 });
 
 Route::prefix('teacher')->middleware(['auth', 'role:Teacher'])->group(function () {
@@ -145,6 +162,9 @@ Route::prefix('user')->middleware(['auth', 'role:User'])->group(function () {
     Route::get('/dashboard/{student}/fee-form', [UserActions::class, 'feeIndex'])->name('fee.index');
     Route::get('/callback', [UserActions::class, 'paymentCallback'])->name('payment.callback');
     Route::post('/dashboard/pay/fees', [UserActions::class, 'initialize'])->name('pay.fee');
+    Route::get('/dashboard/{student}/receipts', [UserActions::class, 'generateReceipt'])->name('generate.receipt');
+    Route::get('/dashboard/receipts/{receipt}/view', [UserActions::class, 'viewReceipt'])->name('view.receipt');
+    Route::get('/dashboard/receipts/{receipt}/download', [UserActions::class, 'downloadReceipt'])->name('download.receipt');
 });
 
 require __DIR__ . '/auth.php';

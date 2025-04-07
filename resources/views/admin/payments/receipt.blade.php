@@ -112,7 +112,7 @@
         </div>
         <div id="student-info">
             <p><strong>Student Name:</strong> <span id="studentName">{{ $receipt->name }}</span></p>
-            <p><strong>Guardian Name:</strong> <span id="guardianName">{{ $authUser->name }}</span></p>
+            <p><strong>Guardian Name:</strong> <span id="guardianName">{{ $receipt->guardian_name }}</span></p>
             <p><strong>Student Number:</strong> <span id="studentNumber">{{ $receipt->student_number }}</span></p>
             <p><strong>Student Class:</strong> <span id="studentClass">{{ $receipt->student_class }}</span></p>
             <p><strong>Session:</strong> <span id="session">{{ $receipt->session }}</span></p>

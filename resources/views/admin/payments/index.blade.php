@@ -44,11 +44,10 @@
                             @forelse ($manualPayments as $key => $receipt)
                                 <tr>
                                     <th scope="row">{{ $key + 1 }}</th>
-                                    <td><a
-                                            href="#">{{ $receipt->student_number }}</a>
+                                    <td><a href="#">{{ $receipt->student_number }}</a>
                                     </td>
-                                    <td>{{ $receipt->name}}</td>
-                                    <td>{{ $receipt->student_class}}</td>
+                                    <td>{{ $receipt->name }}</td>
+                                    <td>{{ $receipt->student_class }}</td>
                                     <td>{{ $receipt->session }}</td>
                                     <td>{{ $receipt->term }}</td>
                                     <td>{{ $receipt->amount }}</td>
@@ -57,6 +56,8 @@
                                             <a href="#" class="nav-link dropdown-toggle"
                                                 data-bs-toggle="dropdown">Update</a>
                                             <div class="dropdown-menu">
+                                                <a href="{{ route('admin.manualPayment.edit', $receipt) }}"
+                                                    class="dropdown-item">Update Payment</a>
                                                 <a href="{{ route('admin.manViewReceipt', $receipt) }}"
                                                     class="dropdown-item">View Receipt</a>
                                             </div>

@@ -305,29 +305,21 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                
-                                        <tr>
-                                            <th scope="row">1</th>
-                                            <td><a href="#">Erafd53652hd</a></td>
-                                            <td>Tes-203-445</td>
-                                            <td>John Doe</td>
-                                            <td>$24,500</td>
-                                            <td> <span class="badge text-success "> success </span> </td>
-                                            <td> <button class="btn btn-success btn-sm"> view </button> </td>
+                                    @forelse ($transactions as $key => $payment)
+                                         <tr>
+                                            <th scope="row">{{$key + 1}}</th>
+                                            <td><a href="#">{{$payment->tx_ref}}</a></td>
+                                            <td>{{$payment->student_number}}</td>
+                                            <td>{{$payment->name}}</td>
+                                            <td>NGN {{$payment->amount}}</td>
+                                            <td> <span class="badge text-success "> {{$payment->paymentStatus}} </span> </td>
+                                            <td><a href="{{route('admin.viewReceipt', $payment)}}"><button class="btn btn-success btn-sm"> view </button></a>  </td>
                                         </tr>
+                                    @empty
                                         <tr>
-                                            <th scope="row">2</th>
-                                            <td><a href="#">Erafd53652hd</a></td>
-                                            <td>Tes-203-445</td>
-                                            <td>John Doe</td>
-                                            <td>$24,500</td>
-                                            <td> <span class="badge text-success "> success </span> </td>
-                                            <td> <button class="btn btn-success btn-sm"> view </button> </td>
-                                        </tr>
-                                        {{-- <tr>
                                             <td class="text-center" colspan="4">No Data Found</td>
-                                        </tr> --}}
-                              
+                                        </tr>
+                                    @endforelse
                                 </tbody>
                             </table>
                         </div>

@@ -8,6 +8,7 @@ use App\Models\Student;
 use App\Models\SchoolSession;
 use App\Models\Classroom;
 use App\Models\Teacher;
+use App\Models\Transaction;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -37,11 +38,16 @@ class DashboardController extends Controller
         $classes = Classroom::count();
         $session = SchoolSession::where('status', 'active')->first();
         
+        $transactions = Transaction::where('paymentStatus', 'successful')
+            ->whereDate('created_at', '>=', now()->startOfMonth())
+            ->whereDate('created_at', '<=', now()->endOfMonth())
+            ->get();
+       
         $notification = array(
             'message' => 'Welcome to your dashboard.',
             'alert-type' => 'success'
         );
-        return view('dashboards.admin', compact('authUser', 'students', 'teachers', 'session', 'classes'))->with($notification);
+        return view('dashboards.admin', compact('authUser', 'students', 'transactions', 'teachers', 'session', 'classes'))->with($notification);
     }
 
     public function user()
@@ -69,7 +75,7 @@ class DashboardController extends Controller
     {
         $authUser = Auth::user();
         $classes = Classroom::with('teacher')->where('teacher_id', $authUser->id)->count();
-      
+
         // $teacher = Teacher::where('user_id', $authUser->id)->first();
         // if (!$teacher) {
         //     session()->flash('message', 'Please fill the teacher form to proceed.');

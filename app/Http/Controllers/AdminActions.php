@@ -675,7 +675,7 @@ class AdminActions extends Controller
         $authUser = Auth::user();
         return view('admin.teacher.edit', compact('teacher', 'authUser'));
     }
-    
+
     public function update_teacher(Request $request, Teacher $teacher)
     {
         $request->validate([
@@ -717,26 +717,28 @@ class AdminActions extends Controller
     public function createFee()
     {
         $authUser = Auth::user();
-        $terms = Term::where('status','=', 'active')->get();
+        $terms = Term::where('status', '=', 'active')->get();
         return view('admin.feesetup.create', compact('authUser', 'terms'));
     }
     public function storeFee(Request $request)
     {
+
         // Validate input with proper unique check for users table
         $request->validate([
-            'name'=> 'required',
+            'name' => 'required',
             'term_id' => 'required|exists:terms,id',
             'amount' => 'required|numeric',
             'status' => 'required|in:active,inactive',
         ]);
 
-       $feeSetup = FeeSetup::create([
-            'name'=> $request->name,
+        $feeSetup = FeeSetup::create([
+            'name' => $request->name,
             'term_id' => $request->term_id,
             'amount' => $request->amount,
             'status' => $request->status,
         ]);
         // Check if the fee setup was created successfully
+
         if (!$feeSetup) {
             $notification = array(
                 'message' => 'Error creating fee setup.',
@@ -746,7 +748,7 @@ class AdminActions extends Controller
         }
         return redirect()->route('adminFee.setup')->with([
             'message' => 'Fee created successfully.',
-            'alert-type' => 'success' 
+            'alert-type' => 'success'
         ]);
     }
 
@@ -759,14 +761,14 @@ class AdminActions extends Controller
     public function updateFee(Request $request, FeeSetup $fee)
     {
         $request->validate([
-            'name'=> 'required',
+            'name' => 'required',
             'term_id' => 'required|exists:terms,id',
             'amount' => 'required|numeric',
             'status' => 'required|in:active,inactive',
         ]);
 
         $fee->update([
-            'name'=> $request->name,
+            'name' => $request->name,
             'term_id' => $request->term_id,
             'amount' => $request->amount,
             'status' => $request->status,
@@ -792,7 +794,7 @@ class AdminActions extends Controller
     {
         $authUser = Auth::user();
         $payments = Transaction::with('student')->orderBy('id', 'desc')->get();
-        
+
         return view('admin.payments.payments', compact('payments', 'authUser'));
     }
     public function paymentReceipt(Transaction $receipt)
@@ -815,19 +817,20 @@ class AdminActions extends Controller
     public function createManualPayment(Student $student)
     {
         $authUser = Auth::user();
-       $guardian = $student->guardian;
+        $guardian = $student->guardian;
         $activeTerm = Term::where('status', 'active')->first();
         $fees = FeeSetup::where('status', 'active')->get();
         return view('admin.payments.create', compact('guardian', 'student', 'activeTerm', 'fees', 'authUser'));
     }
     public function storeManualPayment(Request $request)
     {
+        
         $request->validate([
             'amount' => 'required|numeric',
             'term_id' => 'required|exists:terms,id',
             'status' => 'required|in:paid,unpaid',
-            'student_name'=> 'required|string',
-            'student_id'=> 'required|exists:students,id',
+            'student_name' => 'required|string',
+            'student_id' => 'required|exists:students,id',
         ]);
         $tx_ref = 'MARF_' . time() . '_' . $request->student_id;
         $txr_id = 'MATX_' . time() . '_' . $request->student_id;
@@ -837,7 +840,7 @@ class AdminActions extends Controller
             'name' => $request->student_name,
             'phone_number' => $request->guardian_phone,
             'email' => $request->guardian_email,
-            'guardian_name'=> $request->guardian_name,
+            'guardian_name' => $request->guardian_name,
             'student_class' => $request->student_class,
             'student_number' => $request->student_number,
             'term' => $request->term,
@@ -846,10 +849,10 @@ class AdminActions extends Controller
             'amount' => $request->amount,
             'term_id' => $request->term_id,
             'payment_method' => 'manual',
-            'payitem'=> $request->payitem,
+            'payitem' => $request->payitem,
             'paymentStatus' => $request->status,
-            'tx_ref'=> $tx_ref,
-            'txr_id'=> $txr_id
+            'tx_ref' => $tx_ref,
+            'txr_id' => $txr_id
         ]);
 
         if (!$manualPayment) {
@@ -857,9 +860,35 @@ class AdminActions extends Controller
                 'message' => 'Error creating manual payment. Please try again.',
                 'alert-type' => 'error'
             );
-            
+
             return back()->with($notification);
         }
+        // check if payment exists in transaction table
+        $transaction = Transaction::where('tx_ref', $tx_ref)->first();
+        
+        if (!$transaction) {
+            // check if payment is successful
+            if ($request->status == 'paid') {
+                $transaction = Transaction::create([
+                    'name' => $request->student_name,
+                    'email' => $request->guardian_email,
+                    'student_number' => $request->student_number,
+                    'amount' => $request->amount,
+                    'paymentStatus' => 'successful',
+                    'phone_number' => $request->guardian_phone,
+                    'guardian_name' => $request->guardian_name,
+                    'term' => $request->term,
+                    'session' => $request->session,
+                    'student_class' => $request->student_class,
+                    'student_id' => $request->student_id,
+                    'session_id' => $request->session_id,
+                    'term_id' => $request->term_id,
+                    'tx_ref' => $tx_ref,
+                    'txr_id' => $txr_id
+                ]);
+            }
+        }
+
         $notification = array(
             'message' => 'Manual payment created successfully.',
             'alert-type' => 'success'
@@ -875,27 +904,27 @@ class AdminActions extends Controller
 
     public function editManualPayment(ManualPayments $manualPayment)
     {
-        
+
         $authUser = Auth::user();
         return view('admin.payments.edit', compact('manualPayment', 'authUser'));
     }
-    
+
     public function updateManualPayment(Request $request, ManualPayments $manualPayment)
     {
-        
+
         $manualPaymentDetail = ManualPayments::find($manualPayment->id);
         $txRef = $manualPaymentDetail->tx_ref;
         $trxID = $manualPaymentDetail->txr_id;
-       
+
         $request->validate([
             'amount' => 'required|numeric',
             'status' => 'required|in:paid,unpaid',
-            'payitem'=> 'required|string',
+            'payitem' => 'required|string',
         ]);
 
         $manualPayment->update([
             'amount' => $request->amount,
-            'payitem'=> $request->payitem,
+            'payitem' => $request->payitem,
             'paymentStatus' => $request->status,
         ]);
         // check transaction table if it exists
@@ -909,27 +938,36 @@ class AdminActions extends Controller
             // Create a new transaction record
             $transactions = Transaction::create([
                 'name' => $request->student_name,
-                    'email' => $request->guardian_email,
-                    'student_number' => $request->student_number,
-                    'amount' => $request->amount,
-                    'paymentStatus' => 'successful',
-                    'phone_number' => $request->guardian_phone,
-                    'guardian_name' => $request->guardian_name,
-                    'term' => $request->term,
-                    'session' => $request->session,
-                    'student_class' => $request->student_class,
-                    'student_id' => $request->student_id,
-                    'session_id' => $request->session_id,
-                    'term_id' => $request->term_id,
-                    'tx_ref' => $txRef,
-                    'txr_id' => $trxID
+                'email' => $request->guardian_email,
+                'student_number' => $request->student_number,
+                'amount' => $request->amount,
+                'paymentStatus' => 'successful',
+                'phone_number' => $request->guardian_phone,
+                'guardian_name' => $request->guardian_name,
+                'term' => $request->term,
+                'session' => $request->session,
+                'student_class' => $request->student_class,
+                'student_id' => $request->student_id,
+                'session_id' => $request->session_id,
+                'term_id' => $request->term_id,
+                'tx_ref' => $txRef,
+                'txr_id' => $trxID
             ]);
         }
 
         $notification = array(
-            'message'=> 'Manual payment updated successfully.',
-            'alert-type'=> 'success'
-            );
+            'message' => 'Manual payment updated successfully.',
+            'alert-type' => 'success'
+        );
+        return redirect()->route('admin.manualPayments')->with($notification);
+    }
+    public function deleteManualPayment(ManualPayments $manualPayment)
+    {
+        $manualPayment->delete();
+        $notification = array(
+            'message' => 'Manual payment deleted successfully.',
+            'alert-type' => 'success'
+        );
         return redirect()->route('admin.manualPayments')->with($notification);
     }
 }

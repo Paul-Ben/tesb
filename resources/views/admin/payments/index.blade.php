@@ -60,6 +60,11 @@
                                                     class="dropdown-item">Update Payment</a>
                                                 <a href="{{ route('admin.manViewReceipt', $receipt) }}"
                                                     class="dropdown-item">View Receipt</a>
+                                                    <form action="{{route('admin.manualPayment.delete', $receipt)}}" method="POST">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button type="submit" class="dropdown-item">Delete</button>
+                                                    </form>
                                             </div>
                                         </div>
                                     </td>

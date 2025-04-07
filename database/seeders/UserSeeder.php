@@ -42,6 +42,11 @@ class UserSeeder extends Seeder
 
             ],
         ]);
+        DB::table('admins')->insert([
+            [
+                'user_id' => 2,
+            ],
+        ]);
 
         DB::table('teachers')->insert([
             [

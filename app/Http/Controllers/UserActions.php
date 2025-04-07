@@ -195,6 +195,7 @@ class UserActions extends Controller
                 'alert-type' => 'error',
             ]);
         }
+        
         $authUser = Auth::user();
         $txRef = 'TESB-' . time() . rand(1000, 9999);
         $secretKey = env('FLW_SECRET_KEY');

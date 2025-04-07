@@ -96,8 +96,11 @@
                 </a>
                 <div class="d-flex align-items-center ms-4 mb-4">
                     <div class="position-relative">
-                        <img class="rounded-circle" src="{{$authUser->guardian->image ? asset('storage/' . $authUser->guardian->image) : asset('uploads/avatars/default-avatar.jpg')}}" alt=""
-                            style="width: 40px; height: 40px;">
+                        {{-- <img class="rounded-circle" src="{{$authUser->guardian->image ? asset('storage/' . $authUser->guardian->image) : asset('uploads/avatars/default-avatar.jpg')}}" alt=""
+                            style="width: 40px; height: 40px;"> --}}
+                        <img class="rounded-circle"
+                            src="{{ optional($authUser->guardian)->image ? asset('storage/' . optional($authUser->guardian)->image) : asset('uploads/avatars/default-avatar.jpg') }}"
+                            alt="Guardian Image" style="width: 40px; height: 40px;">
                         <div
                             class="bg-success rounded-circle border-2 border-white position-absolute end-0 bottom-0 p-1">
                         </div>
@@ -108,11 +111,13 @@
                     </div>
                 </div>
                 <div class="navbar-nav w-100">
-                    <a href="{{route('user.dashboard')}}" class="nav-item nav-link active"><i
+                    <a href="{{ route('user.dashboard') }}" class="nav-item nav-link active"><i
                             class="fa fa-tachometer-alt me-2"></i>Dashboard</a>
-                   
-                    <a href="{{route('guardian.students')}}" class="nav-item nav-link"><i class="fa fa-users me-2"></i>My Students</a>
-                    <a href="{{route('guardian.students')}}" class="nav-item nav-link"><i class="fa fa-receipt me-2"></i>Fee Payments</a>
+
+                    <a href="{{ route('guardian.students') }}" class="nav-item nav-link"><i
+                            class="fa fa-users me-2"></i>My Students</a>
+                    <a href="{{ route('guardian.students') }}" class="nav-item nav-link"><i
+                            class="fa fa-receipt me-2"></i>Fee Payments</a>
                 </div>
             </nav>
         </div>
@@ -201,9 +206,13 @@
                     </div> --}}
                     <div class="nav-item dropdown">
                         <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
-                            <img class="rounded-circle me-lg-2" src="{{$authUser->guardian->image ? asset('storage/' . $authUser->guardian->image) : asset('uploads/avatars/default-avatar.jpg')}}" alt=""
-                                style="width: 40px; height: 40px;">
-                            <span class="d-none d-lg-inline-flex">{{$authUser->name}}</span>
+                            {{-- <img class="rounded-circle me-lg-2"
+                                src="{{ $authUser->guardian->image ? asset('storage/' . $authUser->guardian->image) : asset('uploads/avatars/default-avatar.jpg') }}"
+                                alt="" style="width: 40px; height: 40px;"> --}}
+                            <img class="rounded-circle"
+                                src="{{ optional($authUser->guardian)->image ? asset('storage/' . optional($authUser->guardian)->image) : asset('uploads/avatars/default-avatar.jpg') }}"
+                                alt="Guardian Image" style="width: 40px; height: 40px;">
+                            <span class="d-none d-lg-inline-flex">{{ $authUser->name }}</span>
                         </a>
                         <div class="dropdown-menu dropdown-menu-end bg-light border-0 rounded-0 rounded-bottom m-0">
                             <a href="{{ route('profile.edit') }}" class="dropdown-item">My Profile</a>
@@ -285,29 +294,29 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                    
-                                            <tr>
-                                                <th scope="row">1</th>
-                                                <td><a href="#">Erafd53652hd</a></td>
-                                                <td>Tes-203-445</td>
-                                                <td>John Doe</td>
-                                                <td>$24,500</td>
-                                                <td> <span class="badge text-success "> success </span> </td>
-                                                <td> <button class="btn btn-success btn-sm"> view </button> </td>
-                                            </tr>
-                                            <tr>
-                                                <th scope="row">2</th>
-                                                <td><a href="#">Erafd53652hd</a></td>
-                                                <td>Tes-203-445</td>
-                                                <td>John Doe</td>
-                                                <td>$24,500</td>
-                                                <td> <span class="badge text-success "> success </span> </td>
-                                                <td> <button class="btn btn-success btn-sm"> view </button> </td>
-                                            </tr>
-                                            {{-- <tr>
+
+                                        <tr>
+                                            <th scope="row">1</th>
+                                            <td><a href="#">Erafd53652hd</a></td>
+                                            <td>Tes-203-445</td>
+                                            <td>John Doe</td>
+                                            <td>$24,500</td>
+                                            <td> <span class="badge text-success "> success </span> </td>
+                                            <td> <button class="btn btn-success btn-sm"> view </button> </td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row">2</th>
+                                            <td><a href="#">Erafd53652hd</a></td>
+                                            <td>Tes-203-445</td>
+                                            <td>John Doe</td>
+                                            <td>$24,500</td>
+                                            <td> <span class="badge text-success "> success </span> </td>
+                                            <td> <button class="btn btn-success btn-sm"> view </button> </td>
+                                        </tr>
+                                        {{-- <tr>
                                                 <td class="text-center" colspan="4">No Data Found</td>
                                             </tr> --}}
-                                  
+
                                     </tbody>
                                 </table>
                             </div>
@@ -320,23 +329,23 @@
                 @yield('content')
             </div>
 
-                      <!-- Footer Start -->
-                      <div class="container-fluid pt-4 px-4">
-                        <div class="bg-light rounded-top p-4">
-                            <div class="row">
-                                <div class="col-12 col-sm-6 text-center text-sm-start">
-                                    &copy; <a href="#">Tes'B Academy</a>, All Right Reserved. 
-                                </div>
-                                <div class="col-12 col-sm-6 text-center text-sm-end">
-                                    <!--/*** This template is free as long as you keep the footer author’s credit link/attribution link/backlink. If you'd like to use the template without the footer author’s credit link/attribution link/backlink, you can purchase the Credit Removal License from "https://htmlcodex.com/credit-removal". Thank you for your support. ***/-->
-                                    Designed By <a href="#">ozt</a>
-                                </br>
-                                {{-- Distributed By <a class="border-bottom" href="https://themewagon.com" target="_blank">ThemeWagon</a> --}}
-                                </div>
-                            </div>
+            <!-- Footer Start -->
+            <div class="container-fluid pt-4 px-4">
+                <div class="bg-light rounded-top p-4">
+                    <div class="row">
+                        <div class="col-12 col-sm-6 text-center text-sm-start">
+                            &copy; <a href="#">Tes'B Academy</a>, All Right Reserved.
+                        </div>
+                        <div class="col-12 col-sm-6 text-center text-sm-end">
+                            <!--/*** This template is free as long as you keep the footer author’s credit link/attribution link/backlink. If you'd like to use the template without the footer author’s credit link/attribution link/backlink, you can purchase the Credit Removal License from "https://htmlcodex.com/credit-removal". Thank you for your support. ***/-->
+                            Designed By <a href="#">ozt</a>
+                            </br>
+                            {{-- Distributed By <a class="border-bottom" href="https://themewagon.com" target="_blank">ThemeWagon</a> --}}
                         </div>
                     </div>
-                    <!-- Footer End -->
+                </div>
+            </div>
+            <!-- Footer End -->
         </div>
         <!-- Content End -->
 
@@ -355,7 +364,7 @@
     <script src="{{ asset('dashboard/lib/tempusdominus/js/moment.min.js') }}"></script>
     <script src="{{ asset('dashboard/lib/tempusdominus/js/moment-timezone.min.js') }}"></script>
     <script src="{{ asset('dashboard/lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js') }}"></script>
-  
+
     <!-- Template Javascript -->
     <script src="{{ asset('dashboard/js/main.js') }}"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>

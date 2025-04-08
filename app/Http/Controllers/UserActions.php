@@ -15,6 +15,7 @@ use App\Models\Student;
 use App\Models\Term;
 use App\Models\Transaction;
 use Carbon\Carbon;
+use Illuminate\Support\Str;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -135,18 +136,18 @@ class UserActions extends Controller
         $affectiveDevelopment = ResultAffectiveDevelopment::where('result_id', $result->id)->get();
         $table1 = $affectiveDevelopment->take(4);
         $table2 = $affectiveDevelopment->slice(4);
-        
+
         $classroom = Classroom::with('classCategory')->find($student->class_id);
         $classCategoryName = $classroom->classCategory->name;
 
-         // Define a dynamic mapping between class categories and views
-         $categoryViews = [
+        // Define a dynamic mapping between class categories and views
+        $categoryViews = [
             'Kindergarten' => 'users.result.show',
             'Primary' => 'users.result.showPrimary',
             'Junior Secondary School' => 'users.result.showJss',
             'Senior Secondary School' => 'users.result.showSs',
         ];
-        
+
         // Check if the class category exists in the mapping
         if (array_key_exists($classCategoryName, $categoryViews)) {
             return view($categoryViews[$classCategoryName], compact('student', 'result', 'table1', 'table2', 'age'));
@@ -183,11 +184,28 @@ class UserActions extends Controller
 
     public function initialize(Request $request)
     {
-        $existingRegistration = Transaction::where('student_id', $request->student_id)
-            ->where('term_id', $request->term_id)
-            ->where('session_id', $request->session_id)
-            ->where('amount', $request->amount)
-            ->first();
+        // Validate request before processing
+        $validated = $request->validate([
+            'guardian_email' => 'required|email',
+            'student_name' => 'required|string|max:255',
+            'amount' => 'required|numeric|min:0',
+            'term' => 'required|string|max:255',
+            'term_id' => 'required|exists:terms,id',
+            'student_class' => 'required|string|max:255',
+            'student_number' => 'required|string|max:255',
+            'guardian_phone' => 'required|string|max:20',
+            'session' => 'required|string|max:255',
+            'student_id' => 'required|exists:students,id'
+        ]);
+
+        // Check for existing registration with more precise query
+        $existingRegistration = Transaction::where([
+            'student_id' => $validated['student_id'],
+            'term_id' => $validated['term_id'],
+            'session_id' => $request->session_id,
+            'amount' => $request->amount,
+            'paymentStatus' => 'successful' // Only check successful payments
+        ])->exists();
 
         if ($existingRegistration) {
             return redirect()->back()->with([
@@ -195,88 +213,76 @@ class UserActions extends Controller
                 'alert-type' => 'error',
             ]);
         }
-        
-        $authUser = Auth::user();
-        $txRef = 'TESB-' . time() . rand(1000, 9999);
-        $secretKey = env('FLW_SECRET_KEY');
-        $request->validate([
-            'guardian_email' => 'required|email',
-            'student_name' => 'required|string',
-            'amount' => 'required|numeric',
-            'term' => 'required|string',
-            'term_id' => 'required|exists:terms,id',
-            'student_class' => 'required|string',
-            'student_number' => 'required|string',
-            'guardian_phone' => 'required|string',
-            'session' => 'required|string',
-        ]);
 
         DB::beginTransaction();
 
         try {
+            $authUser = Auth::user();
+            $txRef = 'TESB-' . time() . '-' . Str::random(8); // More unique reference
 
-            $user = Registration::create([
-                'name' => $request->student_name,
-                'email' => $request->guardian_email,
-                'student_number' => $request->student_number,
-                'amount' => $request->amount,
-                'student_class' => $request->student_class,
-                'student_id' => $request->student_id,
+            // Create registration record
+            $registration = Registration::create([
+                'name' => $validated['student_name'],
+                'email' => $validated['guardian_email'],
+                'student_number' => $validated['student_number'],
+                'amount' => $validated['amount'],
+                'student_class' => $validated['student_class'],
+                'student_id' => $validated['student_id'],
                 'paymentStatus' => 'pending',
                 'guardian_name' => $authUser->name,
-                'phone_number' => $request->guardian_phone,
-                'term' => $request->term,
-                'term_id' => $request->term_id,
-                'session' => $request->session,
+                'phone_number' => $validated['guardian_phone'],
+                'term' => $validated['term'],
+                'term_id' => $validated['term_id'],
+                'session' => $validated['session'],
                 'session_id' => $request->session_id,
                 'tx_ref' => $txRef
             ]);
 
-
-            // $subaccountID = "RS_abc123xyz"; 
-            // $mainAccountPercentage = 90; 
-            // $subAccountPercentage = 10;
-
-            $headers = [
+            // Initialize payment
+            $secretKey = config('app.flutterwave.secret_key');
+            $response = Http::withHeaders([
                 'Authorization' => 'Bearer ' . $secretKey,
                 'Content-Type' => 'application/json',
-            ];
-
-            $response = Http::withHeaders($headers)->post('https://api.flutterwave.com/v3/payments', [
+            ])->timeout(60)
+            ->retry(3, 1000)
+            ->post('https://api.flutterwave.com/v3/payments', [
                 'tx_ref' => $txRef,
-                'amount' => $request->amount,
+                'amount' => $validated['amount'],
                 'currency' => 'NGN',
                 'redirect_url' => route('payment.callback'),
-                'payment_options' => 'card, mobilemoneyghana, ussd',
+                'payment_options' => 'card,mobilemoneyghana,ussd',
                 'customer' => [
-                    'email' => $request->guardian_email,
-                    'phone_number' => $request->guardian_phone,
-                    'name' => $request->student_name,
+                    'email' => $validated['guardian_email'],
+                    'phone_number' => $validated['guardian_phone'],
+                    'name' => $validated['student_name'],
                 ],
                 'customizations' => [
                     'title' => 'TesB Academy Payment',
                     'description' => 'Payment for TesB Academy User Charges',
-                    'logo' => 'https://www.campus.africa/wp-content/uploads/2018/04/249270c90489c478489dd462bfce82191f3b9429.jpg',
+                    'logo' => asset('frontend/images/logo.png'), // paul change to use logo online from website
                 ],
-                // 'subaccounts' => [
-                //     [
-                //         'id' => $subaccountID,
-                //         'transaction_split_ratio' => $subAccountPercentage,
-                //     ],
-                // ],
-            ])->json();
+            ]);
 
-            if ($response['status'] === 'success') {
-                DB::commit();
-                return redirect($response['data']['link']); // Redirect to payment page
+            $responseData = $response->json();
+
+            if (!$response->successful() || $responseData['status'] !== 'success') {
+                throw new \Exception($responseData['message'] ?? 'Payment initiation failed');
             }
 
-            DB::rollBack();
-            return back()->with('error', 'Payment initiation failed.');
+            DB::commit();
+
+            return redirect()->away($responseData['data']['link']);
         } catch (\Exception $e) {
             DB::rollBack();
-            Log::error('Payment error: ' . $e->getMessage());
-            return back()->with('error', 'An error occurred. Please try again.');
+            Log::error('Payment Error: ' . $e->getMessage(), [
+                'student_id' => $request->student_id,
+                'trace' => $e->getTraceAsString()
+            ]);
+
+            return back()->with([
+                'error' => 'Payment processing failed: ' . $e->getMessage(),
+                'alert-type' => 'error'
+            ]);
         }
     }
 

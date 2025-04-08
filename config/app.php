@@ -185,4 +185,10 @@ return [
         // 'Example' => App\Facades\Example::class,
     ])->toArray(),
 
+    'flutterwave' => [
+    'base_url' => env('FLW_BASE_URL', 'https://api.flutterwave.com/v3'),
+    'secret_key' => env('FLW_SECRET_KEY'),
+    'public_key' => env('FLW_PUBLIC_KEY'),
+],
+
 ];

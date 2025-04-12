@@ -1,43 +1,35 @@
-name: Deploy cPanel via FTP
+name: Laravel
 
 on:
   push:
-    branches: [ main ]
-
+    branches: [ "main" ]
+     
 jobs:
   deploy:
+
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
-      - name: Create .env
-        run: |
-          touch .env
-          echo "${{ secrets.ENV }}" > .env
-          cat .env
-
-      - name: Install dependencies
-        run: |
-          composer install --no-dev --optimize-autoloader
-      - name: Install Node Dependencies
-        run: npm install
-      - name: Build Node Dependencies
-        run: npm run build
-      - name: Fix Permissions
-        run: |
-          find storage -type d -exec chmod 775 {} \;
-          find bootstrap/cache -type d -exec chmod 775 {} \;
-          
-      - name: Upload files via FTP
-        uses: SamKirkland/FTP-Deploy-Action@4.3.0
-        with:
-          server: ${{ secrets.FTP_SERVER }}
-          username: ${{ secrets.FTP_USERNAME }}
-          password: ${{ secrets.FTP_PASSWORD }}
-          local-dir: ./
-          server-dir: ${{ secrets.FTP_DEPLOY_PATH }}
-          exclude: |
-            .git*
-            .github/
-            .env
-            node_modules/
+    - uses: shivammathur/setup-php@15c43e89cdef867065b0213be354c2841860869e
+      with:
+        php-version: '8.1'
+    - uses: actions/checkout@v3
+    - name: Create .env
+      run: |
+        touch .env
+        echo "${{ secrets.ENV }}" > .env
+        cat .env
+    - name: Install Dependencies
+      run: composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
+    - name: Install Node Dependencies
+      run: npm install
+    - name: Build Node Dependencies
+      run: npm run build
+    - name: Directory Permissions
+      run: chmod -R 775 storage bootstrap/cache
+    - name: 📂 Sync files
+      uses: SamKirkland/FTP-Deploy-Action@4.0.0
+      with:
+        server: ${{ secrets.SERVER }}
+        username: ${{ secrets.USERNAME }}
+        password: ${{ secrets.PASSWORD }}

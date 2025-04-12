@@ -20,7 +20,7 @@ jobs:
         echo "${{ secrets.ENV }}" > .env
         cat .env
     - name: Install Dependencies
-      run: composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
+      run: composer install --no-dev --optimize-autoloader
     - name: Install Node Dependencies
       run: npm install
     - name: Build Node Dependencies

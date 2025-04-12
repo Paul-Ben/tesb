@@ -11,18 +11,18 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Create .env
-      run: |
-        touch .env
-        echo "${{ secrets.ENV }}" > .env
-        cat .env
+        run: |
+          touch .env
+          echo "${{ secrets.ENV }}" > .env
+          cat .env
 
       - name: Install dependencies
         run: |
           composer install --no-dev --optimize-autoloader
       - name: Install Node Dependencies
-          run: npm install
+        run: npm install
       - name: Build Node Dependencies
-          run: npm run build
+        run: npm run build
       - name: Fix Permissions
         run: |
           find storage -type d -exec chmod 775 {} \;

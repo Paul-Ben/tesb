@@ -1,11 +1,58 @@
+# This is a cPanel deployment configuration file for a Laravel application.
 ---
 deployment:
+  # Deployment triggers
+  triggers:
+    - branch: development  # Only deploy from main branch
+      
+  # Environment variables
+  environment:
+    APP_ENV: production
+    DEPLOY_PATH: /home/tesbacad/public_html/  # Replace 'username' with your cPanel username
+    LARAVEL_PATH: /home/tesbacad/tesbacademy/  # Path where repo is cloned
+    
+  # Deployment tasks
   tasks:
-    - export DEPLOYPATH=/home/tesbacad/public_html/
-    - /bin/cp -R * $DEPLOYPATH
-    - cd $DEPLOYPATH
-    - composer install --no-dev --optimize-autoloader
-    - php artisan migrate --force
-    - php artisan storage:link
-    - php artisan optimize
-    - chmod -R 755 storage bootstrap/cache
+    # 1. Copy files to public_html
+    - /bin/cp -rf $LARAVEL_PATH* $DEPLOY_PATH
+    
+    # 2. Handle public directory separately
+    - /bin/mkdir -p $DEPLOY_PATH/public
+    - /bin/cp -rf $LARAVEL_PATH/public/* $DEPLOY_PATH/public/
+    
+    # 3. Install dependencies
+    - cd $DEPLOY_PATH
+    - /usr/local/bin/php /opt/cpanel/composer/bin/composer install --no-dev --optimize-autoloader --no-interaction
+    
+    # 4. Laravel specific setup
+    - /usr/local/bin/php artisan config:clear
+    - /usr/local/bin/php artisan cache:clear
+    - /usr/local/bin/php artisan view:clear
+    - /usr/local/bin/php artisan route:clear
+    - /usr/local/bin/php artisan optimize
+    - /usr/local/bin/php artisan storage:link
+    
+    # 5. Database migrations (uncomment if needed)
+    # - /usr/local/bin/php artisan migrate --force
+    
+    # 6. Set proper permissions
+    - /bin/chmod -R 755 $DEPLOY_PATH/storage
+    - /bin/chmod -R 755 $DEPLOY_PATH/bootstrap/cache
+    - /bin/chown -R tesbacad:tesbacad $DEPLOY_PATH  # Replace 'username'
+    
+    # 7. Node.js build (if using frontend assets)
+    # - /bin/npm install --prefix $DEPLOY_PATH
+    # - /bin/npm run production --prefix $DEPLOY_PATH
+
+# Exclude files/folders from deployment
+exclude:
+  - .env
+  - .git/
+  - .github/
+  - node_modules/
+  - tests/
+  - storage/debugbar/
+  - storage/framework/cache/
+  - storage/framework/sessions/
+  - storage/framework/views/
+  - storage/logs/

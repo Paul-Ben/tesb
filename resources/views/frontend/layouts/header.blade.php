@@ -9,10 +9,10 @@
                             <ul class="top_bar_contact_list">
                                 <li><div class="question">Have any questions?</div></li>
                                 <li>
-                                    <div>(009) 35475 6688933 32</div>
+                                    <div>+234 8069263946</div>
                                 </li>
                                 <li>
-                                    <div>info@example.com</div>
+                                    <div>info@tesbacademy.com.ng</div>
                                 </li>
                             </ul>
                             <div class="top_bar_login ml-auto">
@@ -46,8 +46,6 @@
                             <ul class="main_nav">
                                 <li class="active"><a href="{{ route('home') }}">home</a></li>
                                 <li><a href="{{ route('about') }}">about us</a></li>
-                                <!-- <li><a href="courses.html">courses</a></li> -->
-                                <!-- <li><a href="news.html">news</a></li> -->
                                 <li><a href="{{ route('contact') }}">contact</a></li>
                             </ul>
                             <div class="search_button"><i class="fa fa-search" aria-hidden="true"></i></div>

@@ -35,14 +35,14 @@
 		</div>
 		<nav class="menu_nav">
 			<ul class="menu_mm">
-				<li class="menu_mm"><a href="index.html">Home</a></li>
-				<li class="menu_mm"><a href="about.html">About Us</a></li>
-				<li class="menu_mm"><a href="news.html">News</a></li>
-				<li class="menu_mm"><a href="contact.html">Contact</a></li>
+				<li class="menu_mm"><a href="{{route('home')}}">Home</a></li>
+				<li class="menu_mm"><a href="{{route('about')}}">About Us</a></li>
+				{{-- <li class="menu_mm"><a href="news.html">News</a></li> --}}
+				<li class="menu_mm"><a href="{{route('contact')}}">Contact</a></li>
 			</ul>
 		</nav>
 		<div class="menu_extra">
-			<div class="menu_phone"><span class="menu_title">phone:</span>(009) 35475 6688933 32</div>
+			<div class="menu_phone"><span class="menu_title">phone:</span>+234 8069263946</div>
 			<div class="menu_social">
 				<span class="menu_title">follow us</span>
 				<ul>
@@ -82,8 +82,8 @@
 										</div>
 										
 										<div class="home_buttons">
-											<div class="button home_button"><a href="about.html">learn more<div class="button_arrow"><i class="fa fa-angle-right" aria-hidden="true"></i></div></a></div>
-											<div class="button home_button"><a href="register.html">get started<div class="button_arrow"><i class="fa fa-angle-right" aria-hidden="true"></i></div></a></div>
+											<div class="button home_button"><a href="{{route('about')}}">learn more<div class="button_arrow"><i class="fa fa-angle-right" aria-hidden="true"></i></div></a></div>
+											<div class="button home_button"><a href="{{route('register')}}">get started<div class="button_arrow"><i class="fa fa-angle-right" aria-hidden="true"></i></div></a></div>
 										</div>
 									</div>
 								</div>
@@ -108,8 +108,8 @@
 											</div>
 										</div>
 										<div class="home_buttons">
-											<div class="button home_button"><a href="about.html">learn more<div class="button_arrow"><i class="fa fa-angle-right" aria-hidden="true"></i></div></a></div>
-											<div class="button home_button"><a href="register.html">get started<div class="button_arrow"><i class="fa fa-angle-right" aria-hidden="true"></i></div></a></div>
+											<div class="button home_button"><a href="{{route('about')}}">learn more<div class="button_arrow"><i class="fa fa-angle-right" aria-hidden="true"></i></div></a></div>
+											<div class="button home_button"><a href="{{route('register')}}">get started<div class="button_arrow"><i class="fa fa-angle-right" aria-hidden="true"></i></div></a></div>
 										</div>
 									</div>
 								</div>
@@ -134,8 +134,8 @@
 											</div>
 										</div>
 										<div class="home_buttons">
-											<div class="button home_button"><a href="about.html">learn more<div class="button_arrow"><i class="fa fa-angle-right" aria-hidden="true"></i></div></a></div>
-											<div class="button home_button"><a href="register.html">get started<div class="button_arrow"><i class="fa fa-angle-right" aria-hidden="true"></i></div></a></div>
+											<div class="button home_button"><a href="{{route('about')}}">learn more<div class="button_arrow"><i class="fa fa-angle-right" aria-hidden="true"></i></div></a></div>
+											<div class="button home_button"><a href="{{route('register')}}">get started<div class="button_arrow"><i class="fa fa-angle-right" aria-hidden="true"></i></div></a></div>
 										</div>
 									</div>
 								</div>
@@ -416,7 +416,7 @@
 			</div>
 		</div>
 		<div class="button join_button">
-			<a href="#">Register Now
+			<a href="{{route('register')}}">Register Now
 				<div class="button_arrow"><i class="fa fa-angle-right" aria-hidden="true"></i></div>
 			</a>
 		</div>

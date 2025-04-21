@@ -29,7 +29,7 @@
                 Copyright &copy;    
                 <script>document.write(new Date().getFullYear());</script>
                 <br> All rights reserved | Tes'B Academy <i class="fa fa-heart-o" aria-hidden="true"></i> by 
-                <a href="https://alphaservices.onrender.com/" target="_blank"> ICT Team</a></div>
+                <a href="https://web.facebook.com/profile.php?id=61575036835147" target="_blank"> ICT Team</a></div>
                     </div>
             </div>
 
@@ -51,7 +51,7 @@
                     <ul class="footer_list">
                         <li><a href="{{ route('about') }}">About Us</a></li>
                         <li><a href="{{ route('contact') }}">Contact Us</a></li>
-                        <li><a href="#">Register</a></li>
+                        <li><a href="{{route('register')}}">Register</a></li>
                         <li><a href="{{ route('login') }}">Login</a></li>
                     </ul>
                 </div>
@@ -63,15 +63,15 @@
                     <div class="footer_contact_info">
                         <div class="footer_contact_item">
                             <div class="footer_contact_title"><i class="fa fa-map-marker style-icon"></i> Address:</div>
-                            <div class="footer_contact_line">No 21, Vandeikya Street, Makurdi.</div>
+                            <div class="footer_contact_line">opposite Grain Reserve, Terwase Agbadu, Makurdi, Benue State.</div>
                         </div>
                         <div class="footer_contact_item">
                             <div class="footer_contact_title"><i class="fa fa-phone style-icon"></i> Phone:</div>
-                            <div class="footer_contact_line">+234 904 794 8009</div>
+                            <div class="footer_contact_line">+234 8069263946</div>
                         </div>
                         <div class="footer_contact_item">
                             <div class="footer_contact_title"><i class="fa fa-envelope style-icon"></i> Email:</div>
-                            <div class="footer_contact_line">tesbacademics@email.com</div>
+                            <div class="footer_contact_line">info@tesbacademy.com.ng</div>
                         </div>
                     </div>
                 </div>

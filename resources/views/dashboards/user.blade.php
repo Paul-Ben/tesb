@@ -259,7 +259,7 @@
                                 <i class="fa fa-calendar-alt fa-3x text-primary"></i>
                                 <div class="ms-3">
                                     <p class="mb-2">Current Session</p>
-                                    <h6 class="mb-0">{{ $session->sessionName }}</h6>
+                                    <h6 class="mb-0">{{ $session->sessionName ?? 'No session available' }}</h6>
                                 </div>
                             </div>
                         </div>

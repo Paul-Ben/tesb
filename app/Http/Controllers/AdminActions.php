@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Admin;
 use App\Models\ClassCategory;
 use App\Models\Classroom;
 use App\Models\FeeSetup;
@@ -70,7 +71,14 @@ class AdminActions extends Controller
             'password' => 'required|min:6'
         ]);
         $validated['password'] = bcrypt($validated['password']);
-        User::create($validated);
+        $createdUser = User::create($validated);
+        $getRole = $createdUser->role;
+        if ($getRole->name == 'Admin') {
+            Admin::create([
+                'user_id' => $createdUser->id,
+            ]);
+        }
+
         Log::info('User created successfully');
         return redirect()->route('users.index')->with('success', 'User created successfully');
     }
@@ -824,7 +832,7 @@ class AdminActions extends Controller
     }
     public function storeManualPayment(Request $request)
     {
-        
+
         $request->validate([
             'amount' => 'required|numeric',
             'term_id' => 'required|exists:terms,id',
@@ -865,7 +873,7 @@ class AdminActions extends Controller
         }
         // check if payment exists in transaction table
         $transaction = Transaction::where('tx_ref', $tx_ref)->first();
-        
+
         if (!$transaction) {
             // check if payment is successful
             if ($request->status == 'paid') {

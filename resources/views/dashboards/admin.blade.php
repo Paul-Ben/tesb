@@ -113,7 +113,7 @@
                         <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="fa fa-id-card me-2"></i>Student Record</a>
                         <div class="dropdown-menu bg-transparent border-0">
                             <a href="{{route('student.index')}}" class="dropdown-item">Student Information</a>
-                            <a href="#" class="dropdown-item">Class Student</a>
+                            {{-- <a href="#" class="dropdown-item">Class Student</a> --}}
                         </div>
                     </div>
                     <div class="nav-item dropdown">
@@ -269,7 +269,7 @@
                             <div class="bg-light rounded d-flex align-items-center justify-content-between p-4">
                                 <i class="fa fa-user-tie fa-3x text-primary"></i>
                                 <div class="ms-3">
-                                    <p class="mb-2">Today Teachers</p>
+                                    <p class="mb-2">Total Teachers</p>
                                     <h6 class="mb-0">{{ $teachers }}</h6>
                                 </div>
                             </div>
@@ -341,7 +341,7 @@
                         </div>
                         <div class="col-12 col-sm-6 text-center text-sm-end">
                             <!--/*** This template is free as long as you keep the footer author’s credit link/attribution link/backlink. If you'd like to use the template without the footer author’s credit link/attribution link/backlink, you can purchase the Credit Removal License from "https://htmlcodex.com/credit-removal". Thank you for your support. ***/-->
-                            Designed By <a href="#">ozt</a>
+                            Designed By <a href="https://web.facebook.com/profile.php?id=61575036835147">Ozatech Services</a>
                         </br>
                         {{-- Distributed By <a class="border-bottom" href="https://themewagon.com" target="_blank">ThemeWagon</a> --}}
                         </div>

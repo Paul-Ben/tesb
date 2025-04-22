@@ -33,16 +33,18 @@ class DashboardController extends Controller
     public function admin()
     {
         $authUser = Auth::user();
-        $students = Student::count();
+        $students = Student::whereHas('classroom', function ($query) {
+            $query->where('name', '!=', 'Graduated');
+        })->count();
         $teachers = Teacher::count();
-        $classes = Classroom::count();
+        $classes = Classroom::where('name', '!=', 'Graduated')->count();
         $session = SchoolSession::where('status', 'active')->first();
-        
+
         $transactions = Transaction::where('paymentStatus', 'successful')
             ->whereDate('created_at', '>=', now()->startOfMonth())
             ->whereDate('created_at', '<=', now()->endOfMonth())
             ->get();
-       
+
         $notification = array(
             'message' => 'Welcome to your dashboard.',
             'alert-type' => 'success'
@@ -74,21 +76,29 @@ class DashboardController extends Controller
     public function teacher()
     {
         $authUser = Auth::user();
-        $classes = Classroom::with('teacher')->where('teacher_id', $authUser->id)->count();
+        $classes = Classroom::whereHas('teacher', function ($query) use ($authUser) {
+            $query->where('user_id', $authUser->id);
+        })->count();
 
-        // $teacher = Teacher::where('user_id', $authUser->id)->first();
-        // if (!$teacher) {
-        //     session()->flash('message', 'Please fill the teacher form to proceed.');
-        //     $notification = array(
-        //         'message' => 'Please fill the teacher form to proceed.',
-        //         'alert-type' => 'info'
-        //     );
-        //     return redirect()->route('teacher.form')->with($notification);
-        // }
+        $classroomIds = Classroom::with('students')->whereHas('teacher', function ($query) use ($authUser) {
+            $query->where('user_id', $authUser->id);
+        })->get();
+
+        $studentCount = $classroomIds->sum(function ($classroom) {
+            return $classroom->students->count();
+        });
+
+        $subjectCount = Classroom::with('subjects')->whereHas('teacher', function ($query) use ($authUser) {
+            $query->where('user_id', $authUser->id);
+        })->get();
+        $subjectCount = $subjectCount->sum(function ($classroom) {
+            return $classroom->subjects->count();
+        });
+
         $notification = array(
             'message' => 'Welcome to your dashboard.',
             'alert-type' => 'success'
         );
-        return view('dashboards.teacher', compact('authUser', 'classes'))->with($notification);
+        return view('dashboards.teacher', compact('authUser', 'classes', 'studentCount', 'subjectCount'))->with($notification);
     }
 }

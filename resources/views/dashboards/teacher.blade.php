@@ -249,7 +249,7 @@
                 <!-- Sale & Revenue Start -->
                 <div class="container-fluid pt-4 px-4">
                     <div class="row g-4">
-                        <div class="col-sm-6 col-xl-3">
+                        <div class="col-sm-6 col-xl-4">
                             <div class="bg-light rounded d-flex align-items-center justify-content-between p-4">
                                 <i class="fa fa-chalkboard-teacher fa-3x text-primary"></i>
                                 <div class="ms-3">
@@ -258,25 +258,25 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-sm-6 col-xl-3">
+                        <div class="col-sm-6 col-xl-4">
                             <div class="bg-light rounded d-flex align-items-center justify-content-between p-4">
                                 <i class="fa fa-user-graduate fa-3x text-primary"></i>
                                 <div class="ms-3">
                                     <p class="mb-2">My Students</p>
-                                    <h6 class="mb-0">$1234</h6>
+                                    <h6 class="mb-0">{{$studentCount}}</h6>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-sm-6 col-xl-3">
+                        <div class="col-sm-6 col-xl-4">
                             <div class="bg-light rounded d-flex align-items-center justify-content-between p-4">
                                 <i class="fa fa-book-open fa-3x text-primary"></i>
                                 <div class="ms-3">
                                     <p class="mb-2">My Subjects</p>
-                                    <h6 class="mb-0">$1234</h6>
+                                    <h6 class="mb-0">{{$subjectCount}}</h6>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-sm-6 col-xl-3">
+                        {{-- <div class="col-sm-6 col-xl-3">
                             <div class="bg-light rounded d-flex align-items-center justify-content-between p-4">
                                 <i class="fa fa-file-alt fa-3x text-primary"></i>
                                 <div class="ms-3">
@@ -284,7 +284,7 @@
                                     <h6 class="mb-0">$1234</h6>
                                 </div>
                             </div>
-                        </div>
+                        </div> --}}
                     </div>
                 </div>
                 <!-- Sale & Revenue End -->
@@ -305,7 +305,7 @@
                         </div>
                         <div class="col-12 col-sm-6 text-center text-sm-end">
                             <!--/*** This template is free as long as you keep the footer author’s credit link/attribution link/backlink. If you'd like to use the template without the footer author’s credit link/attribution link/backlink, you can purchase the Credit Removal License from "https://htmlcodex.com/credit-removal". Thank you for your support. ***/-->
-                            Designed By <a href="#">ozt</a>
+                            Designed By <a href="https://web.facebook.com/profile.php?id=61575036835147">Ozatech Services</a>
                         </br>
                         {{-- Distributed By <a class="border-bottom" href="https://themewagon.com" target="_blank">ThemeWagon</a> --}}
                         </div>

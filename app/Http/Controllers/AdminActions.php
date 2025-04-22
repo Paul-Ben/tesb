@@ -51,14 +51,14 @@ class AdminActions extends Controller
     public function viewUsers()
     {
         $authUser = Auth::user();
-        $users = User::whereNotIn('role_id', [3, 2])->get();
+        $users = User::whereNotIn('role_id', [3, 2, 4])->get();
         return view('admin.user.index', compact('users', 'authUser'));
     }
 
     public function createUser()
     {
         $authUser = Auth::user();
-        $roles = Role::all();
+        $roles = Role::whereIn('id', [1,2])->get();
         return view('admin.user.create', compact('roles', 'authUser'));
     }
 
@@ -86,7 +86,7 @@ class AdminActions extends Controller
     public function editUser(User $user)
     {
         $authUser = Auth::user();
-        $roles = Role::all();
+        $roles = Role::where('id', 1)->get();
         return view('admin.user.edit', compact('user', 'roles', 'authUser'));
     }
 
@@ -518,7 +518,7 @@ class AdminActions extends Controller
     {
         $authUser = Auth::user();
         $subjects = Subject::all();
-        return view('admin.subject.allindex', compact('subjects', 'authUser'));
+        return view('admin.subject.allIndex', compact('subjects', 'authUser'));
     }
     public function subject_index(Classroom $classroom)
     {

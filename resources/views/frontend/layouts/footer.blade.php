@@ -29,7 +29,7 @@
                 Copyright &copy;    
                 <script>document.write(new Date().getFullYear());</script>
                 <br> All rights reserved | Tes'B Academy <i class="fa fa-heart-o" aria-hidden="true"></i> by 
-                <a href="https://web.facebook.com/profile.php?id=61575036835147" target="_blank"> ICT Team</a></div>
+                <a href="https://web.facebook.com/profile.php?id=61575036835147" target="_blank"> Ozatech Services</a></div>
                     </div>
             </div>
 

@@ -46,6 +46,8 @@ class TeacherController extends Controller
         $classrooms = Classroom::all();
         return view('teacher.classroom.promoteForm', compact('classroom', 'authUser', 'classrooms'));
     }
+
+    
     public function promote(Request $request, Classroom $classroom)
     {
         $authUser = Auth::user();

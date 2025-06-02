@@ -51,6 +51,15 @@
                                 </select>
                             </div>
                             <div class="col-sm-12 col-xl-6 mb-3">
+                                <label for="exampleInputEmail1" class="form-label">Class</label>
+                                <select name="classroom_id" id="term" class="form-control" required>
+                                    <option value="{{$fee->classroom_id}}">{{$fee->classroom->name}}</option>
+                                    @foreach ($classrooms as $classroom)
+                                        <option value="{{$classroom->id}}">{{Str::ucfirst($classroom->name)}}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="col-sm-12 col-xl-6 mb-3">
                                 <label for="exampleInputEmail1" class="form-label">Status</label>
                                 <select name="status" id="status" class="form-control" required>
                                     <option value="{{$fee->status}}">{{$fee->status}}</option>

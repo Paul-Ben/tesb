@@ -9,26 +9,26 @@
     <meta content="" name="description">
 
     <!-- Favicon -->
-    <link href="{{asset('dashboard/img/favicon.ico')}}" rel="icon">
+    <link href="{{ asset('dashboard/img/favicon.ico') }}" rel="icon">
 
     <!-- Google Web Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700&display=swap" rel="stylesheet">
-    
+
     <!-- Icon Font Stylesheet -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
 
     <!-- Libraries Stylesheet -->
-    <link href="{{asset('dashboard/lib/owlcarousel/assets/owl.carousel.min.css')}}" rel="stylesheet">
-    <link href="{{asset('dashboard/lib/tempusdominus/css/tempusdominus-bootstrap-4.min.css')}}" rel="stylesheet" />
+    <link href="{{ asset('dashboard/lib/owlcarousel/assets/owl.carousel.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('dashboard/lib/tempusdominus/css/tempusdominus-bootstrap-4.min.css') }}" rel="stylesheet" />
 
     <!-- Customized Bootstrap Stylesheet -->
-    <link href="{{asset('dashboard/css/bootstrap.min.css')}}" rel="stylesheet">
+    <link href="{{ asset('dashboard/css/bootstrap.min.css') }}" rel="stylesheet">
 
     <!-- Template Stylesheet -->
-    <link href="{{asset('dashboard/css/style.css')}}" rel="stylesheet">
+    <link href="{{ asset('dashboard/css/style.css') }}" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css" rel="stylesheet">
     <style>
         .image-container {
@@ -74,12 +74,18 @@
             display: none;
         }
     </style>
+    <!-- Add in your Blade file, preferably in the <head> or before </body> -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+
 </head>
 
 <body>
     <div class="container-xxl position-relative bg-white d-flex p-0">
         <!-- Spinner Start -->
-        <div id="spinner" class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
+        <div id="spinner"
+            class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
             <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
                 <span class="sr-only">Loading...</span>
             </div>
@@ -96,38 +102,51 @@
                 <div class="d-flex align-items-center ms-4 mb-4">
                     <div class="position-relative">
                         {{-- <img class="rounded-circle" src="{{ $authUser->admin->image ? asset('storage/' . $authUser->admin->image) : asset('uploads/avatars/default-avatar.jpg') }}" alt="" style="width: 40px; height: 40px;"> --}}
-                        <img class="rounded-circle" src="{{ optional(optional($authUser)->admin)->image ? asset('storage/' . $authUser->admin->image) : asset('uploads/avatars/default-avatar.jpg') }}" alt="Profile image" style="width: 40px; height: 40px;">
-                        <div class="bg-success rounded-circle border-2 border-white position-absolute end-0 bottom-0 p-1"></div>
+                        <img class="rounded-circle"
+                            src="{{ optional(optional($authUser)->admin)->image ? asset('storage/' . $authUser->admin->image) : asset('uploads/avatars/default-avatar.jpg') }}"
+                            alt="Profile image" style="width: 40px; height: 40px;">
+                        <div
+                            class="bg-success rounded-circle border-2 border-white position-absolute end-0 bottom-0 p-1">
+                        </div>
                     </div>
                     <div class="ms-3">
-                        <h6 class="mb-0">{{$authUser->name}}</h6>
-                        <span>{{$authUser->role->name}}</span>
+                        <h6 class="mb-0">{{ $authUser->name }}</h6>
+                        <span>{{ $authUser->role->name }}</span>
                     </div>
                 </div>
                 <div class="navbar-nav w-100">
-                    <a href="{{route('admin.dashboard')}}" class="nav-item nav-link active"><i class="fa fa-tachometer-alt me-2"></i>Dashboard</a>
-                    <a href="{{route('session.index')}}" class="nav-item nav-link"><i class="fa fa-calendar me-2"></i>Session</a>
-                    <a href="{{route('term.index')}}" class="nav-item nav-link"><i class="fa fa-book-open me-2"></i>Term</a>
+                    <a href="{{ route('admin.dashboard') }}" class="nav-item nav-link active"><i
+                            class="fa fa-tachometer-alt me-2"></i>Dashboard</a>
+                    <a href="{{ route('session.index') }}" class="nav-item nav-link"><i
+                            class="fa fa-calendar me-2"></i>Session</a>
+                    <a href="{{ route('term.index') }}" class="nav-item nav-link"><i
+                            class="fa fa-book-open me-2"></i>Term</a>
                     {{-- <a href="{{route('role.index')}}" class="nav-item nav-link"><i class="fa fa-th me-2"></i>Roles</a> --}}
                     <div class="nav-item dropdown">
-                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="fa fa-id-card me-2"></i>Student Record</a>
+                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i
+                                class="fa fa-id-card me-2"></i>Student Record</a>
                         <div class="dropdown-menu bg-transparent border-0">
-                            <a href="{{route('student.index')}}" class="dropdown-item">Student Information</a>
+                            <a href="{{ route('student.index') }}" class="dropdown-item">Student Information</a>
                             {{-- <a href="#" class="dropdown-item">Class Student</a> --}}
                         </div>
                     </div>
                     <div class="nav-item dropdown">
-                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="fa fa-chalkboard me-2"></i>Class Manager</a>
+                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i
+                                class="fa fa-chalkboard me-2"></i>Class Manager</a>
                         <div class="dropdown-menu bg-transparent border-0">
-                            <a href="{{route('category.index')}}" class="dropdown-item">Class Category</a>
-                            <a href="{{route('classroom.index')}}" class="dropdown-item">Class LIst</a>
-                            <a href="{{route('subjects')}}" class="dropdown-item">Subject List</a>
+                            <a href="{{ route('category.index') }}" class="dropdown-item">Class Category</a>
+                            <a href="{{ route('classroom.index') }}" class="dropdown-item">Class LIst</a>
+                            <a href="{{ route('subjects') }}" class="dropdown-item">Subject List</a>
                         </div>
                     </div>
-                    <a href="{{route('teacher.index')}}" class="nav-item nav-link"><i class="fa fa-chalkboard-teacher me-2"></i>Manage Teachers</a>
-                    <a href="{{route('users.index')}}" class="nav-item nav-link"><i class="fa fa-users me-2"></i>Manage User</a>
-                    <a href="{{route('adminFee.setup')}}" class="nav-item nav-link"><i class="far fa-file-alt me-2"></i>Fee Setup</a>
-                    <a href="{{route('payment.index')}}" class="nav-item nav-link"><i class="far fa-file-alt me-2"></i>Payments</a>
+                    <a href="{{ route('teacher.index') }}" class="nav-item nav-link"><i
+                            class="fa fa-chalkboard-teacher me-2"></i>Manage Teachers</a>
+                    <a href="{{ route('users.index') }}" class="nav-item nav-link"><i
+                            class="fa fa-users me-2"></i>Manage User</a>
+                    <a href="{{ route('adminFee.setup') }}" class="nav-item nav-link"><i
+                            class="far fa-file-alt me-2"></i>Fee Setup</a>
+                    <a href="{{ route('payment.index') }}" class="nav-item nav-link"><i
+                            class="far fa-file-alt me-2"></i>Payments</a>
                     {{-- <div class="nav-item dropdown">
                         <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="far fa-file-alt me-2"></i>Pages</a>
                         <div class="dropdown-menu bg-transparent border-0">
@@ -165,7 +184,8 @@
                         <div class="dropdown-menu dropdown-menu-end bg-light border-0 rounded-0 rounded-bottom m-0">
                             <a href="#" class="dropdown-item">
                                 <div class="d-flex align-items-center">
-                                    <img class="rounded-circle" src="img/user.jpg" alt="" style="width: 40px; height: 40px;">
+                                    <img class="rounded-circle" src="img/user.jpg" alt=""
+                                        style="width: 40px; height: 40px;">
                                     <div class="ms-2">
                                         <h6 class="fw-normal mb-0">Jhon send you a message</h6>
                                         <small>15 minutes ago</small>
@@ -175,7 +195,8 @@
                             <hr class="dropdown-divider">
                             <a href="#" class="dropdown-item">
                                 <div class="d-flex align-items-center">
-                                    <img class="rounded-circle" src="img/user.jpg" alt="" style="width: 40px; height: 40px;">
+                                    <img class="rounded-circle" src="img/user.jpg" alt=""
+                                        style="width: 40px; height: 40px;">
                                     <div class="ms-2">
                                         <h6 class="fw-normal mb-0">Jhon send you a message</h6>
                                         <small>15 minutes ago</small>
@@ -185,7 +206,8 @@
                             <hr class="dropdown-divider">
                             <a href="#" class="dropdown-item">
                                 <div class="d-flex align-items-center">
-                                    <img class="rounded-circle" src="img/user.jpg" alt="" style="width: 40px; height: 40px;">
+                                    <img class="rounded-circle" src="img/user.jpg" alt=""
+                                        style="width: 40px; height: 40px;">
                                     <div class="ms-2">
                                         <h6 class="fw-normal mb-0">Jhon send you a message</h6>
                                         <small>15 minutes ago</small>
@@ -223,19 +245,22 @@
                     <div class="nav-item dropdown">
                         <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
                             {{-- <img class="rounded-circle me-lg-2" src="{{ $authUser->admin->image ? asset('storage/' . $authUser->admin->image) : asset('uploads/avatars/default-avatar.jpg') }}" alt="" style="width: 40px; height: 40px;"> --}}
-                            <img class="rounded-circle" src="{{ optional(optional($authUser)->admin)->image ? asset('storage/' . $authUser->admin->image) : asset('uploads/avatars/default-avatar.jpg') }}" alt="Profile image" style="width: 40px; height: 40px;">
-                            <span class="d-none d-lg-inline-flex">John Doe</span>
+                            <img class="rounded-circle"
+                                src="{{ optional(optional($authUser)->admin)->image ? asset('storage/' . $authUser->admin->image) : asset('uploads/avatars/default-avatar.jpg') }}"
+                                alt="Profile image" style="width: 40px; height: 40px;">
+                            <span class="d-none d-lg-inline-flex">{{ $authUser->name }}</span>
                         </a>
                         <div class="dropdown-menu dropdown-menu-end bg-light border-0 rounded-0 rounded-bottom m-0">
                             <a href="{{ route('profile.edit') }}" class="dropdown-item">My Profile</a>
                             <a href="#" class="dropdown-item">Settings</a>
                             {{-- <a href="#" class="dropdown-item">Log Out</a> --}}
                             <form method="POST" action="{{ route('logout') }}">
-                              @csrf
-                            <a class="dropdown-item" href="{{route('logout')}}" onclick="event.preventDefault();
+                                @csrf
+                                <a class="dropdown-item" href="{{ route('logout') }}"
+                                    onclick="event.preventDefault();
                                                                   this.closest('form').submit();">
-                            Log Out
-                            </a>
+                                    Log Out
+                                </a>
                             </form>
                         </div>
                     </div>
@@ -243,107 +268,110 @@
             </nav>
             <!-- Navbar End -->
             @if (Route::is('admin.dashboard'))
-                 <div>
-                <!-- Sale & Revenue Start -->
+                <div>
+                    <!-- Sale & Revenue Start -->
+                    <div class="container-fluid pt-4 px-4">
+                        <div class="row g-4">
+                            <div class="col-sm-6 col-xl-3">
+                                <div class="bg-light rounded d-flex align-items-center justify-content-between p-4">
+                                    <i class="fa fa-user-graduate fa-3x text-primary"></i>
+                                    <div class="ms-3">
+                                        <p class="mb-2">Total Student</p>
+                                        <h6 class="mb-0">{{ $students }}</h6>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6 col-xl-3">
+                                <div class="bg-light rounded d-flex align-items-center justify-content-between p-4">
+                                    <i class="fa fa-chalkboard-teacher fa-3x text-primary"></i>
+                                    <div class="ms-3">
+                                        <p class="mb-2">Total Classes</p>
+                                        <h6 class="mb-0">{{ $classes }}</h6>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6 col-xl-3">
+                                <div class="bg-light rounded d-flex align-items-center justify-content-between p-4">
+                                    <i class="fa fa-user-tie fa-3x text-primary"></i>
+                                    <div class="ms-3">
+                                        <p class="mb-2">Total Teachers</p>
+                                        <h6 class="mb-0">{{ $teachers }}</h6>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6 col-xl-3">
+                                <div class="bg-light rounded d-flex align-items-center justify-content-between p-4">
+                                    <i class="fa fa-calendar-alt fa-3x text-primary"></i>
+                                    <div class="ms-3">
+                                        <p class="mb-2">Current Session</p>
+                                        <h6 class="mb-0">{{ $session->sessionName ?? 'No session available' }}</h6>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Sale & Revenue End -->
+                </div>
                 <div class="container-fluid pt-4 px-4">
                     <div class="row g-4">
-                        <div class="col-sm-6 col-xl-3">
-                            <div class="bg-light rounded d-flex align-items-center justify-content-between p-4">
-                                <i class="fa fa-user-graduate fa-3x text-primary"></i>
-                                <div class="ms-3">
-                                    <p class="mb-2">Total Student</p>
-                                    <h6 class="mb-0">{{ $students }}</h6>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-sm-6 col-xl-3">
-                            <div class="bg-light rounded d-flex align-items-center justify-content-between p-4">
-                                <i class="fa fa-chalkboard-teacher fa-3x text-primary"></i>
-                                <div class="ms-3">
-                                    <p class="mb-2">Total Classes</p>
-                                    <h6 class="mb-0">{{ $classes }}</h6>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-sm-6 col-xl-3">
-                            <div class="bg-light rounded d-flex align-items-center justify-content-between p-4">
-                                <i class="fa fa-user-tie fa-3x text-primary"></i>
-                                <div class="ms-3">
-                                    <p class="mb-2">Total Teachers</p>
-                                    <h6 class="mb-0">{{ $teachers }}</h6>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-sm-6 col-xl-3">
-                            <div class="bg-light rounded d-flex align-items-center justify-content-between p-4">
-                                <i class="fa fa-calendar-alt fa-3x text-primary"></i>
-                                <div class="ms-3">
-                                    <p class="mb-2">Current Session</p>
-                                    <h6 class="mb-0">{{ $session->sessionName ?? 'No session available' }}</h6>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- Sale & Revenue End -->
-            </div>
-            <div class="container-fluid pt-4 px-4">
-                <div class="row g-4">
-                    <div class="col-12">
-                        <div class="bg-light rounded h-100 p-4">
-                            <h6 class="mb-4">Recent School Fee Payment</h6>
-                            <table class="table table-hover">
-                                <thead>
-                                    <tr>
-                                        <th scope="col">S/N</th>
-                                        <th scope="col">Transaction ID</th>
-                                        <th scope="col">Reg. No</th>
-                                        <th scope="col">Student Name</th>
-                                        <th scope="col">Amount </th>
-                                        <th scope="col">Status</th>
-                                        <th scope="col">Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @forelse ($transactions as $key => $payment)
-                                         <tr>
-                                            <th scope="row">{{$key + 1}}</th>
-                                            <td><a href="#">{{$payment->tx_ref}}</a></td>
-                                            <td>{{$payment->student_number}}</td>
-                                            <td>{{$payment->name}}</td>
-                                            <td>NGN {{$payment->amount}}</td>
-                                            <td> <span class="badge text-success "> {{$payment->paymentStatus}} </span> </td>
-                                            <td><a href="{{route('admin.viewReceipt', $payment)}}"><button class="btn btn-success btn-sm"> view </button></a>  </td>
-                                        </tr>
-                                    @empty
+                        <div class="col-12">
+                            <div class="bg-light rounded h-100 p-4">
+                                <h6 class="mb-4">Recent School Fee Payment</h6>
+                                <table class="table table-hover">
+                                    <thead>
                                         <tr>
-                                            <td class="text-center" colspan="4">No Data Found</td>
+                                            <th scope="col">S/N</th>
+                                            <th scope="col">Transaction ID</th>
+                                            <th scope="col">Reg. No</th>
+                                            <th scope="col">Student Name</th>
+                                            <th scope="col">Amount </th>
+                                            <th scope="col">Status</th>
+                                            <th scope="col">Action</th>
                                         </tr>
-                                    @endforelse
-                                </tbody>
-                            </table>
+                                    </thead>
+                                    <tbody>
+                                        @forelse ($transactions as $key => $payment)
+                                            <tr>
+                                                <th scope="row">{{ $key + 1 }}</th>
+                                                <td><a href="#">{{ $payment->tx_ref }}</a></td>
+                                                <td>{{ $payment->student_number }}</td>
+                                                <td>{{ $payment->name }}</td>
+                                                <td>NGN {{ $payment->amount }}</td>
+                                                <td> <span class="badge text-success "> {{ $payment->paymentStatus }}
+                                                    </span> </td>
+                                                <td><a href="{{ route('admin.viewReceipt', $payment) }}"><button
+                                                            class="btn btn-success btn-sm"> view </button></a> </td>
+                                            </tr>
+                                        @empty
+                                            <tr>
+                                                <td class="text-center" colspan="4">No Data Found</td>
+                                            </tr>
+                                        @endforelse
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
             @endif
-           
+
             <div>
-              @yield('content')
+                @yield('content')
             </div>
-           
+
             <!-- Footer Start -->
             <div class="container-fluid pt-4 px-4">
                 <div class="bg-light rounded-top p-4">
                     <div class="row">
                         <div class="col-12 col-sm-6 text-center text-sm-start">
-                            &copy; <a href="#">Tes'B Academy</a>, All Right Reserved. 
+                            &copy; <a href="#">Tes'B Academy</a>, All Right Reserved.
                         </div>
                         <div class="col-12 col-sm-6 text-center text-sm-end">
                             <!--/*** This template is free as long as you keep the footer author’s credit link/attribution link/backlink. If you'd like to use the template without the footer author’s credit link/attribution link/backlink, you can purchase the Credit Removal License from "https://htmlcodex.com/credit-removal". Thank you for your support. ***/-->
-                            Designed By <a href="https://web.facebook.com/profile.php?id=61575036835147">Ozatech Services</a>
-                        </br>
-                        {{-- Distributed By <a class="border-bottom" href="https://themewagon.com" target="_blank">ThemeWagon</a> --}}
+                            Designed By <a href="https://web.facebook.com/profile.php?id=61575036835147">Ozatech
+                                Services</a>
+                            </br>
+                            {{-- Distributed By <a class="border-bottom" href="https://themewagon.com" target="_blank">ThemeWagon</a> --}}
                         </div>
                     </div>
                 </div>
@@ -360,13 +388,13 @@
     <!-- JavaScript Libraries -->
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="{{asset('dashboard/lib/chart/chart.min.js')}}"></script>
-    <script src="{{asset('dashboard/lib/easing/easing.min.js')}}"></script>
-    <script src="{{asset('dashboard/lib/waypoints/waypoints.min.js')}}"></script>
-    <script src="{{asset('dashboard/lib/owlcarousel/owl.carousel.min.js')}}"></script>
-    <script src="{{asset('dashboard/lib/tempusdominus/js/moment.min.js')}}"></script>
-    <script src="{{asset('dashboard/lib/tempusdominus/js/moment-timezone.min.js')}}"></script>
-    <script src="{{asset('dashboard/lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js')}}"></script>
+    <script src="{{ asset('dashboard/lib/chart/chart.min.js') }}"></script>
+    <script src="{{ asset('dashboard/lib/easing/easing.min.js') }}"></script>
+    <script src="{{ asset('dashboard/lib/waypoints/waypoints.min.js') }}"></script>
+    <script src="{{ asset('dashboard/lib/owlcarousel/owl.carousel.min.js') }}"></script>
+    <script src="{{ asset('dashboard/lib/tempusdominus/js/moment.min.js') }}"></script>
+    <script src="{{ asset('dashboard/lib/tempusdominus/js/moment-timezone.min.js') }}"></script>
+    <script src="{{ asset('dashboard/lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js') }}"></script>
     <script>
         function previewImage(event) {
             const file = event.target.files[0];
@@ -380,7 +408,7 @@
         }
     </script>
     <!-- Template Javascript -->
-    <script src="{{asset('dashboard/js/main.js')}}"></script>
+    <script src="{{ asset('dashboard/js/main.js') }}"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
     <script>
         @if (Session::has('message'))
@@ -421,4 +449,5 @@
         @endif
     </script>
 </body>
+
 </html>

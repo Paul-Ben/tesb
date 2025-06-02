@@ -725,15 +725,17 @@ class AdminActions extends Controller
     public function createFee()
     {
         $authUser = Auth::user();
+        $classrooms = Classroom::all();
         $terms = Term::where('status', '=', 'active')->get();
-        return view('admin.feesetup.create', compact('authUser', 'terms'));
+        return view('admin.feesetup.create', compact('authUser', 'terms', 'classrooms'));
     }
     public function storeFee(Request $request)
     {
-
+       
         // Validate input with proper unique check for users table
         $request->validate([
             'name' => 'required',
+            'classroom_id' => 'required|exists:classrooms,id',
             'term_id' => 'required|exists:terms,id',
             'amount' => 'required|numeric',
             'status' => 'required|in:active,inactive',
@@ -742,6 +744,7 @@ class AdminActions extends Controller
         $feeSetup = FeeSetup::create([
             'name' => $request->name,
             'term_id' => $request->term_id,
+            'classroom_id' => $request->classroom_id,
             'amount' => $request->amount,
             'status' => $request->status,
         ]);
@@ -763,14 +766,16 @@ class AdminActions extends Controller
     public function editFee(FeeSetup $fee)
     {
         $authUser = Auth::user();
+        $classrooms = Classroom::all();
         $terms = Term::all();
-        return view('admin.feesetup.edit', compact('fee', 'authUser', 'terms'));
+        return view('admin.feesetup.edit', compact('fee', 'authUser', 'terms', 'classrooms'));
     }
     public function updateFee(Request $request, FeeSetup $fee)
     {
         $request->validate([
             'name' => 'required',
             'term_id' => 'required|exists:terms,id',
+            'classroom_id' => 'required|exists:classrooms,id',
             'amount' => 'required|numeric',
             'status' => 'required|in:active,inactive',
         ]);
@@ -778,6 +783,7 @@ class AdminActions extends Controller
         $fee->update([
             'name' => $request->name,
             'term_id' => $request->term_id,
+            'classroom_id' => $request->classroom_id,
             'amount' => $request->amount,
             'status' => $request->status,
         ]);

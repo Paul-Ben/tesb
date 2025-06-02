@@ -1,5 +1,9 @@
 @extends('dashboards.admin')
 @section('content')
+   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
     <!-- Button Start -->
     <div class="container-fluid pt-4 px-4">
         <div class="col-12">
@@ -81,9 +85,10 @@
                                     <p id="error-message" style="color: red; display: none;">Please select a valid image
                                         file.</p>
                                 </div>
+                                
                                 <div class="form-group">
                                     <label for="address">Paarent/Guardian</label>
-                                    <select name="guardian_id" id="guardian_id" class="form-control" required>
+                                    <select name="guardian_id" id="guardian_id" class="form-control" select2-search required>
                                         <option value="" selected>Select Guardian</option>
                                         @foreach ($guardians as $guardian)
                                             <option value="{{ $guardian->id }}">{{ $guardian->guardian_name }}</option>
@@ -171,6 +176,7 @@
         </div>
     </div>
     <!-- Form End -->
+    
     <script>
         //Fetch all States
         fetch('https://nga-states-lga.onrender.com/fetch')
@@ -205,5 +211,17 @@
                     }
                 });
         }
+
+        // Initialize Select2 for Guardian select
+
+        jQuery(document).ready(function($) {
+            $('#guardian_id').select2({
+                placeholder: "Search for a guardian...",
+                allowClear: true,
+                width: '100%',
+                minimumInputLength: 1,
+                dropdownParent: $('#guardian_id').parent()
+            });
+        });
     </script>
 @endsection

@@ -28,4 +28,9 @@ class Classroom extends Model
     {
         return $this->belongsTo(Teacher::class, 'teacher_id');
     }
+
+    public function fee_setups()
+    {
+        return $this->hasMany(FeeSetup::class);
+    }
 }

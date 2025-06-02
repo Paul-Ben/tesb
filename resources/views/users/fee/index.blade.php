@@ -71,11 +71,11 @@
                                     <select name="amount" id="amount" class="form-control" required>
                                         <option value="">Select Pay Item</option>
                                         @foreach ($fees as $payItem)
-                                            <option value="{{ $payItem->amount }}">{{ $payItem->name.' | '.'NGN '.$payItem->amount }}</option>
+                                            <option value="{{ $payItem->amount }}">
+                                                {{ $payItem->name . ' | ' . 'NGN ' . $payItem->amount }}</option>
                                         @endforeach
                                     </select>
                                 </div>
-
                             </div>
 
                             <!-- Right Column -->

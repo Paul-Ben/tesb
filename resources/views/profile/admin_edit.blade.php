@@ -76,5 +76,12 @@
             </div>
         </div>
     </div>
+    <div class="row g-4">
+        <div class="col-12">
+            <div class="bg-light rounded h-100 p-4">
+                @include('profile.partials.update-password-form')
+            </div>
+        </div>
+    </div>
 </div>
 @endsection

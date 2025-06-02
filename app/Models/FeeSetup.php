@@ -17,4 +17,9 @@ class FeeSetup extends Model
     {
         return $this->belongsTo(ClassCategory::class, 'class_id');
     }
+
+    public function classroom()
+    {
+        return $this->belongsTo(Classroom::class, 'classroom_id');
+    }
 }

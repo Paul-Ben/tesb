@@ -161,9 +161,13 @@ class UserActions extends Controller
 
     public function feeIndex(Student $student)
     {
+        
         $authUser = Auth::user();
         $guardian = Guardian::where('user_id', $authUser->id)->first();
-        $fees = FeeSetup::where('status', 'active')->get();
+        $fees = FeeSetup::where('status', 'active')
+        ->where('classroom_id', $student->class_id)
+        ->get();
+        
         if (!$fees) {
             return redirect()->back()->with([
                 'message' => 'No fee setup found.',

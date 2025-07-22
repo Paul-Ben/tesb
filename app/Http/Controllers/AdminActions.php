@@ -58,7 +58,7 @@ class AdminActions extends Controller
     public function createUser()
     {
         $authUser = Auth::user();
-        $roles = Role::whereIn('id', [1,2])->get();
+        $roles = Role::whereIn('id', [1, 2])->get();
         return view('admin.user.create', compact('roles', 'authUser'));
     }
 
@@ -96,7 +96,7 @@ class AdminActions extends Controller
             'name' => 'required',
             'email' => 'required|email|unique:users,email,' . $user->id,
             'role_id' => 'required|exists:roles,id',
-            // 'password' => 'nullable|min:6'
+            'password' => 'nullable|min:8'
         ]);
         if ($request->password != $user->password) {
             $validated['password'] = bcrypt($validated['password']);
@@ -355,13 +355,34 @@ class AdminActions extends Controller
         return redirect()->route('term.index')->with($notification);
     }
 
-
-    public function studentIndex()
+    public function studentIndex(Request $request)
     {
         $authUser = Auth::user();
-        $students = Student::all();
+
+        $students = Student::query()
+            ->when($request->search, function ($query) use ($request) {
+                $query->where(function ($q) use ($request) {
+                    $q->where('first_name', 'like', '%' . $request->search . '%')
+                        ->orWhere('last_name', 'like', '%' . $request->search . '%')
+                        ->orWhere('std_number', 'like', '%' . $request->search . '%')
+                        ->orWhere('gender', 'like', '%' . $request->search . '%')
+                        ->orWhereHas('classroom', function ($q) use ($request) {
+                            $q->where('name', 'like', '%' . $request->search . '%');
+                        });
+                });
+            })
+            ->with('classroom')
+            ->paginate(20);
+
         return view('admin.student.index', compact('students', 'authUser'));
     }
+
+    // public function studentIndex()
+    // {
+    //     $authUser = Auth::user();
+    //     $students = Student::all();
+    //     return view('admin.student.index', compact('students', 'authUser'));
+    // }
 
     public function showStudent(Student $student)
     {
@@ -731,7 +752,7 @@ class AdminActions extends Controller
     }
     public function storeFee(Request $request)
     {
-       
+
         // Validate input with proper unique check for users table
         $request->validate([
             'name' => 'required',

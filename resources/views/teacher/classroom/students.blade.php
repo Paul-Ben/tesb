@@ -15,6 +15,19 @@
                             <i class="fa fa-plus me-2"></i>Promote Students
                         </a>
                     </button>
+                    <div class="dropdown m-2">
+                        <button class="btn btn-success dropdown-toggle" type="button" id="uploadResultsDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fa fa-upload me-2"></i>Upload Results
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="uploadResultsDropdown">
+                            @foreach($classroom->subjects as $subject)
+                                <li><a class="dropdown-item" href="{{ route('results.upload.form', ['classroom' => $classroom->id, 'subject' => $subject->id]) }}">{{ $subject->name }}</a></li>
+                            @endforeach
+                            @if($classroom->subjects->isEmpty())
+                                <li><a class="dropdown-item disabled" href="#">No subjects available</a></li>
+                            @endif
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>

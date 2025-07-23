@@ -5,6 +5,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\FrontendController;
 use App\Http\Controllers\ResultController;
+use App\Http\Controllers\ResultImportController;
 use App\Http\Controllers\TeacherController;
 use App\Http\Controllers\UserActions;
 use Illuminate\Support\Facades\Route;
@@ -146,6 +147,10 @@ Route::prefix('teacher')->middleware(['auth', 'role:Teacher'])->group(function (
     Route::get('/dashboard/student/result/{result}/result', [ResultController::class, 'singleResultView'])->name('single.result');
     Route::get('/dashboard/promote-students/{classroom}', [TeacherController::class, 'promoteStudents'])->name('promote.students');
     Route::put('/dashboard/promote-student', [TeacherController::class, 'promote'])->name('promote');
+    
+    // Bulk result upload routes
+    Route::get('/dashboard/results/upload/{classroom}/{subject}', [ResultImportController::class, 'showUploadForm'])->name('results.upload.form');
+    Route::post('/dashboard/results/upload/{classroom}/{subject}', [ResultImportController::class, 'processUpload'])->name('results.upload.process');
 });
 
 Route::prefix('user')->middleware(['auth', 'role:User'])->group(function () {

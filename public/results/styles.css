@@ -113,7 +113,28 @@ body {
 }
 
 .teacher-comments {
-    margin-bottom: 20px;
+    margin-top: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 20px;
+}
+
+.teacher-comments .average-score,
+.teacher-comments .remark {
+    flex: 1;
+}
+
+.teacher-comments h3 {
+    margin-bottom: 10px;
+    color: #333;
+    font-size: 1.1em;
+}
+
+.teacher-comments .average-score p {
+    font-weight: bold;
+    font-size: 1.2em;
+    color: #2c3e50;
 }
 
 .footer {

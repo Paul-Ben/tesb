@@ -188,8 +188,16 @@
         </div>
 
         <div class="teacher-comments">
-            <h3>Teacher's Comments</h3>
-            <p>{{ $result->teacher_remark }}</p>
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                    <h3>Teacher's Comments</h3>
+                    <p>{{ $result->teacher_remark }}</p>
+                </div>
+                <div class="average-score">
+                    <h3>Average Score</h3>
+                    <p style="font-weight: bold; font-size: 1.2em;">{{ number_format($result->subjects->avg('total'), 1) }}%</p>
+                </div>
+            </div>
         </div>
 
         <div class="footer">

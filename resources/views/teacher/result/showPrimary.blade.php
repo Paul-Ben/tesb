@@ -143,17 +143,37 @@
                 </tbody>
             </table>
         </div>
+        <div class="student-info">
+             <p><strong>Teacher's Comments : </strong> {{ $result->teacher_remark }}</p>
+             <p><strong>Position in Class : </strong>  @php
+                    $lastTwo = substr($position, -2);
+                    $suffix = in_array($lastTwo, [11, 12, 13])
+                        ? 'th'
+                        : match (substr($position, -1)) {
+                            '1' => 'st',
+                            '2' => 'nd',
+                            '3' => 'rd',
+                            default => 'th',
+                        };
+                @endphp
 
-        <div class="teacher-comments">
-            <div class="average-score">
-                <h3>Average Score</h3>
-                <p>{{ number_format($result->subjects->avg('total'), 2) }}%</p>
-            </div>
+                {{ $position }}{{ $suffix }}</p>
+             <p><strong>Average Score : </strong> {{ number_format($result->subjects->avg('total'), 1) }}%</p>
+        </div>
+        {{-- <div class="teacher-comments">
             <div class="remark">
-                <h3>Teacher's Comments</h3>
+                <h4>Teacher's Comments</h4>
                 <p>{{ $result->teacher_remark }}</p>
             </div>
-        </div>
+            <div class="position">
+                <h4>Position in Class</h4>
+                <p>{{ $position }}{{ substr($position, -1) == '1' ? 'st' : (substr($position, -1) == '2' ? 'nd' : (substr($position, -1) == '3' ? 'rd' : 'th')) }}</p>
+            </div>
+            <div class="average-score">
+                <h4>Average Score</h4>
+                <p>{{ number_format($result->subjects->avg('total'), 1) }}%</p>
+            </div>
+        </div> --}}
 
         <div class="footer">
             <p><strong>Teacher's Signature:</strong></p>

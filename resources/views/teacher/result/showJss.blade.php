@@ -9,46 +9,46 @@
     <style>
         /* Stamp styling - hidden by default */
         .principal-stamp {
-          display: none;
-          position: absolute;
-          right: 20px;
-          bottom: 10px;
-          opacity: 0.8;
-          z-index: 100;
+            display: none;
+            position: absolute;
+            right: 20px;
+            bottom: 10px;
+            opacity: 0.8;
+            z-index: 100;
         }
-        
+
         .stamp-image {
-          width: 120px;
-          height: auto;
+            width: 120px;
+            height: auto;
         }
-        
+
         /* Make footer position relative for stamp positioning */
         .footer {
-          position: relative;
-          margin-top: 50px;
-          padding-bottom: 50px;
+            position: relative;
+            margin-top: 50px;
+            padding-bottom: 50px;
         }
-        
+
         /* Print-specific styling */
         @media print {
-          .principal-stamp {
-            display: block !important;
-          }
-          
-          /* Ensure colors and backgrounds print properly */
-          body {
-            -webkit-print-color-adjust: exact;
-            print-color-adjust: exact;
-          }
+            .principal-stamp {
+                display: block !important;
+            }
+
+            /* Ensure colors and backgrounds print properly */
+            body {
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
         }
-      </style>
+    </style>
 </head>
 
 <body>
     <div class="report-card">
         <div class="header">
             <div class="school-info">
-                <a href="{{url()->previous()}}">
+                <a href="{{ url()->previous() }}">
                     <img src="{{ asset('frontend/images/home_logo.png') }}" alt="logo" width="100">
                 </a>
                 <div>
@@ -107,7 +107,9 @@
                 @endforeach
             </tbody>
         </table>
-        <div><h3>Skills Assessment</h3></div>
+        <div>
+            <h3>Skills Assessment</h3>
+        </div>
         <div class="skills-assessment">
             {{-- <h3>Skills Assessment</h3> --}}
             <table class="skills-table">
@@ -144,17 +146,47 @@
             </table>
         </div>
 
-        <div class="teacher-comments">
-            <div class="average-score">
-                <h3>Average Score</h3>
-                <p>{{ number_format($result->subjects->avg('total'), 2) }}%</p>
-            </div>
-            <div class="remark">
-                <h3>Teacher's Comments</h3>
-                <p>{{ $result->teacher_remark }}</p>
-            </div>
-        </div>
+        <div class="student-info">
+            <p><strong>Teacher's Comments : </strong> {{ $result->teacher_remark }}</p>
+            <p><strong>Position in Class : </strong>
+                @php
+                    $lastTwo = substr($position, -2);
+                    $suffix = in_array($lastTwo, [11, 12, 13])
+                        ? 'th'
+                        : match (substr($position, -1)) {
+                            '1' => 'st',
+                            '2' => 'nd',
+                            '3' => 'rd',
+                            default => 'th',
+                        };
+                @endphp
 
+                {{ $position }}{{ $suffix }}
+                {{-- {{ $position }}{{ substr($position, -1) == '1' ? 'st' : (substr($position, -1) == '2' ? 'nd' : (substr($position, -1) == '3' ? 'rd' : 'th')) }} --}}
+            </p>
+            <p><strong>Average Score : </strong> {{ number_format($result->subjects->avg('total'), 1) }}%</p>
+        </div>
+        {{-- <div class="performance-summary">
+                <div class="average-score">
+                    <h3>Average Score</h3>
+                    <p>{{ number_format($result->subjects->avg('total'), 1) }}%</p>
+                </div>
+                <div class="teacher-comments">
+                    <div class="remark">
+                        <h4>Teacher's Comments</h4>
+                        <p>{{ $result->teacher_remark }}</p>
+                    </div>
+                    <div class="position">
+                        <h4>Position in Class</h4>
+                        <p>{{ $position }}{{ substr($position, -1) == '1' ? 'st' : (substr($position, -1) == '2' ? 'nd' : (substr($position, -1) == '3' ? 'rd' : 'th')) }}
+                        </p>
+                    </div>
+                    <div class="average-score">
+                        <h4>Average Score</h4>
+                        <p>{{ number_format($result->subjects->avg('total'), 1) }}%</p>
+                    </div>
+                </div>
+            </div> --}}
         <div class="footer">
             <p><strong>Teacher's Signature:</strong></p>
             <p><strong>Principal's Signature:</strong>{{ $result->principal_signature }}</p>
@@ -164,58 +196,58 @@
             </div>
             <p>Date: {{ $result->date }}</p>
         </div>
-    </div>
-    <div class="button-container">
-        <button onclick="window.print()">Print Report Card</button>
-        <button id="downloadButton">Download Report Card</button>
-        <a href="{{url()->previous()}}"><button>Back</button></a>
-    </div>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Show stamp when printing
-            window.addEventListener('beforeprint', function() {
-                document.getElementById('principalStamp').style.display = 'block';
-            });
-            
-            // Hide stamp after printing (for screen view)
-            window.addEventListener('afterprint', function() {
-                document.getElementById('principalStamp').style.display = 'none';
-            });
-            
-            // Update download button to show stamp
-            document.getElementById('downloadButton').addEventListener('click', function() {
-                // Show stamp before capturing
-                document.getElementById('principalStamp').style.display = 'block';
-                
-                // Create a new canvas
-                const reportCard = document.querySelector('.report-card');
-                
-                html2canvas(reportCard, {
-                    scale: 2,
-                    logging: false,
-                    useCORS: true,
-                    allowTaint: true
-                }).then(canvas => {
-                    // Hide stamp again after capture
+
+        <div class="button-container">
+            <button onclick="window.print()">Print Report Card</button>
+            <button id="downloadButton">Download Report Card</button>
+            <a href="{{ url()->previous() }}"><button>Back</button></a>
+        </div>
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                // Show stamp when printing
+                window.addEventListener('beforeprint', function() {
+                    document.getElementById('principalStamp').style.display = 'block';
+                });
+
+                // Hide stamp after printing (for screen view)
+                window.addEventListener('afterprint', function() {
                     document.getElementById('principalStamp').style.display = 'none';
-                    
-                    // Convert the canvas to a data URL
-                    const dataURL = canvas.toDataURL('image/png');
-                    
-                    // Create download link
-                    const link = document.createElement('a');
-                    link.href = dataURL;
-                    link.download = 'report_card_' + new Date().toISOString().slice(0,10) + '.png';
-                    
-                    // Trigger download
-                    document.body.appendChild(link);
-                    link.click();
-                    document.body.removeChild(link);
+                });
+
+                // Update download button to show stamp
+                document.getElementById('downloadButton').addEventListener('click', function() {
+                    // Show stamp before capturing
+                    document.getElementById('principalStamp').style.display = 'block';
+
+                    // Create a new canvas
+                    const reportCard = document.querySelector('.report-card');
+
+                    html2canvas(reportCard, {
+                        scale: 2,
+                        logging: false,
+                        useCORS: true,
+                        allowTaint: true
+                    }).then(canvas => {
+                        // Hide stamp again after capture
+                        document.getElementById('principalStamp').style.display = 'none';
+
+                        // Convert the canvas to a data URL
+                        const dataURL = canvas.toDataURL('image/png');
+
+                        // Create download link
+                        const link = document.createElement('a');
+                        link.href = dataURL;
+                        link.download = 'report_card_' + new Date().toISOString().slice(0, 10) + '.png';
+
+                        // Trigger download
+                        document.body.appendChild(link);
+                        link.click();
+                        document.body.removeChild(link);
+                    });
                 });
             });
-        });
-    </script>
-    {{-- <script>
+        </script>
+        {{-- <script>
         document.getElementById('downloadButton').addEventListener('click', function() {
             // Create a new canvas
             const reportCard = document.querySelector('.report-card');
@@ -238,46 +270,46 @@
             });
         });
     </script> --}}
-    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
-    <script>
-        @if (Session::has('message'))
-            var type = "{{ Session::get('alert-type', 'info') }}"
-            switch (type) {
-                case 'info':
+        <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+        <script>
+            @if (Session::has('message'))
+                var type = "{{ Session::get('alert-type', 'info') }}"
+                switch (type) {
+                    case 'info':
 
-                    toastr.options.timeOut = 10000;
-                    toastr.info("{{ Session::get('message') }}");
-                    var audio = new Audio('audio.mp3');
-                    audio.play();
-                    break;
-                case 'success':
+                        toastr.options.timeOut = 10000;
+                        toastr.info("{{ Session::get('message') }}");
+                        var audio = new Audio('audio.mp3');
+                        audio.play();
+                        break;
+                    case 'success':
 
-                    toastr.options.timeOut = 10000;
-                    toastr.success("{{ Session::get('message') }}");
-                    var audio = new Audio('audio.mp3');
-                    audio.play();
+                        toastr.options.timeOut = 10000;
+                        toastr.success("{{ Session::get('message') }}");
+                        var audio = new Audio('audio.mp3');
+                        audio.play();
 
-                    break;
-                case 'warning':
+                        break;
+                    case 'warning':
 
-                    toastr.options.timeOut = 10000;
-                    toastr.warning("{{ Session::get('message') }}");
-                    var audio = new Audio('audio.mp3');
-                    audio.play();
+                        toastr.options.timeOut = 10000;
+                        toastr.warning("{{ Session::get('message') }}");
+                        var audio = new Audio('audio.mp3');
+                        audio.play();
 
-                    break;
-                case 'error':
+                        break;
+                    case 'error':
 
-                    toastr.options.timeOut = 10000;
-                    toastr.error("{{ Session::get('message') }}");
-                    var audio = new Audio('audio.mp3');
-                    audio.play();
+                        toastr.options.timeOut = 10000;
+                        toastr.error("{{ Session::get('message') }}");
+                        var audio = new Audio('audio.mp3');
+                        audio.play();
 
-                    break;
-            }
-        @endif
-    </script>
+                        break;
+                }
+            @endif
+        </script>
 </body>
 
 </html>

@@ -9,46 +9,46 @@
     <style>
         /* Stamp styling - hidden by default */
         .principal-stamp {
-          display: none;
-          position: absolute;
-          right: 20px;
-          bottom: 10px;
-          opacity: 0.8;
-          z-index: 100;
+            display: none;
+            position: absolute;
+            right: 20px;
+            bottom: 10px;
+            opacity: 0.8;
+            z-index: 100;
         }
-        
+
         .stamp-image {
-          width: 120px;
-          height: auto;
+            width: 120px;
+            height: auto;
         }
-        
+
         /* Make footer position relative for stamp positioning */
         .footer {
-          position: relative;
-          margin-top: 50px;
-          padding-bottom: 50px;
+            position: relative;
+            margin-top: 50px;
+            padding-bottom: 50px;
         }
-        
+
         /* Print-specific styling */
         @media print {
-          .principal-stamp {
-            display: block !important;
-          }
-          
-          /* Ensure colors and backgrounds print properly */
-          body {
-            -webkit-print-color-adjust: exact;
-            print-color-adjust: exact;
-          }
+            .principal-stamp {
+                display: block !important;
+            }
+
+            /* Ensure colors and backgrounds print properly */
+            body {
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
         }
-      </style>
+    </style>
 </head>
 
 <body>
     <div class="report-card">
         <div class="header">
             <div class="school-info">
-                <a href="{{url()->previous()}}">
+                <a href="{{ url()->previous() }}">
                     <img src="{{ asset('frontend/images/home_logo.png') }}" alt="logo" width="100">
                 </a>
                 <div>
@@ -95,62 +95,20 @@
                 @foreach ($result->subjects as $subject)
                     <tr>
                         <td>{{ $subject->subject }}</td>
-                        {{-- <td>{{$subject->assignment}}</td> --}}
-                        {{-- <td>{{$subject->ca}}</td> --}}
-                        {{-- <td>{{$subject->second_ca}}</td> --}}
                         <td>{{ $subject->ca }}</td>
                         <td>{{ $subject->exam }}</td>
                         <td>{{ $subject->total }}</td>
-                        {{-- <td>{{ $subject->class_average }}</td> --}}
                         <td>{{ $subject->highest_in_class }}</td>
                         <td>{{ $subject->lowest_in_class }}</td>
                         <td>{{ $subject->position }}</td>
                         <td>{{ $subject->grade }}</td>
                     </tr>
                 @endforeach
-                {{-- <tr>
-                    <td>Mathematics</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr> --}}
-                {{-- <tr>
-                    <td>English Language</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>Basic Science</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr> --}}
-                <!-- Add more subjects as needed -->
             </tbody>
         </table>
-        <div><h3>Skills Assessment</h3></div>
+        <div>
+            <h3>Skills Assessment</h3>
+        </div>
         <div class="skills-assessment">
             {{-- <h3>Skills Assessment</h3> --}}
             <table class="skills-table">
@@ -186,19 +144,50 @@
                 </tbody>
             </table>
         </div>
+        <div class="student-info">
+             <p><strong>Teacher's Comments : </strong> {{ $result->teacher_remark }}</p>
+             <p><strong>Position in Class : </strong>  @php
+                    $lastTwo = substr($position, -2);
+                    $suffix = in_array($lastTwo, [11, 12, 13])
+                        ? 'th'
+                        : match (substr($position, -1)) {
+                            '1' => 'st',
+                            '2' => 'nd',
+                            '3' => 'rd',
+                            default => 'th',
+                        };
+                @endphp
 
-        <div class="teacher-comments">
-            <div style="display: flex; justify-content: space-between; align-items: center;">
-                <div>
-                    <h3>Teacher's Comments</h3>
-                    <p>{{ $result->teacher_remark }}</p>
-                </div>
-                <div class="average-score">
-                    <h3>Average Score</h3>
-                    <p style="font-weight: bold; font-size: 1.2em;">{{ number_format($result->subjects->avg('total'), 1) }}%</p>
-                </div>
-            </div>
+                {{ $position }}{{ $suffix }}</p>
+             <p><strong>Average Score : </strong> {{ number_format($result->subjects->avg('total'), 1) }}%</p>
         </div>
+        {{-- <div class="teacher-comments">
+            <table>
+                <tr>
+                    <td>
+                        <div class="remark">
+                            <h4>Teacher's Comments</h4>
+                            <p>{{ $result->teacher_remark }}</p>
+                        </div>
+                    </td>
+                    <td></td> <td></td>
+                    <td>
+                        <div class="position">
+                            <h4>Position in Class</h4>
+                            <p>{{ $position }}{{ substr($position, -1) == '1' ? 'st' : (substr($position, -1) == '2' ? 'nd' : (substr($position, -1) == '3' ? 'rd' : 'th')) }}
+                            </p>
+                        </div>
+                    </td>
+                    <td></td><td></td>
+                    <td>
+                        <div class="average-score">
+                            <h4>Average Score</h4>
+                            <p>{{ number_format($result->subjects->avg('total'), 1) }}%</p>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </div> --}}
 
         <div class="footer">
             <p><strong>Teacher's Signature:</strong></p>
@@ -213,7 +202,7 @@
     <div class="button-container">
         <button onclick="window.print()">Print Report Card</button>
         <button id="downloadButton">Download Report Card</button>
-        <a href="{{url()->previous()}}"><button>Back</button></a>
+        <a href="{{ url()->previous() }}"><button>Back</button></a>
     </div>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -221,20 +210,20 @@
             window.addEventListener('beforeprint', function() {
                 document.getElementById('principalStamp').style.display = 'block';
             });
-            
+
             // Hide stamp after printing (for screen view)
             window.addEventListener('afterprint', function() {
                 document.getElementById('principalStamp').style.display = 'none';
             });
-            
+
             // Update download button to show stamp
             document.getElementById('downloadButton').addEventListener('click', function() {
                 // Show stamp before capturing
                 document.getElementById('principalStamp').style.display = 'block';
-                
+
                 // Create a new canvas
                 const reportCard = document.querySelector('.report-card');
-                
+
                 html2canvas(reportCard, {
                     scale: 2,
                     logging: false,
@@ -243,15 +232,15 @@
                 }).then(canvas => {
                     // Hide stamp again after capture
                     document.getElementById('principalStamp').style.display = 'none';
-                    
+
                     // Convert the canvas to a data URL
                     const dataURL = canvas.toDataURL('image/png');
-                    
+
                     // Create download link
                     const link = document.createElement('a');
                     link.href = dataURL;
-                    link.download = 'report_card_' + new Date().toISOString().slice(0,10) + '.png';
-                    
+                    link.download = 'report_card_' + new Date().toISOString().slice(0, 10) + '.png';
+
                     // Trigger download
                     document.body.appendChild(link);
                     link.click();
@@ -260,29 +249,7 @@
             });
         });
     </script>
-    {{-- <script>
-        document.getElementById('downloadButton').addEventListener('click', function() {
-            // Create a new canvas
-            const reportCard = document.querySelector('.report-card');
 
-            html2canvas(reportCard, {
-                scale: 2
-            }).then(canvas => { // Increase scale for better resolution
-                // Convert the canvas to a data URL
-                const dataURL = canvas.toDataURL('image/png');
-
-                // Create a dummy link and set the filename
-                const link = document.createElement('a');
-                link.href = dataURL;
-                link.download = 'report_card.png';
-
-                // Append the link to the body, click it, and remove it
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-            });
-        });
-    </script> --}}
     <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
     <script>

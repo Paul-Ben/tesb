@@ -152,11 +152,11 @@ class ResultController extends Controller
 
     private function calculateGrade($total)
     {
-        if ($total >= 90) return 'A';
-        if ($total >= 70) return 'B';
-        if ($total >= 60) return 'C';
-        if ($total >= 50) return 'D';
-        return 'F';
+        if ($total >= 75) return 'A';
+        if ($total >= 65) return 'B';
+        if ($total >= 50) return 'C';
+        if ($total >= 45) return 'D';
+        return 'E';
     }
 
     // public function viewResult(Student $student)
@@ -212,6 +212,10 @@ class ResultController extends Controller
         $classroom = Classroom::with('classCategory')->find($student->class_id);
         $classCategoryName = $classroom->classCategory->name;
 
+        // Calculate positions for all students in the class
+        $positions = Result::calculatePositions($student->class_id, $result->term, $result->session);
+        $position = $positions[$result->id] ?? null;
+
         // Define a dynamic mapping between class categories and views
         $categoryViews = [
             'Kindergarten' => 'teacher.result.show',
@@ -222,7 +226,7 @@ class ResultController extends Controller
 
         // Check if the class category exists in the mapping
         if (array_key_exists($classCategoryName, $categoryViews)) {
-            return view($categoryViews[$classCategoryName], compact('student', 'result', 'table1', 'table2', 'age'));
+            return view($categoryViews[$classCategoryName], compact('student', 'result', 'table1', 'table2', 'age', 'position'));
         }
 
         return redirect()->back()->with([

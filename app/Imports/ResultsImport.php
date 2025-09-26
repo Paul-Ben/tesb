@@ -314,11 +314,11 @@ class ResultsImport implements ToCollection, WithHeadingRow
      */
     private function calculateGrade($total)
     {
-        if ($total >= 90) return 'A';
-        if ($total >= 70) return 'B';
-        if ($total >= 60) return 'C';
-        if ($total >= 50) return 'D';
-        return 'F';
+        if ($total >= 75) return 'A';
+        if ($total >= 65) return 'B';
+        if ($total >= 50) return 'C';
+        if ($total >= 45) return 'D';
+        return 'E';
     }
 
     /**

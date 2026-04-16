@@ -63,7 +63,7 @@ class ResultImportController extends Controller
     {
         // Validate the request
         $validator = Validator::make($request->all(), [
-            'excel_file' => 'required|file|mimes:xlsx,xls,csv',
+            'excel_file' => 'required|max:2048',
             'term_id' => 'required|exists:terms,id',
             'session_id' => 'required|exists:school_sessions,id',
         ]);

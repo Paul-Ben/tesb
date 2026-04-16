@@ -476,7 +476,7 @@ class AdminActions extends Controller
             'bgroup' => 'required',
             'class_id' => 'required|exists:classrooms,id',
             'current_session' => 'required|exists:school_sessions,id',
-            'image' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
+            'image' => 'nullable|max:2048',
         ]);
 
         $imagePath = $student->image; // Keep existing image by default

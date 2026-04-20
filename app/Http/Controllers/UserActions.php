@@ -140,6 +140,9 @@ class UserActions extends Controller
         $classroom = Classroom::with('classCategory')->find($student->class_id);
         $classCategoryName = $classroom->classCategory->name;
 
+        $positions = Result::calculatePositions($student->class_id, $result->term, $result->session);
+        $position = $positions[$result->id] ?? null;
+
         // Define a dynamic mapping between class categories and views
         $categoryViews = [
             'Kindergarten' => 'users.result.show',
@@ -150,7 +153,7 @@ class UserActions extends Controller
 
         // Check if the class category exists in the mapping
         if (array_key_exists($classCategoryName, $categoryViews)) {
-            return view($categoryViews[$classCategoryName], compact('student', 'result', 'table1', 'table2', 'age'));
+            return view($categoryViews[$classCategoryName], compact('student', 'result', 'table1', 'table2', 'age', 'position'));
         }
         return redirect()->back()->with([
             'message' => 'Classroom category not recognized.',

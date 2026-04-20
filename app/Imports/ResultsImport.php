@@ -207,8 +207,8 @@ class ResultsImport implements ToCollection, WithHeadingRow
                     continue;
                 }
                 
-                // Calculate grade
-                $grade = $this->calculateGrade($total);
+                $isUnscored = $ca === 0 && $exam === 0;
+                $grade = $isUnscored ? null : $this->calculateGrade($total);
                 
                 // Get optional class statistics from CSV (if provided)
                 $highestInClass = isset($row['highest_in_class']) && $row['highest_in_class'] > 0 ? (int) $row['highest_in_class'] : 0;
@@ -227,9 +227,9 @@ class ResultsImport implements ToCollection, WithHeadingRow
                         'exam' => $exam,
                         'total' => $total,
                         'grade' => $grade,
-                        'highest_in_class' => $highestInClass,
-                        'lowest_in_class' => $lowestInClass,
-                        'position' => $position,
+                        'highest_in_class' => $isUnscored ? 0 : $highestInClass,
+                        'lowest_in_class' => $isUnscored ? 0 : $lowestInClass,
+                        'position' => $isUnscored ? 0 : $position,
                     ]);
                 } else {
                     // Create new subject result
@@ -240,9 +240,9 @@ class ResultsImport implements ToCollection, WithHeadingRow
                         'exam' => $exam,
                         'total' => $total,
                         'grade' => $grade,
-                        'highest_in_class' => $highestInClass,
-                        'lowest_in_class' => $lowestInClass,
-                        'position' => $position,
+                        'highest_in_class' => $isUnscored ? 0 : $highestInClass,
+                        'lowest_in_class' => $isUnscored ? 0 : $lowestInClass,
+                        'position' => $isUnscored ? 0 : $position,
                     ]);
                 }
                 
@@ -333,6 +333,10 @@ class ResultsImport implements ToCollection, WithHeadingRow
                   ->where('session', $this->session->sessionName)
                   ->where('class', $this->classroom->name);
         })->where('subject', $this->subject->name)
+          ->where(function ($query) {
+              $query->where('ca', '!=', 0)
+                    ->orWhere('exam', '!=', 0);
+          })
           ->orderBy('total', 'desc')
           ->get();
 

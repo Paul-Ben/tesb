@@ -70,7 +70,7 @@ class ResultController extends Controller
         // **Check if the result already exists for the student, term, and session**
         $existingResult = Result::where('student_id', $request->student_id)
             ->where('term', $request->term)
-            ->where('session', $request->session)
+            ->where('session', $request->input('session'))
             ->first();
 
         if ($existingResult) {
@@ -90,7 +90,7 @@ class ResultController extends Controller
             'state' => $request->state,
             'class' => $request->class,
             'term' => $request->term,
-            'session' => $request->session,
+            'session' => $request->input('session'),
             'school_opened' => $request->school_opened,
             'times_present' => $request->times_present,
             'times_absent' => $request->times_absent,
@@ -105,8 +105,11 @@ class ResultController extends Controller
             $exam = $request->exam[$key];
             $total = $ca + $exam;
 
-            // Calculate Grade
-            $grade = $this->calculateGrade($total);
+            $isUnscored = (int) $ca === 0 && (int) $exam === 0;
+            $grade = $isUnscored ? null : $this->calculateGrade($total);
+            $lowestInClass = $isUnscored ? 0 : $request->lowest_in_class[$key];
+            $highestInClass = $isUnscored ? 0 : $request->highest_in_class[$key];
+            $position = $isUnscored ? 0 : $request->position[$key];
 
             ResultSubject::create([
                 'result_id' => $result->id,
@@ -114,9 +117,9 @@ class ResultController extends Controller
                 'ca' => $ca,
                 'exam' => $exam,
                 'total' => $total,
-                'lowest_in_class' => $request->lowest_in_class[$key],
-                'highest_in_class' => $request->highest_in_class[$key],
-                'position' => $request->position[$key],
+                'lowest_in_class' => $lowestInClass,
+                'highest_in_class' => $highestInClass,
+                'position' => $position,
                 'grade' => $grade,
                 'remark' => $request->remark[$key] ?? '',
             ]);

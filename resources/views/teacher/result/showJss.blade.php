@@ -99,10 +99,34 @@
                         <td>{{ $subject->exam }}</td>
                         <td>{{ $subject->total }}</td>
                         {{-- <td>{{ $subject->class_average }}</td> --}}
-                        <td>{{ $subject->highest_in_class }}</td>
-                        <td>{{ $subject->lowest_in_class }}</td>
-                        <td>{{ $subject->position }}</td>
-                        <td>{{ $subject->grade }}</td>
+                        <td>
+                            @if ((int) $subject->ca === 0 && (int) $subject->exam === 0)
+                                -
+                            @else
+                                {{ $subject->highest_in_class }}
+                            @endif
+                        </td>
+                        <td>
+                            @if ((int) $subject->ca === 0 && (int) $subject->exam === 0)
+                                -
+                            @else
+                                {{ $subject->lowest_in_class }}
+                            @endif
+                        </td>
+                        <td>
+                            @if ((int) $subject->ca === 0 && (int) $subject->exam === 0)
+                                -
+                            @else
+                                {{ $subject->position }}
+                            @endif
+                        </td>
+                        <td>
+                            @if ((int) $subject->ca === 0 && (int) $subject->exam === 0)
+                                -
+                            @else
+                                {{ $subject->grade }}
+                            @endif
+                        </td>
                     </tr>
                 @endforeach
             </tbody>
@@ -164,7 +188,8 @@
                 {{ $position }}{{ $suffix }}
                 {{-- {{ $position }}{{ substr($position, -1) == '1' ? 'st' : (substr($position, -1) == '2' ? 'nd' : (substr($position, -1) == '3' ? 'rd' : 'th')) }} --}}
             </p>
-            <p><strong>Average Score : </strong> {{ number_format($result->subjects->avg('total'), 1) }}%</p>
+            @php $averageScore = $result->scoredAverage(); @endphp
+            <p><strong>Average Score : </strong> {{ is_null($averageScore) ? 'N/A' : number_format($averageScore, 1) }}%</p>
         </div>
         {{-- <div class="performance-summary">
                 <div class="average-score">

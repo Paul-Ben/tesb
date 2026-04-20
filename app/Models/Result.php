@@ -10,6 +10,24 @@ class Result extends Model
     use HasFactory;
     public $guarded = [];
 
+    public function scoredSubjects()
+    {
+        return $this->subjects->filter(function ($subject) {
+            return !((int) $subject->ca === 0 && (int) $subject->exam === 0);
+        });
+    }
+
+    public function scoredAverage()
+    {
+        $scoredSubjects = $this->scoredSubjects();
+
+        if ($scoredSubjects->isEmpty()) {
+            return null;
+        }
+
+        return $scoredSubjects->avg('total');
+    }
+
     public static function calculatePositions($classId, $term, $session)
     {
         $results = self::whereHas('student', function($query) use ($classId) {
@@ -17,11 +35,14 @@ class Result extends Model
         })
         ->where('term', $term)
         ->where('session', $session)
+        ->with('subjects')
         ->get()
         ->map(function($result) {
+            $average = $result->scoredAverage();
+
             return [
                 'id' => $result->id,
-                'average' => $result->subjects->avg('total'),
+                'average' => $average ?? -1,
             ];
         })
         ->sortByDesc('average')

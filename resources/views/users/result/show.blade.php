@@ -96,10 +96,34 @@
                         <td>{{ $subject->exam }}</td>
                         <td>{{ $subject->total }}</td>
                         {{-- <td>{{ $subject->class_average }}</td> --}}
-                        <td>{{ $subject->highest_in_class }}</td>
-                        <td>{{ $subject->lowest_in_class }}</td>
-                        <td>{{ $subject->position }}</td>
-                        <td>{{ $subject->grade }}</td>
+                        <td>
+                            @if ((int) $subject->ca === 0 && (int) $subject->exam === 0)
+                                -
+                            @else
+                                {{ $subject->highest_in_class }}
+                            @endif
+                        </td>
+                        <td>
+                            @if ((int) $subject->ca === 0 && (int) $subject->exam === 0)
+                                -
+                            @else
+                                {{ $subject->lowest_in_class }}
+                            @endif
+                        </td>
+                        <td>
+                            @if ((int) $subject->ca === 0 && (int) $subject->exam === 0)
+                                -
+                            @else
+                                {{ $subject->position }}
+                            @endif
+                        </td>
+                        <td>
+                            @if ((int) $subject->ca === 0 && (int) $subject->exam === 0)
+                                -
+                            @else
+                                {{ $subject->grade }}
+                            @endif
+                        </td>
                     </tr>
                 @endforeach
                 <!-- Add more subjects as needed -->
@@ -141,9 +165,29 @@
             </table>
         </div>
 
-        <div class="teacher-comments">
-            <h3>Teacher's Comments</h3>
-            <p>{{ $result->teacher_remark }}</p>
+        <div class="student-info">
+             <p><strong>Teacher's Comments : </strong> {{ $result->teacher_remark }}</p>
+             <p><strong>Position in Class : </strong>
+                @if (!is_null($position))
+                    @php
+                        $lastTwo = substr($position, -2);
+                        $suffix = in_array($lastTwo, [11, 12, 13])
+                            ? 'th'
+                            : match (substr($position, -1)) {
+                                '1' => 'st',
+                                '2' => 'nd',
+                                '3' => 'rd',
+                                default => 'th',
+                            };
+                    @endphp
+
+                    {{ $position }}{{ $suffix }}
+                @else
+                    N/A
+                @endif
+            </p>
+             @php $averageScore = $result->scoredAverage(); @endphp
+             <p><strong>Average Score : </strong> {{ is_null($averageScore) ? 'N/A' : number_format($averageScore, 1) }}%</p>
         </div>
 
         <div class="footer">

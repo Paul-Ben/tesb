@@ -44,9 +44,10 @@
                         </div>
                         <nav class="main_nav_contaner ml-auto">
                             <ul class="main_nav">
-                                <li class="active"><a href="{{ route('home') }}">home</a></li>
-                                <li><a href="{{ route('about') }}">about us</a></li>
-                                <li><a href="{{ route('contact') }}">contact</a></li>
+                                <li class="{{ request()->routeIs('home') ? 'active' : '' }}"><a href="{{ route('home') }}">home</a></li>
+                                <li class="{{ request()->routeIs('about') ? 'active' : '' }}"><a href="{{ route('about') }}">about us</a></li>
+                                <li class="{{ request()->routeIs('contact') ? 'active' : '' }}"><a href="{{ route('contact') }}">contact</a></li>
+                                <li class="{{ request()->routeIs('newsletter') ? 'active' : '' }}"><a href="{{ route('newsletter') }}">newsletter</a></li>
                             </ul>
                             <div class="search_button"><i class="fa fa-search" aria-hidden="true"></i></div>
 

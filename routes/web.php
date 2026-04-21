@@ -36,6 +36,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [FrontendController::class, 'index'])->name('home');
 Route::get('/about-us', [FrontendController::class, 'about'])->name('about');
 Route::get('/contact-us', [FrontendController::class, 'contact'])->name('contact');
+Route::get('/newsletter', [FrontendController::class, 'newsletter'])->name('newsletter');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -130,6 +131,10 @@ Route::prefix('admin')->middleware(['auth', 'role:Admin, Teacher'])->group(funct
     Route::get('/dashboard/manual-payments/{manualPayment}/edit', [AdminActions::class, 'editManualPayment'])->name('admin.manualPayment.edit');
     Route::put('/dashboard/manual-payments/{manualPayment}/update', [AdminActions::class, 'updateManualPayment'])->name('admin.manualPayment.update');
     Route::delete('/dashboard/manual-payments/{manualPayment}/delete', [AdminActions::class, 'deleteManualPayment'])->name('admin.manualPayment.delete');
+
+    // Newsletter routes
+    Route::get('/dashboard/newsletter', [AdminActions::class, 'newsletterIndex'])->name('newsletter.index');
+    Route::post('/dashboard/newsletter', [AdminActions::class, 'newsletterUpload'])->name('newsletter.upload');
 });
 
 Route::prefix('teacher')->middleware(['auth', 'role:Teacher'])->group(function () {

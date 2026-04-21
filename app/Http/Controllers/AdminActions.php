@@ -1005,4 +1005,39 @@ class AdminActions extends Controller
         );
         return redirect()->route('admin.manualPayments')->with($notification);
     }
+
+    // -----------------------------------------------------------------------
+    // Newsletter
+    // -----------------------------------------------------------------------
+
+    public function newsletterIndex()
+    {
+        $authUser = Auth::user();
+        $newsletterExists = file_exists(public_path('uploads/newsletter/newsletter.pdf'));
+        return view('admin.newsletter.index', compact('authUser', 'newsletterExists'));
+    }
+
+    public function newsletterUpload(Request $request)
+    {
+        $request->validate([
+            'newsletter' => 'required|file|mimes:pdf|max:20480', // max 20 MB
+        ]);
+
+        $uploadDir = public_path('uploads/newsletter');
+
+        // Ensure the directory exists
+        if (!file_exists($uploadDir)) {
+            mkdir($uploadDir, 0755, true);
+        }
+
+        // Always save with the same fixed name, overwriting the previous newsletter
+        $request->file('newsletter')->move($uploadDir, 'newsletter.pdf');
+
+        $notification = [
+            'message'    => 'Newsletter uploaded successfully.',
+            'alert-type' => 'success',
+        ];
+
+        return redirect()->route('newsletter.index')->with($notification);
+    }
 }

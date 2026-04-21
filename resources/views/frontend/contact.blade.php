@@ -32,10 +32,10 @@
 		</div>
 		<nav class="menu_nav">
 			<ul class="menu_mm">
-				<li class="menu_mm"><a href="index.html">Home</a></li>
-				<li class="menu_mm"><a href="about.html">About Us</a></li>
-				<li class="menu_mm"><a href="news.html">News</a></li>
-				<li class="menu_mm"><a href="contact.html">Contact</a></li>
+				<li class="menu_mm {{ request()->routeIs('home') ? 'active' : '' }}"><a href="{{route('home')}}">Home</a></li>
+				<li class="menu_mm {{ request()->routeIs('about') ? 'active' : '' }}"><a href="{{route('about')}}">About Us</a></li>
+				<li class="menu_mm {{ request()->routeIs('contact') ? 'active' : '' }}"><a href="{{route('contact')}}">Contact</a></li>
+				<li class="menu_mm {{ request()->routeIs('newsletter') ? 'active' : '' }}"><a href="{{route('newsletter')}}">Newsletter</a></li>
 			</ul>
 		</nav>
 		<div class="menu_extra">

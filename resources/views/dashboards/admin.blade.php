@@ -147,6 +147,8 @@
                             class="far fa-file-alt me-2"></i>Fee Setup</a>
                     <a href="{{ route('payment.index') }}" class="nav-item nav-link"><i
                             class="far fa-file-alt me-2"></i>Payments</a>
+                    <a href="{{ route('newsletter.index') }}" class="nav-item nav-link"><i
+                            class="fa fa-file-alt me-2"></i>Newsletter</a>
                     {{-- <div class="nav-item dropdown">
                         <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="far fa-file-alt me-2"></i>Pages</a>
                         <div class="dropdown-menu bg-transparent border-0">

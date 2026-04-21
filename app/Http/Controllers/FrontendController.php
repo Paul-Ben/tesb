@@ -22,5 +22,9 @@ class FrontendController extends Controller
         return view('frontend.contact');
     }
 
-    
+    public function newsletter()
+    {
+        $newsletterExists = file_exists(public_path('uploads/newsletter/newsletter.pdf'));
+        return view('frontend.newsletter', compact('newsletterExists'));
+    }
 }

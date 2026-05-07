@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Student Report Card</title>
-    <link rel="stylesheet" href="{{ asset('results/styles.css') }}">
+    <link rel="stylesheet" href="{{ asset('resultstyles/styles.css') }}">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css" rel="stylesheet">
     <style>
         /* Stamp styling - hidden by default */

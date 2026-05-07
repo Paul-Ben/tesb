@@ -45,6 +45,7 @@ class AdminActions extends Controller
     {
         $authUser = Auth::user();
         $roles = Role::all();
+
         return view('admin.role', compact('roles', 'authUser'));
     }
 
@@ -52,6 +53,7 @@ class AdminActions extends Controller
     {
         $authUser = Auth::user();
         $users = User::whereNotIn('role_id', [3, 2, 4])->get();
+
         return view('admin.user.index', compact('users', 'authUser'));
     }
 
@@ -59,6 +61,7 @@ class AdminActions extends Controller
     {
         $authUser = Auth::user();
         $roles = Role::whereIn('id', [1, 2])->get();
+
         return view('admin.user.create', compact('roles', 'authUser'));
     }
 
@@ -68,7 +71,7 @@ class AdminActions extends Controller
             'name' => 'required',
             'email' => 'required|email|unique:users',
             'role_id' => 'required|exists:roles,id',
-            'password' => 'required|min:6'
+            'password' => 'required|min:6',
         ]);
         $validated['password'] = bcrypt($validated['password']);
         $createdUser = User::create($validated);
@@ -80,6 +83,7 @@ class AdminActions extends Controller
         }
 
         Log::info('User created successfully');
+
         return redirect()->route('users.index')->with('success', 'User created successfully');
     }
 
@@ -87,6 +91,7 @@ class AdminActions extends Controller
     {
         $authUser = Auth::user();
         $roles = Role::where('id', 1)->get();
+
         return view('admin.user.edit', compact('user', 'roles', 'authUser'));
     }
 
@@ -94,15 +99,16 @@ class AdminActions extends Controller
     {
         $validated = $request->validate([
             'name' => 'required',
-            'email' => 'required|email|unique:users,email,' . $user->id,
+            'email' => 'required|email|unique:users,email,'.$user->id,
             'role_id' => 'required|exists:roles,id',
-            'password' => 'nullable|min:8'
+            'password' => 'nullable|min:8',
         ]);
         if ($request->password != $user->password) {
             $validated['password'] = bcrypt($validated['password']);
         }
         $user->update($validated);
         Log::info('User updated successfully');
+
         return redirect()->route('users.index')->with('success', 'User updated successfully');
     }
 
@@ -110,6 +116,7 @@ class AdminActions extends Controller
     {
         $user->delete();
         Log::info('User deleted successfully');
+
         return redirect()->route('users.index')->with('success', 'User deleted successfully');
     }
 
@@ -117,12 +124,14 @@ class AdminActions extends Controller
     {
         $authUser = Auth::user();
         $classCategories = ClassCategory::all();
+
         return view('admin.classcategory.index', compact('classCategories', 'authUser'));
     }
 
     public function createclassCategory()
     {
         $authUser = Auth::user();
+
         return view('admin.classcategory.create', compact('authUser'));
     }
 
@@ -130,16 +139,18 @@ class AdminActions extends Controller
     {
         $validated = $request->validate([
             'name' => 'required',
-            'abbreviation' => 'required'
+            'abbreviation' => 'required',
         ]);
         ClassCategory::create($validated);
         Log::info('Class Category created successfully');
+
         return redirect()->route('category.index')->with('success', 'Class Category created successfully');
     }
 
     public function editclassCategory(Request $request, ClassCategory $classCategory)
     {
         $authUser = Auth::user();
+
         return view('admin.classcategory.edit', compact('classCategory', 'authUser'));
     }
 
@@ -147,10 +158,11 @@ class AdminActions extends Controller
     {
         $validated = $request->validate([
             'name' => 'required',
-            'abbreviation' => 'required'
+            'abbreviation' => 'required',
         ]);
         $classCategory->update($validated);
         Log::info('Class Category updated successfully');
+
         return redirect()->route('category.index')->with('success', 'Class Category updated successfully');
     }
 
@@ -158,6 +170,7 @@ class AdminActions extends Controller
     {
         $classCategory->delete();
         Log::info('Class Category deleted successfully');
+
         return redirect()->route('category.index')->with('success', 'Class Category deleted successfully');
     }
 
@@ -165,6 +178,7 @@ class AdminActions extends Controller
     {
         $authUser = Auth::user();
         $classrooms = Classroom::with('classCategory', 'teacher')->get();
+
         // $classrooms = Classroom::with('classCategory')->paginate(10);
         // $teachers = Teacher::all();
         // dd($classrooms);
@@ -176,6 +190,7 @@ class AdminActions extends Controller
         $authUser = Auth::user();
         $classCategories = ClassCategory::all();
         $teachers = Teacher::all();
+
         return view('admin.classroom.create', compact('classCategories', 'authUser', 'teachers'));
     }
 
@@ -188,6 +203,7 @@ class AdminActions extends Controller
         ]);
         Classroom::create($validated);
         Log::info('Classroom created successfully');
+
         return redirect()->route('classroom.index')->with('success', 'Classroom created successfully');
     }
 
@@ -197,6 +213,7 @@ class AdminActions extends Controller
         $category = ClassCategory::find($classroom->category_id);
         $classCategories = ClassCategory::all();
         $teachers = Teacher::all();
+
         return view('admin.classroom.edit', compact('classroom', 'classCategories', 'category', 'authUser', 'teachers'));
     }
 
@@ -205,10 +222,11 @@ class AdminActions extends Controller
         $validated = $request->validate([
             'name' => 'required',
             'category_id' => 'required',
-            'teacher_id' => 'required'
+            'teacher_id' => 'required',
         ]);
         $classroom->update($validated);
         Log::info('Classroom updated successfully');
+
         return redirect()->route('classroom.index')->with('success', 'Classroom updated successfully');
     }
 
@@ -216,21 +234,23 @@ class AdminActions extends Controller
     {
         $classroom->delete();
         Log::info('Classroom deleted successfully');
+
         return redirect()->route('classroom.index')->with('success', 'Classroom deleted successfully');
     }
-
 
     /**Session operations */
     public function schoolSessionIndex()
     {
         $authUser = Auth::user();
         $schoolsessions = SchoolSession::all();
+
         return view('admin.sessions.index', compact('schoolsessions', 'authUser'));
     }
 
     public function createschoolSession()
     {
         $authUser = Auth::user();
+
         return view('admin.sessions.create', compact('authUser'));
     }
 
@@ -238,7 +258,7 @@ class AdminActions extends Controller
     {
         $validated = $request->validate([
             'sessionName' => 'required',
-            'status' => 'required'
+            'status' => 'required',
         ]);
         $staus = $validated['status'] == 'active' ? 1 : 0;
         SchoolSession::create([
@@ -247,23 +267,26 @@ class AdminActions extends Controller
 
         ]);
         Log::info('Session created successfully');
-        $notification = array(
+        $notification = [
             'message' => 'Session created successfully.',
-            'alert-type' => 'success'
-        );
+            'alert-type' => 'success',
+        ];
+
         return redirect()->route('session.index')->with($notification);
     }
 
     public function editschoolSession(SchoolSession $schoolsession)
     {
         $authUser = Auth::user();
+
         return view('admin.sessions.edit', compact('schoolsession', 'authUser'));
     }
+
     public function updateschoolSession(Request $request, SchoolSession $schoolsession)
     {
         $validated = $request->validate([
             'sessionName' => 'required',
-            'status' => 'required'
+            'status' => 'required',
         ]);
         $staus = $validated['status'] == 'active' ? 1 : 0;
         $schoolsession->update([
@@ -271,28 +294,36 @@ class AdminActions extends Controller
             'status' => $validated['status'],
         ]);
         Log::info('Session updated successfully');
+
         return redirect()->route('session.index')->with('success', 'Session updated successfully');
     }
+
     public function deleteschoolSession(SchoolSession $schoolsession)
     {
         $schoolsession->delete();
         Log::info('Session deleted successfully');
+
         return redirect()->route('session.index')->with('success', 'Session deleted successfully');
     }
+
     public function termIndex()
     {
         $authUser = Auth::user();
         $terms = Term::with('schoolSession')->get();
         $sessions = schoolSession::all();
+
         return view('admin.term.index', compact('terms', 'sessions', 'authUser'));
     }
+
     public function createTerm(Request $request)
     {
         $authUser = Auth::user();
         $sessions = SchoolSession::where('status', 'active')->get();
+
         // dd($sessions);
         return view('admin.term.create', compact('sessions', 'authUser'));
     }
+
     public function storeTerm(Request $request)
     {
         $request->validate([
@@ -310,18 +341,22 @@ class AdminActions extends Controller
             'endDate' => $request->end_date,
             'status' => $request->status,
         ]);
-        $notification = array(
+        $notification = [
             'message' => 'Term created successfully.',
-            'alert-type' => 'success'
-        );
+            'alert-type' => 'success',
+        ];
+
         return redirect()->route('term.index')->with($notification);
     }
+
     public function editTerm(Term $term)
     {
         $authUser = Auth::user();
         $sessions = SchoolSession::all();
+
         return view('admin.term.edit', compact('term', 'sessions', 'authUser'));
     }
+
     public function updateTerm(Request $request, Term $term)
     {
         $request->validate([
@@ -339,19 +374,22 @@ class AdminActions extends Controller
             'endDate' => $request->end_date,
             'status' => $request->status,
         ]);
-        $notification = array(
+        $notification = [
             'message' => 'Term updated successfully.',
-            'alert-type' => 'success'
-        );
+            'alert-type' => 'success',
+        ];
+
         return redirect()->route('term.index')->with($notification);
     }
+
     public function deleteTerm(Term $term)
     {
         $term->delete();
-        $notification = array(
+        $notification = [
             'message' => 'Term deleted successfully.',
-            'alert-type' => 'success'
-        );
+            'alert-type' => 'success',
+        ];
+
         return redirect()->route('term.index')->with($notification);
     }
 
@@ -362,12 +400,12 @@ class AdminActions extends Controller
         $students = Student::query()
             ->when($request->search, function ($query) use ($request) {
                 $query->where(function ($q) use ($request) {
-                    $q->where('first_name', 'like', '%' . $request->search . '%')
-                        ->orWhere('last_name', 'like', '%' . $request->search . '%')
-                        ->orWhere('std_number', 'like', '%' . $request->search . '%')
-                        ->orWhere('gender', 'like', '%' . $request->search . '%')
+                    $q->where('first_name', 'like', '%'.$request->search.'%')
+                        ->orWhere('last_name', 'like', '%'.$request->search.'%')
+                        ->orWhere('std_number', 'like', '%'.$request->search.'%')
+                        ->orWhere('gender', 'like', '%'.$request->search.'%')
                         ->orWhereHas('classroom', function ($q) use ($request) {
-                            $q->where('name', 'like', '%' . $request->search . '%');
+                            $q->where('name', 'like', '%'.$request->search.'%');
                         });
                 });
             })
@@ -387,6 +425,7 @@ class AdminActions extends Controller
     public function showStudent(Student $student)
     {
         $authUser = Auth::user();
+
         return view('admin.student.show', compact('student', 'authUser'));
     }
 
@@ -396,6 +435,7 @@ class AdminActions extends Controller
         $classrooms = Classroom::all();
         $guardians = Guardian::all();
         $schoolSessions = SchoolSession::all();
+
         return view('admin.student.create', compact('classrooms', 'schoolSessions', 'authUser', 'guardians'));
     }
 
@@ -420,11 +460,10 @@ class AdminActions extends Controller
 
         if ($request->hasFile('image')) {
             $filePath = $request->file('image');
-            $filename = time() . '_' . $filePath->getClientOriginalName();
+            $filename = time().'_'.$filePath->getClientOriginalName();
             $image = $filePath->move(public_path('images/'), $filename);
             $file = $request->merge(['file_path' => $filename]);
         }
-
 
         // Create the student record
         Student::create([
@@ -444,7 +483,6 @@ class AdminActions extends Controller
             'current_session' => $request->current_session,
             'image' => $filename ?? null, // Save the image path in the database
         ]);
-
 
         return redirect()->route('student.index')->with('success', 'Student created successfully.');
     }
@@ -466,7 +504,7 @@ class AdminActions extends Controller
             'first_name' => 'required',
             'middle_name' => 'string|nullable',
             'last_name' => 'required',
-            'std_number' => 'required|unique:students,std_number,' . $student->id,
+            'std_number' => 'required|unique:students,std_number,'.$student->id,
             'date_of_birth' => 'required|date',
             'nationality' => 'required',
             'stateoforigin' => 'required',
@@ -484,13 +522,13 @@ class AdminActions extends Controller
         // Only process image if a new one was uploaded
         if ($request->hasFile('image')) {
             // Delete old image if it exists
-            if ($student->image && file_exists(public_path('images/' . $student->image))) {
-                unlink(public_path('images/' . $student->image));
+            if ($student->image && file_exists(public_path('images/'.$student->image))) {
+                unlink(public_path('images/'.$student->image));
             }
 
             // Store new image
             $file = $request->file('image');
-            $filename = time() . '_' . $file->getClientOriginalName();
+            $filename = time().'_'.$file->getClientOriginalName();
             $file->move(public_path('images/'), $filename);
             $imagePath = $filename;
         }
@@ -510,15 +548,17 @@ class AdminActions extends Controller
             'current_session' => $request->current_session,
             'image' => $filename ?? $student->image, // Save the image path in the database
         ]);
+
         return redirect()->route('student.index')->with('success', 'Student updated successfully.');
     }
 
     public function deleteStudent(Student $student)
     {
-        if ($student->image && file_exists(public_path('images/' . $student->image))) {
-            unlink(public_path('images/' . $student->image));
+        if ($student->image && file_exists(public_path('images/'.$student->image))) {
+            unlink(public_path('images/'.$student->image));
         }
         $student->delete();
+
         return redirect()->route('student.index')->with('success', 'Student deleted successfully.');
     }
 
@@ -526,12 +566,14 @@ class AdminActions extends Controller
     {
         $authUser = Auth::user();
         $students = Student::where('class_id', $classroom->id)->get();
+
         return view('admin.classroom.students', compact('students', 'classroom', 'authUser'));
     }
 
     public function guardianForm(Request $request, User $user)
     {
         $authUser = Auth::user();
+
         return view('users.guardian.create', compact('authUser'));
     }
 
@@ -539,12 +581,15 @@ class AdminActions extends Controller
     {
         $authUser = Auth::user();
         $subjects = Subject::all();
+
         return view('admin.subject.allIndex', compact('subjects', 'authUser'));
     }
+
     public function subject_index(Classroom $classroom)
     {
         $authUser = Auth::user();
         $subjects = Subject::where('classroom_id', $classroom->id)->get();
+
         return view('admin.subject.index', compact('subjects', 'classroom', 'authUser'));
     }
 
@@ -553,14 +598,16 @@ class AdminActions extends Controller
         $authUser = Auth::user();
         $classrooms = Classroom::all();
         $teachers = Teacher::all();
+
         return view('admin.subject.create', compact('classroom', 'authUser', 'teachers'));
     }
+
     public function storeSubject(Request $request, Classroom $classroom)
     {
         $request->validate([
             'name' => 'required',
             'code' => 'required',
-            'teacher_id' => 'required'
+            'teacher_id' => 'required',
             // 'classroom_id' => 'required|exists:classrooms,id',
         ]);
 
@@ -570,18 +617,21 @@ class AdminActions extends Controller
             'code' => $request->code,
             'teacher_id' => $request->teacher_id,
         ]);
-        $notification = array(
+        $notification = [
             'message' => 'Subject created successfully.',
-            'alert-type' => 'success'
-        );
+            'alert-type' => 'success',
+        ];
+
         return redirect()->route('class.subjects', $classroom)->with($notification);
     }
 
     public function editSubject(Subject $subject)
     {
         $authUser = Auth::user();
+
         return view('admin.subject.edit', compact('subject', 'authUser'));
     }
+
     public function updateSubject(Request $request, Subject $subject)
     {
         $request->validate([
@@ -593,10 +643,11 @@ class AdminActions extends Controller
             'name' => $request->name,
             'code' => $request->code,
         ]);
-        $notification = array(
+        $notification = [
             'message' => 'Subject updated successfully.',
-            'alert-type' => 'success'
-        );
+            'alert-type' => 'success',
+        ];
+
         return redirect()->route('class.subjects', $subject->classroom)->with($notification);
     }
 
@@ -604,12 +655,14 @@ class AdminActions extends Controller
     {
         $authUser = Auth::user();
         $teachers = Teacher::all();
+
         return view('admin.teacher.index', compact('teachers', 'authUser'));
     }
 
     public function create_teacher()
     {
         $authUser = Auth::user();
+
         return view('admin.teacher.create', compact('authUser'));
     }
 
@@ -638,7 +691,6 @@ class AdminActions extends Controller
     //     $teacher['user_id'] = $user->id;
 
     //     Teacher::create($teacher);
-
 
     //     $notification = array(
     //         'message' => 'Teacher created successfully.',
@@ -693,15 +745,17 @@ class AdminActions extends Controller
                 ->with('success', 'Teacher created successfully.');
         } catch (\Exception $e) {
             DB::rollBack();
-            Log::error('Teacher creation failed: ' . $e->getMessage());
+            Log::error('Teacher creation failed: '.$e->getMessage());
 
             return back()->withInput()
                 ->with('error', 'Error creating teacher. Please try again.');
         }
     }
+
     public function edit_teacher(Teacher $teacher)
     {
         $authUser = Auth::user();
+
         return view('admin.teacher.edit', compact('teacher', 'authUser'));
     }
 
@@ -711,7 +765,7 @@ class AdminActions extends Controller
             'first_name' => 'required',
             'last_name' => 'required',
             'middle_name' => 'string|nullable',
-            'email' => 'required|email|unique:teachers,email,' . $teacher->id,
+            'email' => 'required|email|unique:teachers,email,'.$teacher->id,
             'date_of_birth' => 'required|date',
             'phone_number' => 'required',
             'address' => 'required',
@@ -728,11 +782,14 @@ class AdminActions extends Controller
             'address' => $request->address,
             'qualification' => $request->qualification,
         ]);
+
         return redirect()->route('teacher.index')->with('success', 'Teacher updated successfully!');
     }
+
     public function delete_teacher(Teacher $teacher)
     {
         $teacher->delete();
+
         return redirect()->route('teacher.index')->with('success', 'Teacher deleted successfully!');
     }
 
@@ -740,6 +797,7 @@ class AdminActions extends Controller
     {
         $authUser = Auth::user();
         $fees = FeeSetup::all();
+
         return view('admin.feesetup.index', compact('authUser', 'fees'));
     }
 
@@ -748,8 +806,10 @@ class AdminActions extends Controller
         $authUser = Auth::user();
         $classrooms = Classroom::all();
         $terms = Term::where('status', '=', 'active')->get();
+
         return view('admin.feesetup.create', compact('authUser', 'terms', 'classrooms'));
     }
+
     public function storeFee(Request $request)
     {
 
@@ -771,16 +831,18 @@ class AdminActions extends Controller
         ]);
         // Check if the fee setup was created successfully
 
-        if (!$feeSetup) {
-            $notification = array(
+        if (! $feeSetup) {
+            $notification = [
                 'message' => 'Error creating fee setup.',
-                'alert-type' => 'error'
-            );
+                'alert-type' => 'error',
+            ];
+
             return back()->with('error', 'Error creating fee setup. Please try again.');
         }
+
         return redirect()->route('adminFee.setup')->with([
             'message' => 'Fee created successfully.',
-            'alert-type' => 'success'
+            'alert-type' => 'success',
         ]);
     }
 
@@ -789,8 +851,10 @@ class AdminActions extends Controller
         $authUser = Auth::user();
         $classrooms = Classroom::all();
         $terms = Term::all();
+
         return view('admin.feesetup.edit', compact('fee', 'authUser', 'terms', 'classrooms'));
     }
+
     public function updateFee(Request $request, FeeSetup $fee)
     {
         $request->validate([
@@ -808,20 +872,22 @@ class AdminActions extends Controller
             'amount' => $request->amount,
             'status' => $request->status,
         ]);
-        $notification = array(
+        $notification = [
             'message' => 'Fee updated successfully.',
-            'alert-type' => 'success'
-        );
+            'alert-type' => 'success',
+        ];
+
         return redirect()->route('adminFee.setup')->with($notification);
     }
 
     public function deleteFee(FeeSetup $fee)
     {
         $fee->delete();
-        $notification = array(
+        $notification = [
             'message' => 'Fee deleted successfully.',
-            'alert-type' => 'success'
-        );
+            'alert-type' => 'success',
+        ];
+
         return redirect()->route('adminFee.setup')->with($notification);
     }
 
@@ -832,31 +898,40 @@ class AdminActions extends Controller
 
         return view('admin.payments.payments', compact('payments', 'authUser'));
     }
+
     public function paymentReceipt(Transaction $receipt)
     {
         $authUser = Auth::user();
+
         return view('admin.payments.receipt', compact('receipt', 'authUser'));
     }
+
     public function allTransactions()
     {
         $authUser = Auth::user();
         $transactions = Registration::with('student')->orderBy('id', 'desc')->get();
+
         return view('admin.payments.registrations', compact('transactions', 'authUser'));
     }
+
     public function allManualPayments()
     {
         $authUser = Auth::user();
-        $manualPayments = ManualPayments::with('student')->orderBy('id', 'desc')->get();
+        $manualPayments = ManualPayments::with('student')->orderBy('id', 'desc')->paginate(25);
+
         return view('admin.payments.index', compact('manualPayments', 'authUser'));
     }
+
     public function createManualPayment(Student $student)
     {
         $authUser = Auth::user();
         $guardian = $student->guardian;
         $activeTerm = Term::where('status', 'active')->first();
         $fees = FeeSetup::where('status', 'active')->get();
+
         return view('admin.payments.create', compact('guardian', 'student', 'activeTerm', 'fees', 'authUser'));
     }
+
     public function storeManualPayment(Request $request)
     {
 
@@ -867,8 +942,8 @@ class AdminActions extends Controller
             'student_name' => 'required|string',
             'student_id' => 'required|exists:students,id',
         ]);
-        $tx_ref = 'MARF_' . time() . '_' . $request->student_id;
-        $txr_id = 'MATX_' . time() . '_' . $request->student_id;
+        $tx_ref = 'MARF_'.time().'_'.$request->student_id;
+        $txr_id = 'MATX_'.time().'_'.$request->student_id;
 
         $manualPayment = ManualPayments::create([
             'student_id' => $request->student_id,
@@ -887,21 +962,21 @@ class AdminActions extends Controller
             'payitem' => $request->payitem,
             'paymentStatus' => $request->status,
             'tx_ref' => $tx_ref,
-            'txr_id' => $txr_id
+            'txr_id' => $txr_id,
         ]);
 
-        if (!$manualPayment) {
-            $notification = array(
+        if (! $manualPayment) {
+            $notification = [
                 'message' => 'Error creating manual payment. Please try again.',
-                'alert-type' => 'error'
-            );
+                'alert-type' => 'error',
+            ];
 
             return back()->with($notification);
         }
         // check if payment exists in transaction table
         $transaction = Transaction::where('tx_ref', $tx_ref)->first();
 
-        if (!$transaction) {
+        if (! $transaction) {
             // check if payment is successful
             if ($request->status == 'paid') {
                 $transaction = Transaction::create([
@@ -919,21 +994,23 @@ class AdminActions extends Controller
                     'session_id' => $request->session_id,
                     'term_id' => $request->term_id,
                     'tx_ref' => $tx_ref,
-                    'txr_id' => $txr_id
+                    'txr_id' => $txr_id,
                 ]);
             }
         }
 
-        $notification = array(
+        $notification = [
             'message' => 'Manual payment created successfully.',
-            'alert-type' => 'success'
-        );
+            'alert-type' => 'success',
+        ];
+
         return redirect()->route('admin.manualPayments')->with($notification);
     }
 
     public function manPaymentReceipt(ManualPayments $receipt)
     {
         $authUser = Auth::user();
+
         return view('admin.payments.receipt', compact('receipt', 'authUser'));
     }
 
@@ -941,6 +1018,7 @@ class AdminActions extends Controller
     {
 
         $authUser = Auth::user();
+
         return view('admin.payments.edit', compact('manualPayment', 'authUser'));
     }
 
@@ -986,23 +1064,26 @@ class AdminActions extends Controller
                 'session_id' => $request->session_id,
                 'term_id' => $request->term_id,
                 'tx_ref' => $txRef,
-                'txr_id' => $trxID
+                'txr_id' => $trxID,
             ]);
         }
 
-        $notification = array(
+        $notification = [
             'message' => 'Manual payment updated successfully.',
-            'alert-type' => 'success'
-        );
+            'alert-type' => 'success',
+        ];
+
         return redirect()->route('admin.manualPayments')->with($notification);
     }
+
     public function deleteManualPayment(ManualPayments $manualPayment)
     {
         $manualPayment->delete();
-        $notification = array(
+        $notification = [
             'message' => 'Manual payment deleted successfully.',
-            'alert-type' => 'success'
-        );
+            'alert-type' => 'success',
+        ];
+
         return redirect()->route('admin.manualPayments')->with($notification);
     }
 
@@ -1014,6 +1095,7 @@ class AdminActions extends Controller
     {
         $authUser = Auth::user();
         $newsletterExists = file_exists(public_path('uploads/newsletter/newsletter.pdf'));
+
         return view('admin.newsletter.index', compact('authUser', 'newsletterExists'));
     }
 
@@ -1026,7 +1108,7 @@ class AdminActions extends Controller
         $uploadDir = public_path('uploads/newsletter');
 
         // Ensure the directory exists
-        if (!file_exists($uploadDir)) {
+        if (! file_exists($uploadDir)) {
             mkdir($uploadDir, 0755, true);
         }
 
@@ -1034,7 +1116,7 @@ class AdminActions extends Controller
         $request->file('newsletter')->move($uploadDir, 'newsletter.pdf');
 
         $notification = [
-            'message'    => 'Newsletter uploaded successfully.',
+            'message' => 'Newsletter uploaded successfully.',
             'alert-type' => 'success',
         ];
 

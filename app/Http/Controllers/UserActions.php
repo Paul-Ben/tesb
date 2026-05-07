@@ -6,22 +6,18 @@ use App\Models\Classroom;
 use App\Models\FeeSetup;
 use App\Models\Guardian;
 use App\Models\Registration;
-use App\Models\Teacher;
-
 use App\Models\Result;
 use App\Models\ResultAffectiveDevelopment;
-use App\Models\SchoolSession;
 use App\Models\Student;
 use App\Models\Term;
 use App\Models\Transaction;
 use Carbon\Carbon;
-use Illuminate\Support\Str;
-
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 
 class UserActions extends Controller
 {
@@ -34,6 +30,7 @@ class UserActions extends Controller
     public function guardianForm()
     {
         $authUser = Auth::user();
+
         return view('users.guardian.create', compact('authUser'));
     }
 
@@ -47,7 +44,7 @@ class UserActions extends Controller
             'guardian_email' => 'required|email|max:255',
             'address' => 'nullable|string|max:255',
             'nationality' => 'required|string|max:255',
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048', // 2MB max
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'stateoforigin' => 'nullable|string|max:255',
             'lga' => 'nullable|string|max:255',
         ]);
@@ -72,10 +69,11 @@ class UserActions extends Controller
             'lga' => $request->lga,
         ]);
 
-        $notification = array(
+        $notification = [
             'message' => 'Guardian information saved successfully.',
-            'alert-type' => 'success'
-        );
+            'alert-type' => 'success',
+        ];
+
         return redirect()->route('user.dashboard')->with($notification);
     }
 
@@ -90,14 +88,16 @@ class UserActions extends Controller
         } else {
             return redirect()->back()->with([
                 'message' => 'No student information found.',
-                'alert-type' => 'error'
+                'alert-type' => 'error',
             ]);
         }
     }
+
     public function showStudent(Student $student)
     {
         $authUser = Auth::user();
         $guardian = Guardian::where('user_id', $authUser->id)->first();
+
         return view('users.guardian.student', compact('student', 'authUser', 'guardian'));
     }
 
@@ -106,12 +106,13 @@ class UserActions extends Controller
         $authUser = auth()->user();
         $guardian = Guardian::where('user_id', $authUser->id)->first();
         $results = Result::where('student_id', $student->id)->get();
-        if (!$results) {
+        if (! $results) {
             return redirect()->back()->with([
                 'message' => 'No result found for this student.',
                 'alert-type' => 'error',
             ]);
         }
+
         return view('users.result.index', compact('student', 'results', 'authUser', 'guardian'));
     }
 
@@ -125,7 +126,7 @@ class UserActions extends Controller
             ->where('student_class', $result->class)
             ->first();
 
-        if (!$checkPayment) {
+        if (! $checkPayment) {
             return redirect()->back()->with([
                 'message' => 'You need to pay your fees before you can view the result.',
                 'alert-type' => 'error',
@@ -155,6 +156,7 @@ class UserActions extends Controller
         if (array_key_exists($classCategoryName, $categoryViews)) {
             return view($categoryViews[$classCategoryName], compact('student', 'result', 'table1', 'table2', 'age', 'position'));
         }
+
         return redirect()->back()->with([
             'message' => 'Classroom category not recognized.',
             'alert-type' => 'error',
@@ -164,27 +166,26 @@ class UserActions extends Controller
 
     public function feeIndex(Student $student)
     {
-        
+
         $authUser = Auth::user();
         $guardian = Guardian::where('user_id', $authUser->id)->first();
         $fees = FeeSetup::where('status', 'active')
-        ->where('classroom_id', $student->class_id)
-        ->get();
-        
-        if (!$fees) {
+            ->where('classroom_id', $student->class_id)
+            ->get();
+
+        if (! $fees) {
             return redirect()->back()->with([
                 'message' => 'No fee setup found.',
                 'alert-type' => 'error',
             ]);
         }
         $activeTerm = Term::where('status', 'active')->first();
-        if (!$activeTerm) {
+        if (! $activeTerm) {
             return redirect()->back()->with([
                 'message' => 'No active term found.',
                 'alert-type' => 'error',
             ]);
         }
-
 
         return view('users.fee.index', compact('student', 'activeTerm', 'authUser', 'guardian', 'fees'));
     }
@@ -202,7 +203,7 @@ class UserActions extends Controller
             'student_number' => 'required|string|max:255',
             'guardian_phone' => 'required|string|max:20',
             'session' => 'required|string|max:255',
-            'student_id' => 'required|exists:students,id'
+            'student_id' => 'required|exists:students,id',
         ]);
 
         // Check for existing registration with more precise query
@@ -211,7 +212,7 @@ class UserActions extends Controller
             'term_id' => $validated['term_id'],
             'session_id' => $request->session_id,
             'amount' => $request->amount,
-            'paymentStatus' => 'successful' // Only check successful payments
+            'paymentStatus' => 'successful', // Only check successful payments
         ])->exists();
 
         if ($existingRegistration) {
@@ -225,7 +226,7 @@ class UserActions extends Controller
 
         try {
             $authUser = Auth::user();
-            $txRef = 'TESB-' . time() . '-' . Str::random(8); // More unique reference
+            $txRef = 'TESB-'.time().'-'.Str::random(8); // More unique reference
 
             // Create registration record
             $registration = Registration::create([
@@ -242,37 +243,37 @@ class UserActions extends Controller
                 'term_id' => $validated['term_id'],
                 'session' => $validated['session'],
                 'session_id' => $request->session_id,
-                'tx_ref' => $txRef
+                'tx_ref' => $txRef,
             ]);
 
             // Initialize payment
             $secretKey = config('app.flutterwave.secret_key');
             $response = Http::withHeaders([
-                'Authorization' => 'Bearer ' . $secretKey,
+                'Authorization' => 'Bearer '.$secretKey,
                 'Content-Type' => 'application/json',
             ])->timeout(60)
-            ->retry(3, 1000)
-            ->post('https://api.flutterwave.com/v3/payments', [
-                'tx_ref' => $txRef,
-                'amount' => $validated['amount'],
-                'currency' => 'NGN',
-                'redirect_url' => route('payment.callback'),
-                'payment_options' => 'card,mobilemoneyghana,ussd',
-                'customer' => [
-                    'email' => $validated['guardian_email'],
-                    'phone_number' => $validated['guardian_phone'],
-                    'name' => $validated['student_name'],
-                ],
-                'customizations' => [
-                    'title' => 'TesB Academy Payment',
-                    'description' => 'Payment for TesB Academy User Charges',
-                    'logo' => asset('frontend/images/logo.png'), // paul change to use logo online from website
-                ],
-            ]);
+                ->retry(3, 1000)
+                ->post('https://api.flutterwave.com/v3/payments', [
+                    'tx_ref' => $txRef,
+                    'amount' => $validated['amount'],
+                    'currency' => 'NGN',
+                    'redirect_url' => route('payment.callback'),
+                    'payment_options' => 'card,mobilemoneyghana,ussd',
+                    'customer' => [
+                        'email' => $validated['guardian_email'],
+                        'phone_number' => $validated['guardian_phone'],
+                        'name' => $validated['student_name'],
+                    ],
+                    'customizations' => [
+                        'title' => 'TesB Academy Payment',
+                        'description' => 'Payment for TesB Academy User Charges',
+                        'logo' => asset('frontend/images/logo.png'), // paul change to use logo online from website
+                    ],
+                ]);
 
             $responseData = $response->json();
 
-            if (!$response->successful() || $responseData['status'] !== 'success') {
+            if (! $response->successful() || $responseData['status'] !== 'success') {
                 throw new \Exception($responseData['message'] ?? 'Payment initiation failed');
             }
 
@@ -281,14 +282,14 @@ class UserActions extends Controller
             return redirect()->away($responseData['data']['link']);
         } catch (\Exception $e) {
             DB::rollBack();
-            Log::error('Payment Error: ' . $e->getMessage(), [
+            Log::error('Payment Error: '.$e->getMessage(), [
                 'student_id' => $request->student_id,
-                'trace' => $e->getTraceAsString()
+                'trace' => $e->getTraceAsString(),
             ]);
 
             return back()->with([
-                'error' => 'Payment processing failed: ' . $e->getMessage(),
-                'alert-type' => 'error'
+                'error' => 'Payment processing failed: '.$e->getMessage(),
+                'alert-type' => 'error',
             ]);
         }
     }
@@ -300,14 +301,13 @@ class UserActions extends Controller
         $trxID = $request->transaction_id;
 
         $payment = Registration::where('tx_ref', $txRef)->first();
-        if (!$payment) {
+        if (! $payment) {
             return redirect()->route('home')->with('error', 'Transaction not found.');
         }
         // $response = Http::withHeaders([
         //     'Authorization' => 'Bearer ' . env('FLW_SECRET_KEY'), // Use Flutterwave Secret Key
         //     'Content-Type' => 'application/json',
         // ])->get("https://api.flutterwave.com/v3/transactions/{$txRef}/verify")->json();
-
 
         // if ($response['status'] === 'success' && $response['data']['status'] === 'successful')
         if ($status == 'successful') {
@@ -326,13 +326,15 @@ class UserActions extends Controller
                 'session_id' => $payment->session_id,
                 'term_id' => $payment->term_id,
                 'tx_ref' => $txRef,
-                'txr_id' => $trxID
+                'txr_id' => $trxID,
             ]);
             $payment->update(['paymentStatus' => 'successful']);
+
             return redirect()->route('home')->with('success', 'Payment successful!');
         }
 
         $payment->update(['paymentStatus' => 'failed']);
+
         return redirect()->route('home')->with('error', 'Payment failed.');
     }
 
@@ -348,12 +350,14 @@ class UserActions extends Controller
                 'alert-type' => 'error',
             ]);
         }
+
         return view('users.fee.receipts', compact('student', 'receipts', 'authUser', 'guardian'));
     }
 
     public function viewReceipt(Transaction $receipt)
     {
         $authUser = Auth::user();
+
         return view('users.fee.showReceipt', compact('receipt', 'authUser'));
     }
 }

@@ -48,7 +48,7 @@
                         <tbody>
                             @forelse ($payments as $key => $receipt)
                                 <tr>
-                                    <th scope="row">{{ $key + 1 }}</th>
+                                    <th scope="row">{{ $payments->firstItem() + $key }}</th>
                                     <td><a
                                             href="#">{{ $receipt->student_number }}</a>
                                     </td>
@@ -70,11 +70,14 @@
                                 </tr>
                             @empty
                                 <tr>
-                                    <td class="text-center" colspan="4">No Data Found</td>
+                                    <td class="text-center" colspan="8">No Data Found</td>
                                 </tr>
                             @endforelse
                         </tbody>
                     </table>
+                    <div class="d-flex justify-content-center">
+                        {{ $payments->links('pagination::simple-bootstrap-4') }}
+                    </div>
                 </div>
             </div>
         </div>

@@ -894,7 +894,7 @@ class AdminActions extends Controller
     public function paymentIndex()
     {
         $authUser = Auth::user();
-        $payments = Transaction::with('student')->orderBy('id', 'desc')->get();
+        $payments = Transaction::with('student')->orderBy('id', 'desc')->paginate(25);
 
         return view('admin.payments.payments', compact('payments', 'authUser'));
     }

@@ -42,7 +42,7 @@ class FrontendController extends Controller
         $sessions = SchoolSession::orderBy('sessionName', 'desc')->get();
         $terms = Term::where('status', 'active')->get();
 
-        return view('frontend.result.search', compact('sessions', 'terms'));
+        return view('frontend.frontresult.search', compact('sessions', 'terms'));
     }
 
     public function checkResult(Request $request)

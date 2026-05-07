@@ -40,7 +40,7 @@
 				{{-- <li class="menu_mm"><a href="news.html">News</a></li> --}}
 				<li class="menu_mm {{ request()->routeIs('contact') ? 'active' : '' }}"><a href="{{route('contact')}}">Contact</a></li>
 				<li class="menu_mm {{ request()->routeIs('newsletter') ? 'active' : '' }}"><a href="{{route('newsletter')}}">Newsletter</a></li>
-				<li class="menu_mm {{ request()->routeIs('result.search') ? 'active' : '' }}"><a href="{{route('result.search')}}">Results</a></li>
+				<li class="menu_mm {{ request()->routeIs('frontresult.search') ? 'active' : '' }}"><a href="{{route('frontresult.search')}}">Results</a></li>
 			</ul>
 		</nav>
 		<div class="menu_extra">

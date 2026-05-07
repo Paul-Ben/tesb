@@ -37,8 +37,8 @@ Route::get('/', [FrontendController::class, 'index'])->name('home');
 Route::get('/about-us', [FrontendController::class, 'about'])->name('about');
 Route::get('/contact-us', [FrontendController::class, 'contact'])->name('contact');
 Route::get('/newsletter', [FrontendController::class, 'newsletter'])->name('newsletter');
-Route::get('/results', [FrontendController::class, 'resultSearch'])->name('result.search');
-Route::post('/results/check', [FrontendController::class, 'checkResult'])->name('result.check');
+Route::get('/results', [FrontendController::class, 'resultSearch'])->name('frontresult.search');
+Route::post('/results/check', [FrontendController::class, 'checkResult'])->name('frontresult.check');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

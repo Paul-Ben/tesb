@@ -937,12 +937,35 @@ class AdminActions extends Controller
         return view('admin.payments.registrations', compact('transactions', 'authUser'));
     }
 
-    public function allManualPayments()
+    public function allManualPayments(Request $request)
     {
         $authUser = Auth::user();
-        $manualPayments = ManualPayments::with('student')->orderBy('id', 'desc')->paginate(25);
 
-        return view('admin.payments.index', compact('manualPayments', 'authUser'));
+        $query = ManualPayments::with('student')->orderBy('id', 'desc');
+
+        if ($request->filled('student_number')) {
+            $query->where('student_number', 'like', '%'.$request->student_number.'%');
+        }
+
+        if ($request->filled('student_class')) {
+            $query->where('student_class', $request->student_class);
+        }
+
+        if ($request->filled('session')) {
+            $query->where('session', $request->session);
+        }
+
+        if ($request->filled('term')) {
+            $query->where('term', $request->term);
+        }
+
+        $manualPayments = $query->paginate(25)->appends($request->query());
+
+        $classes = ManualPayments::distinct()->pluck('student_class')->filter()->sort();
+        $sessions = ManualPayments::distinct()->pluck('session')->filter()->sort();
+        $terms = ManualPayments::distinct()->pluck('term')->filter()->sort();
+
+        return view('admin.payments.index', compact('manualPayments', 'authUser', 'classes', 'sessions', 'terms'));
     }
 
     public function createManualPayment(Student $student)

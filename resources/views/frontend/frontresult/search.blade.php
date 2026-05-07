@@ -12,9 +12,9 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('frontend/styles/responsive.css') }}">
     <style>
         .result-search-section {
-            padding: 60px 0;
+            padding: 120px 20px 60px;
             background: #f8f9fa;
-            min-height: 60vh;
+            min-height: 100vh;
         }
         .search-card {
             background: #fff;

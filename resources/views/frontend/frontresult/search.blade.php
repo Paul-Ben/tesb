@@ -120,21 +120,11 @@
                             </div>
 
                             <div class="form-group">
-                                <label for="session">Session</label>
-                                <select name="session" id="session" class="form-control" required>
-                                    <option value="" selected>Select Session</option>
-                                    @foreach($sessions as $session)
-                                        <option value="{{ $session->sessionName }}">{{ $session->sessionName }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="term">Term</label>
-                                <select name="term" id="term" class="form-control" required>
-                                    <option value="" selected>Select Term</option>
-                                    @foreach($terms as $term)
-                                        <option value="{{ $term->term_name }}">{{ $term->term_name }}</option>
+                                <label for="term_session">Term & Session</label>
+                                <select name="term_session" id="term_session" class="form-control" required>
+                                    <option value="" selected>Select Term & Session</option>
+                                    @foreach($termSessions as $ts)
+                                        <option value="{{ $ts['name'] }}|{{ $ts['session'] }}">{{ strtoupper($ts['name']." ".'Term') }} | {{ $ts['session'] }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -159,6 +149,7 @@
 <script src="{{ asset('frontend/styles/bootstrap4/popper.js') }}"></script>
 <script src="{{ asset('frontend/styles/bootstrap4/bootstrap.min.js') }}"></script>
 <script src="{{ asset('frontend/js/custom.js') }}"></script>
+
 
 </body>
 </html>

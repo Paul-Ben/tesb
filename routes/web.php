@@ -2,8 +2,8 @@
 
 use App\Http\Controllers\AdminActions;
 use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\FrontendController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ResultController;
 use App\Http\Controllers\ResultImportController;
 use App\Http\Controllers\TeacherController;
@@ -116,7 +116,7 @@ Route::prefix('admin')->middleware(['auth', 'role:Admin, Teacher'])->group(funct
     Route::get('/dashboard/fee-setup/{fee}/edit', [AdminActions::class, 'editFee'])->name('fee.edit');
     Route::put('/dashboard/fee-setup/{fee}/update', [AdminActions::class, 'updateFee'])->name('fee.update');
     Route::delete('/dashboard/fee-setup/{fee}/delete', [AdminActions::class, 'deleteFee'])->name('fee.delete');
-    
+
     Route::get('/dashboard/payments', [AdminActions::class, 'paymentIndex'])->name('payment.index');
     Route::get('/dashboard/payments/create', [AdminActions::class, 'createPayment'])->name('payment.create');
     Route::post('/dashboard/payments/create', [AdminActions::class, 'storePayment'])->name('payment.store');
@@ -147,14 +147,14 @@ Route::prefix('teacher')->middleware(['auth', 'role:Teacher'])->group(function (
     Route::get('/dashboard/class_subjects', [TeacherController::class, 'subject_index'])->name('teacher.subjects');
     Route::get('/dashboard/result/index', [TeacherController::class, 'resultIndex'])->name('result.index');
     Route::get('/dashboard/result/search', [TeacherController::class, 'searchStudentForResult'])->name('search.result');
-    Route::get('/dashboard/result/{student}/create', [TeacherController::class, "createResult"])->name('create.result');
+    Route::get('/dashboard/result/{student}/create', [TeacherController::class, 'createResult'])->name('create.result');
     Route::post('/results/store', [ResultController::class, 'store'])->name('results.store');
     Route::get('/dashboard/student/{student}/result', [ResultController::class, 'viewResult'])->name('view.result');
     Route::get('/dashboard/student/{student}/resultlist', [ResultController::class, 'getResults'])->name('get.results');
     Route::get('/dashboard/student/result/{result}/result', [ResultController::class, 'singleResultView'])->name('single.result');
     Route::get('/dashboard/promote-students/{classroom}', [TeacherController::class, 'promoteStudents'])->name('promote.students');
     Route::put('/dashboard/promote-student', [TeacherController::class, 'promote'])->name('promote');
-    
+
     // Bulk result upload routes
     Route::get('/dashboard/results/upload/{classroom}/{subject}', [ResultImportController::class, 'showUploadForm'])->name('results.upload.form');
     Route::post('/dashboard/results/upload/{classroom}/{subject}', [ResultImportController::class, 'processUpload'])->name('results.upload.process');
@@ -179,4 +179,4 @@ Route::prefix('user')->middleware(['auth', 'role:User'])->group(function () {
     Route::get('/dashboard/receipts/{receipt}/download', [UserActions::class, 'downloadReceipt'])->name('download.receipt');
 });
 
-require __DIR__ . '/auth.php';
+require __DIR__.'/auth.php';

@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\Classroom;
 use App\Models\Result;
 use App\Models\ResultAffectiveDevelopment;
-use App\Models\SchoolSession;
 use App\Models\Student;
 use App\Models\Term;
 use App\Models\Transaction;
@@ -39,19 +38,40 @@ class FrontendController extends Controller
 
     public function resultSearch()
     {
-        $sessions = SchoolSession::orderBy('sessionName', 'desc')->get();
-        $terms = Term::where('status', 'active')->get();
+        $termSessions = Term::with('schoolSession')
+            ->orderBy('session_id', 'desc')
+            ->orderBy('id', 'asc')
+            ->get()
+            ->map(function ($term) {
+                return [
+                    'id' => $term->id,
+                    'display' => $term->name.' | '.($term->schoolSession ? $term->schoolSession->sessionName : 'N/A'),
+                    'name' => $term->name,
+                    'session' => $term->schoolSession ? $term->schoolSession->sessionName : null,
+                ];
+            });
 
-        return view('frontend.frontresult.search', compact('sessions', 'terms'));
+        return view('frontend.frontresult.search', compact('termSessions'));
     }
 
     public function checkResult(Request $request)
     {
         $request->validate([
             'student_number' => 'required|string',
-            'session' => 'required|string',
-            'term' => 'required|string',
+            'term_session' => 'required|string',
         ]);
+
+        // Parse the combined term_session value (format: "TermName|SessionName")
+        $parts = explode('|', $request->term_session);
+        $term = trim($parts[0]);
+        $session = trim($parts[1] ?? '');
+
+        if (empty($term) || empty($session)) {
+            return back()->with([
+                'message' => 'Invalid term/session selection.',
+                'alert-type' => 'error',
+            ]);
+        }
 
         $student = Student::where('std_number', $request->student_number)->first();
 
@@ -63,8 +83,8 @@ class FrontendController extends Controller
         }
 
         $hasPayment = Transaction::where('student_id', $student->id)
-            ->where('term', $request->term)
-            ->where('session', $request->session)
+            ->where('term', $term)
+            ->where('session', $session)
             ->where('paymentStatus', 'successful')
             ->exists();
 
@@ -76,8 +96,8 @@ class FrontendController extends Controller
         }
 
         $result = Result::where('student_id', $student->id)
-            ->where('term', $request->term)
-            ->where('session', $request->session)
+            ->where('term', $term)
+            ->where('session', $session)
             ->first();
 
         if (! $result) {

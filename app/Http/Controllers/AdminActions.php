@@ -891,12 +891,35 @@ class AdminActions extends Controller
         return redirect()->route('adminFee.setup')->with($notification);
     }
 
-    public function paymentIndex()
+    public function paymentIndex(Request $request)
     {
         $authUser = Auth::user();
-        $payments = Transaction::with('student')->orderBy('id', 'desc')->paginate(25);
 
-        return view('admin.payments.payments', compact('payments', 'authUser'));
+        $query = Transaction::with('student')->orderBy('id', 'desc');
+
+        if ($request->filled('student_number')) {
+            $query->where('student_number', 'like', '%'.$request->student_number.'%');
+        }
+
+        if ($request->filled('student_class')) {
+            $query->where('student_class', $request->student_class);
+        }
+
+        if ($request->filled('session')) {
+            $query->where('session', $request->session);
+        }
+
+        if ($request->filled('term')) {
+            $query->where('term', $request->term);
+        }
+
+        $payments = $query->paginate(25)->appends($request->query());
+
+        $classes = Transaction::distinct()->pluck('student_class')->filter()->sort();
+        $sessions = Transaction::distinct()->pluck('session')->filter()->sort();
+        $terms = Transaction::distinct()->pluck('term')->filter()->sort();
+
+        return view('admin.payments.payments', compact('payments', 'authUser', 'classes', 'sessions', 'terms'));
     }
 
     public function paymentReceipt(Transaction $receipt)

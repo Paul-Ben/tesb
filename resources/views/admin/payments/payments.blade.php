@@ -26,6 +26,53 @@
     </div>
     <!-- Button End -->
 
+    <!-- Search/Filter Start -->
+    <div class="container-fluid pt-4 px-4">
+        <div class="row g-4">
+            <div class="col-12">
+                <div class="bg-light rounded h-100 p-4">
+                    <h6 class="mb-4">Search & Filter</h6>
+                    <form method="GET" action="{{ route('payment.index') }}" class="row g-3">
+                        <div class="col-md-3">
+                            <input type="text" name="student_number" class="form-control" placeholder="Search by Student Number" value="{{ request('student_number') }}">
+                        </div>
+                        <div class="col-md-2">
+                            <select name="student_class" class="form-select">
+                                <option value="">All Classes</option>
+                                @foreach($classes as $class)
+                                    <option value="{{ $class }}" {{ request('student_class') == $class ? 'selected' : '' }}>{{ $class }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <select name="session" class="form-select">
+                                <option value="">All Sessions</option>
+                                @foreach($sessions as $session)
+                                    <option value="{{ $session }}" {{ request('session') == $session ? 'selected' : '' }}>{{ $session }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <select name="term" class="form-select">
+                                <option value="">All Terms</option>
+                                @foreach($terms as $term)
+                                    <option value="{{ $term }}" {{ request('term') == $term ? 'selected' : '' }}>{{ $term }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <button type="submit" class="btn btn-primary w-100">Search</button>
+                        </div>
+                        <div class="col-md-1">
+                            <a href="{{ route('payment.index') }}" class="btn btn-secondary w-100">Reset</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Search/Filter End -->
+
     <!-- Table Start -->
     <div class="container-fluid pt-4 px-4">
         <div class="row g-4">
